@@ -130,29 +130,57 @@ async function publishToGitHub() {
   // --- Build portfolio data ---
   const portfolio = buildPublishPayload();
 
-  // --- Collect media from IndexedDB ---
-  if (btn) btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Media load ho rahi hai...';
+  // --- Smart Delta Sync: Only upload NEW media files ---
+  if (btn) btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Checking changes...';
   const idbItems = await dbGetAllItems();
   const mediaPayload = [];
   let skipped = 0;
 
+  // Track what is ALREADY published in portfolio.json
+  const publishedMap = new Map();
+  (portfolioData?._media || []).forEach(m => {
+    if (m && m.name) publishedMap.set(m.name, m);
+  });
+
+  const activeMediaList = [];
+
   for (const item of idbItems) {
     if (!item.blob) continue;
     const sizeMB = item.blob.size / (1024 * 1024);
-    if (sizeMB > 95) { skipped++; continue; } // GitHub 100MB limit
-    try {
-      const b64  = await blobToBase64(item.blob);
-      const ext  = item.type === 'glb' ? '.glb' : '.mp4';
-      const safe = (item.name || 'media').replace(/[^a-zA-Z0-9._-]/g, '_') + ext;
-      mediaPayload.push({ name: safe, displayName: item.name, type: item.type, dataBase64: b64, size: item.blob.size });
-    } catch(e) { console.warn('blob convert error:', e); }
+    if (sizeMB > 95) { skipped++; continue; }
+
+    const ext  = item.type === 'glb' ? '.glb' : '.mp4';
+    const safe = (item.name || 'media').replace(/[^a-zA-Z0-9._-]/g, '_') + ext;
+
+    if (publishedMap.has(safe)) {
+      // Reuse existing published link — ZERO wait, ZERO re-upload!
+      activeMediaList.push(publishedMap.get(safe));
+    } else {
+      // Brand new file — upload it
+      try {
+        const b64 = await blobToBase64(item.blob);
+        mediaPayload.push({
+          name: safe,
+          displayName: item.name,
+          type: item.type,
+          dataBase64: b64,
+          size: item.blob.size
+        });
+      } catch(e) { console.warn('blob convert error:', e); }
+    }
   }
 
+  portfolio._media = activeMediaList;
   if (skipped > 0) showToast(`⚠️ ${skipped} file(s) 95MB+ — skip ho gaye (too large)`, 'error');
 
   // --- Send to publish server ---
-  if (btn) btn.innerHTML = `<i class="fas fa-spinner fa-spin"></i> ${mediaPayload.length} files push ho rahi hain...`;
-  showToast(`\u2601\uFE0F Publishing ${mediaPayload.length} media file(s)...`, 'success');
+  if (mediaPayload.length > 0) {
+    if (btn) btn.innerHTML = `<i class="fas fa-spinner fa-spin"></i> ${mediaPayload.length} new file(s) push...`;
+    showToast(`☁️ ${mediaPayload.length} nayi media file(s) upload ho rahi hain...`, 'success');
+  } else {
+    if (btn) btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Live sync...';
+    showToast('⚡ Instant Sync: Sirf new edits push ho rahe hain...', 'success');
+  }
 
   try {
     const res  = await fetch(PUBLISH_SERVER + '/publish', {
@@ -162,12 +190,19 @@ async function publishToGitHub() {
     });
     const json = await res.json();
     if (json.ok) {
-      showToast(`\uD83D\uDE80 Published! ${json.mediaCount || 0} files live. 1-2 min mein update!`);
+      if (mediaPayload.length > 0) {
+        showToast(`🚀 Published! ${mediaPayload.length} nayi file(s) live. 1-2 min mein update!`);
+      } else {
+        showToast('⚡ Published instantly! Tamam edits live ho gaye.');
+      }
+      if (json.media) {
+        portfolioData._media = json.media;
+      }
     } else {
-      showToast('\u274C Publish fail: ' + (json.message || 'unknown'), 'error');
+      showToast('❌ Publish fail: ' + (json.message || 'unknown'), 'error');
     }
   } catch(e) {
-    showToast('\u274C Network error: ' + e.message, 'error');
+    showToast('❌ Network error: ' + e.message, 'error');
   }
 
   if (btn) { btn.disabled = false; btn.innerHTML = '<i class="fas fa-cloud-upload-alt"></i> Publish Live'; }

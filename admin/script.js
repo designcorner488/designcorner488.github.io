@@ -88,7 +88,7 @@ function initAuth() {
   saveTokBtn.addEventListener('click', async () => {
     const token = ghTokenInput.value.trim();
     const tokenErr = document.getElementById('token-error');
-    if (!token || !token.startsWith('ghp_') && !token.startsWith('github_pat_')) {
+    if (!token || (!token.startsWith('ghp_') && !token.startsWith('github_pat_') && !token.startsWith('gho_'))) {
       tokenErr.textContent = 'Please enter a valid GitHub token (starts with ghp_ or github_pat_)';
       tokenErr.style.display = 'block';
       return;

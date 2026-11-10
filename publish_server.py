@@ -1,7 +1,7 @@
 """
-Local Publish Server — Portfolio CMS v3 (E: Drive Dedicated)
+Local Publish Server — Portfolio CMS v3.1 (Smart Delta Sync)
 Handles portfolio.json AND media files (GLB / MP4) strictly in E:\\my-portfolio
-Automatically routes large files (>25MB) through GitHub Release CDN
+Only uploads NEW media files; reuses existing published assets automatically
 """
 from http.server import HTTPServer, BaseHTTPRequestHandler
 import json, subprocess, os, base64
@@ -24,20 +24,30 @@ class PublishHandler(BaseHTTPRequestHandler):
         self.send_header('Access-Control-Allow-Headers', 'Content-Type')
 
     def do_OPTIONS(self):
-        self.send_response(200)
-        self._cors()
-        self.end_headers()
+        try:
+            self.send_response(200)
+            self._cors()
+            self.end_headers()
+        except Exception:
+            pass
 
     def do_GET(self):
         if self.path == '/ping':
-            self._respond(200, {'ok': True, 'status': 'running', 'drive': 'E'})
+            self._respond(200, {'ok': True, 'status': 'running', 'drive': 'E', 'version': '3.1'})
         else:
-            self.send_response(404)
-            self.end_headers()
+            try:
+                self.send_response(404)
+                self.end_headers()
+            except Exception:
+                pass
 
     def do_POST(self):
         if self.path != '/publish':
-            self.send_response(404); self.end_headers(); return
+            try:
+                self.send_response(404); self.end_headers()
+            except Exception:
+                pass
+            return
 
         length = int(self.headers.get('Content-Length', 0))
         body   = self.rfile.read(length)
@@ -51,11 +61,11 @@ class PublishHandler(BaseHTTPRequestHandler):
         portfolio  = payload.get('portfolio', {})
         media_list = payload.get('media', [])
 
-        # ---- Save media files strictly in E:\my-portfolio\media ----
+        # ---- Process ONLY newly uploaded media files ----
         media_dir = os.path.join(REPO, 'media')
         os.makedirs(media_dir, exist_ok=True)
 
-        published_media = []
+        published_new = []
         large_files = []
 
         for item in media_list:
@@ -66,16 +76,16 @@ class PublishHandler(BaseHTTPRequestHandler):
                 with open(filepath, 'wb') as f:
                     f.write(file_bytes)
                 size_mb = len(file_bytes) / (1024*1024)
-                print(f"  [E: Drive] Saved: {filename} ({size_mb:.1f} MB)")
+                print(f"  [New Media] Saved: {filename} ({size_mb:.1f} MB)")
 
-                # If file > 25MB, upload via GitHub Release CDN to prevent git push timeout
+                # If file > 25MB, upload via GitHub Release CDN
                 if size_mb > 25.0:
                     large_files.append((filename, filepath))
                     item_url = f'{RELEASE_URL}/{filename}'
                 else:
                     item_url = f'{PAGES_BASE}/media/{filename}'
 
-                published_media.append({
+                published_new.append({
                     'name':        filename,
                     'displayName': item.get('displayName', filename),
                     'type':        item.get('type', 'video'),
@@ -84,7 +94,7 @@ class PublishHandler(BaseHTTPRequestHandler):
             except Exception as e:
                 print(f"  Error saving {item.get('name','?')}: {e}")
 
-        # Upload any large files to Release CDN
+        # Upload large files to Release CDN
         for fn, fp in large_files:
             try:
                 print(f"  Uploading large asset {fn} to GitHub Release CDN...")
@@ -93,7 +103,7 @@ class PublishHandler(BaseHTTPRequestHandler):
             except Exception as ex:
                 print(f"  Release upload note: {ex}")
 
-        # ---- Safely merge portfolio.json so nothing is ever lost ----
+        # ---- Load existing portfolio.json ----
         pf = os.path.join(REPO, 'portfolio.json')
         existing = {}
         if os.path.exists(pf):
@@ -116,10 +126,26 @@ class PublishHandler(BaseHTTPRequestHandler):
             if 'projects' in portfolio and portfolio['projects']:
                 merged['projects'] = portfolio['projects']
 
-        if published_media:
-            merged['_media'] = published_media
-        elif '_media' not in merged and '_media' in existing:
-            merged['_media'] = existing['_media']
+        # ---- Smart Media Reconciliation ----
+        final_media = []
+        client_media = portfolio.get('_media', [])
+        existing_media = existing.get('_media', [])
+
+        base_media = client_media if (client_media and isinstance(client_media, list)) else existing_media
+        new_map = {m['name']: m for m in published_new}
+
+        for m in base_media:
+            fn = m.get('name')
+            if fn in new_map:
+                final_media.append(new_map.pop(fn))
+            else:
+                final_media.append(m)
+
+        for m in new_map.values():
+            final_media.append(m)
+
+        if final_media:
+            merged['_media'] = final_media
 
         with open(pf, 'w', encoding='utf-8') as f:
             json.dump(merged, f, indent=2, ensure_ascii=False)
@@ -132,15 +158,13 @@ class PublishHandler(BaseHTTPRequestHandler):
                 capture_output=True, text=True, encoding='utf-8', errors='replace'
             )
 
-        # Always pull latest remote changes first to prevent push rejection
         git('pull', '--rebase', 'origin', BRANCH)
-
         git('add', 'portfolio.json')
-        if os.path.isdir(media_dir):
+        if os.path.isdir(media_dir) and published_new:
             git('add', 'media/')
 
-        c = git('commit', '-m',
-                f'Portfolio update: {len(published_media)} media files, via Publish button')
+        msg = f'Portfolio update: {len(published_new)} new media, {len(final_media)} total assets'
+        c = git('commit', '-m', msg)
         print(c.stdout.strip() or c.stderr.strip() or '(no commit output)')
 
         p = git('push', 'origin', BRANCH)
@@ -150,8 +174,10 @@ class PublishHandler(BaseHTTPRequestHandler):
         if p.returncode == 0 or 'Everything up-to-date' in push_output:
             self._respond(200, {
                 'ok': True,
-                'mediaCount': len(published_media),
-                'message': f'Published! {len(published_media)} media files. 1-2 min mein update nazar aayega.'
+                'newCount': len(published_new),
+                'totalCount': len(final_media),
+                'media': final_media,
+                'message': f'Published! {len(published_new)} new file(s), total {len(final_media)} live.'
             })
         else:
             self._respond(500, {
@@ -160,23 +186,25 @@ class PublishHandler(BaseHTTPRequestHandler):
             })
 
     def _respond(self, code, obj):
-        body = json.dumps(obj, ensure_ascii=False).encode('utf-8')
-        self.send_response(code)
-        self._cors()
-        self.send_header('Content-Type', 'application/json; charset=utf-8')
-        self.send_header('Content-Length', len(body))
-        self.end_headers()
-        self.wfile.write(body)
+        try:
+            body = json.dumps(obj, ensure_ascii=False).encode('utf-8')
+            self.send_response(code)
+            self._cors()
+            self.send_header('Content-Type', 'application/json; charset=utf-8')
+            self.send_header('Content-Length', len(body))
+            self.end_headers()
+            self.wfile.write(body)
+        except (ConnectionResetError, ConnectionAbortedError, BrokenPipeError, Exception):
+            pass
 
 
 if __name__ == '__main__':
     PORT = 7788
     print('=' * 58)
-    print('  Portfolio Publish Server  —  Design Corner (E: Drive)')
+    print('  Portfolio Publish Server v3.1 (Smart Delta Sync)')
     print(f'  Listening: http://localhost:{PORT}')
     print(f'  Repository Root: {REPO}')
-    print('  Website par "Publish Live" dabayein')
-    print('  Band karne ke liye: Ctrl+C  or window close')
+    print('  Instant publish active — only new files upload!')
     print('=' * 58)
     try:
         HTTPServer(('localhost', PORT), PublishHandler).serve_forever()
