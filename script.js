@@ -2042,9 +2042,20 @@ function flipPortal(forceState) {
   card.classList.toggle('flipped', scifiFlipped);
 }
 
-function manualFlipPortal() {
+function manualFlipPortal(e) {
+  // If user clicked an editable element or button, DO NOT flip!
+  if (e && e.target && (e.target.closest('.editable') || e.target.closest('button') || e.target.closest('input') || e.target.closest('.scifi-edit-actions'))) {
+    return;
+  }
+  // If in Edit Mode, do not flip on card click (only flip via the toggle button)
+  if (document.body.classList.contains('edit-mode')) {
+    if (e && e.target && e.target.closest('.btn-portal-flip-toggle')) {
+      flipPortal();
+    }
+    return;
+  }
   flipPortal();
-  startScifiTimer(); // Reset timer after manual interaction
+  startScifiTimer();
 }
 
 function startScifiTimer() {
@@ -2457,3 +2468,95 @@ if (document.readyState === 'loading') {
 } else {
   bootPortfolio();
 }
+
+
+/* ============================================================
+   SCI-FI CIRCLE TEXT EDIT MODAL LOGIC
+   ============================================================ */
+function openScifiModal(e) {
+  if (e) {
+    if (typeof e.preventDefault === 'function') e.preventDefault();
+    if (typeof e.stopPropagation === 'function') e.stopPropagation();
+  }
+  const modal = document.getElementById('scifiTextModal');
+  if (!modal) return;
+
+  const getTxt = (key, fallback = '') => {
+    const el = document.querySelector(`[data-key="${key}"]`);
+    return el ? el.textContent.trim() : fallback;
+  };
+
+  const setVal = (id, val) => {
+    const el = document.getElementById(id);
+    if (el) el.value = val;
+  };
+
+  setVal('mScifiCallsign',  getTxt('scifiCallsign', 'DESIGN CORNER'));
+  setVal('mScifiRank',      getTxt('scifiRank', 'ARCHITECT & 3D ARTIST'));
+  setVal('mScifiStatus',    getTxt('scifiStatus', 'SYS // ONLINE'));
+  setVal('mScifiTermTag',   getTxt('scifiTermTag', 'CORE // 3D MATRIX'));
+  setVal('mScifiTermTitle', getTxt('scifiTermTitle', 'BLENDER 3D // BIM'));
+  setVal('mScifiTermDesc',  getTxt('scifiTermDesc', 'Photorealistic architectural renders, parametric geometry nodes & motion design.'));
+  setVal('mScifiBadge1',    getTxt('scifiBadge1', 'Blender 4.x'));
+  setVal('mScifiBadge2',    getTxt('scifiBadge2', 'Revit & D5'));
+
+  modal.style.display = 'flex';
+}
+
+function closeScifiModal() {
+  const modal = document.getElementById('scifiTextModal');
+  if (modal) modal.style.display = 'none';
+}
+
+function saveScifiModal() {
+  const getVal = id => document.getElementById(id)?.value?.trim() || '';
+  const setDOM = (key, val) => {
+    const el = document.querySelector(`[data-key="${key}"]`);
+    if (el && val) el.innerHTML = val;
+  };
+
+  const fields = {
+    scifiCallsign:  getVal('mScifiCallsign'),
+    scifiRank:      getVal('mScifiRank'),
+    scifiStatus:    getVal('mScifiStatus'),
+    scifiTermTag:   getVal('mScifiTermTag'),
+    scifiTermTitle: getVal('mScifiTermTitle'),
+    scifiTermDesc:  getVal('mScifiTermDesc'),
+    scifiBadge1:    getVal('mScifiBadge1'),
+    scifiBadge2:    getVal('mScifiBadge2')
+  };
+
+  // Update DOM
+  Object.entries(fields).forEach(([key, val]) => {
+    if (val) setDOM(key, val);
+  });
+
+  // Save to localStorage
+  const d = getSavedData();
+  d.text = d.text || {};
+  Object.assign(d.text, fields);
+  saveData(d);
+
+  // Update portfolioData if present
+  if (portfolioData) {
+    portfolioData._textOverrides = portfolioData._textOverrides || {};
+    Object.assign(portfolioData._textOverrides, fields);
+    portfolioData.settings = portfolioData.settings || {};
+    portfolioData.settings.scifiPortal = portfolioData.settings.scifiPortal || {};
+    portfolioData.settings.scifiPortal.callsign  = fields.scifiCallsign;
+    portfolioData.settings.scifiPortal.rank      = fields.scifiRank;
+    portfolioData.settings.scifiPortal.status    = fields.scifiStatus;
+    portfolioData.settings.scifiPortal.termTag   = fields.scifiTermTag;
+    portfolioData.settings.scifiPortal.termTitle = fields.scifiTermTitle;
+    portfolioData.settings.scifiPortal.termDesc  = fields.scifiTermDesc;
+    portfolioData.settings.scifiPortal.badge1    = fields.scifiBadge1;
+    portfolioData.settings.scifiPortal.badge2    = fields.scifiBadge2;
+  }
+
+  closeScifiModal();
+  showToast('✅ Sci-Fi Circle Text Update ho gaya! "Publish Live" daba kar live karein.');
+}
+
+window.openScifiModal  = openScifiModal;
+window.closeScifiModal = closeScifiModal;
+window.saveScifiModal  = saveScifiModal;

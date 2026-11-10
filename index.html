@@ -16,7 +16,7 @@ window.addEventListener('error', function(e) {
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
-  <link rel="stylesheet" href="style.css?v=21.5"/>
+  <link rel="stylesheet" href="style.css?v=21.6"/>
   <script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/3.4.0/model-viewer.min.js"></script>
 </head>
 <body>
@@ -190,7 +190,7 @@ window.addEventListener('error', function(e) {
       </div>
 
       <!-- 3D Flip Card: Alternates every 5 seconds -->
-      <div class="scifi-flip-card" id="scifiFlipCard" onclick="manualFlipPortal()" title="Click to rotate (Auto 5s)">
+      <div class="scifi-flip-card" id="scifiFlipCard" onclick="manualFlipPortal(event)" title="Click to rotate (Auto 5s)">
         <!-- Face A: Holographic Avatar / Profile Image -->
         <div class="scifi-face scifi-face-front">
           <div class="scifi-avatar-wrap">
@@ -237,7 +237,10 @@ window.addEventListener('error', function(e) {
     <!-- Dedicated Mobile & Desktop Change Photo Button in Edit Mode -->
     <div class="scifi-edit-actions" id="scifiEditActions">
       <button type="button" class="btn-change-scifi-photo" onclick="triggerScifiAvatarUpload(event)">
-        <i class="fas fa-camera"></i> Change Avatar Photo
+        <i class="fas fa-camera"></i> Change Photo
+      </button>
+      <button type="button" class="btn-change-scifi-photo" onclick="openScifiModal(event)" style="border-color:#a855f7;background:linear-gradient(135deg,rgba(168,85,247,.3),rgba(99,102,241,.3));">
+        <i class="fas fa-pen-to-square"></i> Edit Circle Text
       </button>
     </div>
   </div>
@@ -688,7 +691,7 @@ window.addEventListener('error', function(e) {
   </div>
 </div>
 
-<script src="script.js?v=21.5"></script>
+<script src="script.js?v=21.6"></script>
 <!-- REORDER MODELS & ANIMATIONS MODAL -->
 <div class="modal-overlay" id="glbReorderModal">
   <div class="modal-box" style="max-width:520px;">
@@ -791,6 +794,73 @@ window.addEventListener('error', function(e) {
     <div class="modal-footer" style="display:flex;gap:.75rem;justify-content:flex-end;padding:1rem 1.5rem">
       <button type="button" class="btn-secondary" onclick="closeAddonModal()">Cancel</button>
       <button type="button" class="btn-primary" onclick="saveAddonFromModal()"><i class="fas fa-check"></i> Save Addon</button>
+    </div>
+  </div>
+</div>
+
+
+<!-- SCI-FI CIRCLE TEXT EDIT MODAL -->
+<div class="modal-overlay" id="scifiTextModal" style="display:none;" onclick="if(event.target===this)closeScifiModal()">
+  <div class="modal-box" style="max-width:480px; width:92%; background:#0c0f24; border:1.5px solid rgba(0,240,255,0.4); border-radius:16px; box-shadow:0 10px 40px rgba(0,0,0,0.8), 0 0 30px rgba(0,240,255,0.2);">
+    <div class="modal-header" style="border-bottom:1px solid rgba(0,240,255,0.2); padding:1rem 1.4rem; display:flex; justify-content:space-between; align-items:center;">
+      <h3 style="display:flex;align-items:center;gap:.6rem;color:#00f0ff;font-size:1.1rem;margin:0;">
+        <i class="fas fa-circle-nodes"></i> Edit Sci-Fi Circle Text
+      </h3>
+      <button class="modal-close" onclick="closeScifiModal()" style="background:transparent;border:none;color:#aaa;font-size:1.2rem;cursor:pointer;"><i class="fas fa-times"></i></button>
+    </div>
+    <div class="modal-body" style="padding:1.4rem; max-height:75vh; overflow-y:auto;">
+      <div style="font-size:.8rem;color:#a5b4fc;margin-bottom:1rem;background:rgba(0,240,255,.08);border:1px solid rgba(0,240,255,.25);border-radius:8px;padding:.6rem .8rem;">
+        <i class="fas fa-circle-info"></i> Circle ke text ko yahan type kar ke <strong>Save & Apply</strong> dabayein:
+      </div>
+
+      <div style="color:#00f0ff;font-weight:700;font-size:.85rem;margin-bottom:.5rem;border-bottom:1px solid rgba(0,240,255,.2);padding-bottom:4px;">
+        SIDE A (Photo Side)
+      </div>
+      <div class="form-group" style="margin-bottom:.8rem;">
+        <label style="font-size:.78rem;color:#ccc;display:block;margin-bottom:4px;">Callsign / Name (Neechay White Text)</label>
+        <input type="text" id="mScifiCallsign" class="form-input" style="width:100%;padding:.65rem;background:#141733;border:1px solid rgba(0,240,255,0.3);color:#fff;border-radius:8px;font-size:.9rem;" />
+      </div>
+      <div class="form-group" style="margin-bottom:.8rem;">
+        <label style="font-size:.78rem;color:#ccc;display:block;margin-bottom:4px;">Role / Title (Cyan Text e.g. ARCHITECT & 3D ARTIST)</label>
+        <input type="text" id="mScifiRank" class="form-input" style="width:100%;padding:.65rem;background:#141733;border:1px solid rgba(0,240,255,0.3);color:#fff;border-radius:8px;font-size:.9rem;" />
+      </div>
+      <div class="form-group" style="margin-bottom:1.2rem;">
+        <label style="font-size:.78rem;color:#ccc;display:block;margin-bottom:4px;">Status Pill (Top Badge e.g. SYS // ONLINE)</label>
+        <input type="text" id="mScifiStatus" class="form-input" style="width:100%;padding:.65rem;background:#141733;border:1px solid rgba(0,240,255,0.3);color:#fff;border-radius:8px;font-size:.9rem;" />
+      </div>
+
+      <div style="color:#a855f7;font-weight:700;font-size:.85rem;margin-bottom:.5rem;border-bottom:1px solid rgba(168,85,247,.2);padding-bottom:4px;">
+        SIDE B (Data / Terminal Side)
+      </div>
+      <div class="form-group" style="margin-bottom:.8rem;">
+        <label style="font-size:.78rem;color:#ccc;display:block;margin-bottom:4px;">Terminal Tag (e.g. CORE // 3D MATRIX)</label>
+        <input type="text" id="mScifiTermTag" class="form-input" style="width:100%;padding:.65rem;background:#141733;border:1px solid rgba(168,85,247,0.3);color:#fff;border-radius:8px;font-size:.9rem;" />
+      </div>
+      <div class="form-group" style="margin-bottom:.8rem;">
+        <label style="font-size:.78rem;color:#ccc;display:block;margin-bottom:4px;">Main Heading (e.g. BLENDER 3D // BIM)</label>
+        <input type="text" id="mScifiTermTitle" class="form-input" style="width:100%;padding:.65rem;background:#141733;border:1px solid rgba(168,85,247,0.3);color:#fff;border-radius:8px;font-size:.9rem;" />
+      </div>
+      <div class="form-group" style="margin-bottom:.8rem;">
+        <label style="font-size:.78rem;color:#ccc;display:block;margin-bottom:4px;">Description</label>
+        <textarea id="mScifiTermDesc" class="form-input" rows="3" style="width:100%;padding:.65rem;background:#141733;border:1px solid rgba(168,85,247,0.3);color:#fff;border-radius:8px;font-size:.85rem;resize:vertical;"></textarea>
+      </div>
+      <div class="form-group" style="display:grid;grid-template-columns:1fr 1fr;gap:.6rem;margin-bottom:1.4rem;">
+        <div>
+          <label style="font-size:.78rem;color:#ccc;display:block;margin-bottom:4px;">Skill Badge 1</label>
+          <input type="text" id="mScifiBadge1" class="form-input" style="width:100%;padding:.65rem;background:#141733;border:1px solid rgba(168,85,247,0.3);color:#fff;border-radius:8px;font-size:.85rem;" />
+        </div>
+        <div>
+          <label style="font-size:.78rem;color:#ccc;display:block;margin-bottom:4px;">Skill Badge 2</label>
+          <input type="text" id="mScifiBadge2" class="form-input" style="width:100%;padding:.65rem;background:#141733;border:1px solid rgba(168,85,247,0.3);color:#fff;border-radius:8px;font-size:.85rem;" />
+        </div>
+      </div>
+
+      <div style="display:flex;gap:.8rem;justify-content:flex-end;">
+        <button type="button" class="btn-secondary" onclick="closeScifiModal()" style="padding:.6rem 1.2rem;border-radius:50px;">Cancel</button>
+        <button type="button" class="btn-primary" onclick="saveScifiModal()" style="padding:.6rem 1.4rem;border-radius:50px;background:var(--gradient-btn);">
+          <i class="fas fa-check"></i> Save & Apply
+        </button>
+      </div>
     </div>
   </div>
 </div>
