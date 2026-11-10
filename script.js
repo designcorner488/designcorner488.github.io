@@ -81,6 +81,46 @@ async function publishToGitHub() {
   } catch(e) { serverRunning = false; }
 
   if (!serverRunning) {
+    const token = localStorage.getItem('cms_gh_token');
+    if (token) {
+      try {
+        if (btn) btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> GitHub API se publish...';
+        showToast('☁️ GitHub API se live update ho raha hai...', 'success');
+        const portfolio = buildPublishPayload();
+        const fileRes = await fetch(`https://api.github.com/repos/${REPO_OWNER}/${REPO_NAME}/contents/portfolio.json`, {
+          headers: { 'Authorization': `Bearer ${token}` }
+        });
+        let sha = null;
+        if (fileRes.ok) {
+          const fileJson = await fileRes.json();
+          sha = fileJson.sha;
+        }
+        const jsonString = JSON.stringify(portfolio, null, 2);
+        const base64Json = btoa(unescape(encodeURIComponent(jsonString)));
+        const putRes = await fetch(`https://api.github.com/repos/${REPO_OWNER}/${REPO_NAME}/contents/portfolio.json`, {
+          method: 'PUT',
+          headers: {
+            'Authorization': `Bearer ${token}`,
+            'Accept': 'application/vnd.github.v3+json',
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            message: 'Live website update via Edit Mode',
+            content: base64Json,
+            sha: sha,
+            branch: BRANCH
+          })
+        });
+        if (putRes.ok) {
+          showToast('🚀 Live website publish ho gayi! 1-2 min mein update nazar aayega.');
+          if (btn) { btn.disabled = false; btn.innerHTML = '<i class="fas fa-cloud-upload-alt"></i> Publish Live'; }
+          return;
+        }
+      } catch (err) {
+        console.warn('API publish fallback error:', err);
+      }
+    }
+
     if (btn) { btn.disabled = false; btn.innerHTML = '<i class="fas fa-cloud-upload-alt"></i> Publish Live'; }
     const modal = document.getElementById('ghTokenModal');
     if (modal) modal.style.display = 'flex';
@@ -1322,20 +1362,8 @@ async function saveAll() {
   if (token && portfolioData) {
     try {
       showToast('☁️ GitHub par publish ho raha hai...', 'success');
-      portfolioData.settings = portfolioData.settings || {};
-      portfolioData.settings.softwareTags = currentSoftwareTags;
-      const heroLine2 = document.querySelector('[data-key="heroLine2"]')?.textContent?.trim();
-      const heroDesc  = document.querySelector('[data-key="heroDesc"]')?.textContent?.trim();
-      const aboutText = document.querySelector('[data-key="aboutText"]')?.textContent?.trim();
-      const aboutTitle= document.querySelector('[data-key="aboutTitle"]')?.textContent?.trim();
-      const contactEm = document.querySelector('[data-key="contactEmail"]')?.textContent?.trim();
-      const contactPh = document.querySelector('[data-key="contactPhone"]')?.textContent?.trim();
-
-      if (aboutTitle) portfolioData.settings.name = aboutTitle;
-      if (heroLine2)  portfolioData.settings.tagline = heroLine2;
-      if (aboutText)  portfolioData.settings.about = aboutText;
-      if (contactEm)  portfolioData.settings.email = contactEm;
-      if (contactPh)  portfolioData.settings.phone = contactPh;
+      const fullPayload = buildPublishPayload();
+      portfolioData = fullPayload;
 
       const fileRes = await fetch(`https://api.github.com/repos/${REPO_OWNER}/${REPO_NAME}/contents/portfolio.json`, {
         headers: { 'Authorization': `Bearer ${token}` }
@@ -1346,7 +1374,7 @@ async function saveAll() {
         sha = fileJson.sha;
       }
 
-      const jsonString = JSON.stringify(portfolioData, null, 2);
+      const jsonString = JSON.stringify(fullPayload, null, 2);
       const base64Json = btoa(unescape(encodeURIComponent(jsonString)));
 
       const putRes = await fetch(`https://api.github.com/repos/${REPO_OWNER}/${REPO_NAME}/contents/portfolio.json`, {

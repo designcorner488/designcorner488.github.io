@@ -1,6 +1,6 @@
 """
 Local Publish Server — Portfolio CMS v3 (E: Drive Dedicated)
-Handles portfolio.json AND media files (GLB / MP4) strictly in E:\my-portfolio
+Handles portfolio.json AND media files (GLB / MP4) strictly in E:\\my-portfolio
 Automatically routes large files (>25MB) through GitHub Release CDN
 """
 from http.server import HTTPServer, BaseHTTPRequestHandler
@@ -93,17 +93,37 @@ class PublishHandler(BaseHTTPRequestHandler):
             except Exception as ex:
                 print(f"  Release upload note: {ex}")
 
-        # Preserve previously published media if no new ones sent
-        if not media_list and '_media' in portfolio:
-            published_media = portfolio.get('_media', [])
-        elif published_media:
-            portfolio['_media'] = published_media
-
-        # ---- Write portfolio.json ----
+        # ---- Safely merge portfolio.json so nothing is ever lost ----
         pf = os.path.join(REPO, 'portfolio.json')
+        existing = {}
+        if os.path.exists(pf):
+            try:
+                with open(pf, 'r', encoding='utf-8') as f:
+                    existing = json.load(f)
+            except Exception as e:
+                print(f"  Warning reading existing portfolio.json: {e}")
+
+        merged = dict(existing)
+        if isinstance(portfolio, dict):
+            if 'settings' in portfolio:
+                merged.setdefault('settings', {}).update(portfolio.get('settings', {}))
+            if '_textOverrides' in portfolio:
+                merged.setdefault('_textOverrides', {}).update(portfolio.get('_textOverrides', {}))
+            if 'addons' in portfolio:
+                merged['addons'] = portfolio['addons']
+            if 'categories' in portfolio and portfolio['categories']:
+                merged['categories'] = portfolio['categories']
+            if 'projects' in portfolio and portfolio['projects']:
+                merged['projects'] = portfolio['projects']
+
+        if published_media:
+            merged['_media'] = published_media
+        elif '_media' not in merged and '_media' in existing:
+            merged['_media'] = existing['_media']
+
         with open(pf, 'w', encoding='utf-8') as f:
-            json.dump(portfolio, f, indent=2, ensure_ascii=False)
-        print(f"  [E: Drive] portfolio.json saved ({len(json.dumps(portfolio))} bytes)")
+            json.dump(merged, f, indent=2, ensure_ascii=False)
+        print(f"  [E: Drive] portfolio.json saved safely ({len(json.dumps(merged))} bytes)")
 
         # ---- Git pull rebase + commit + push ----
         def git(*args):
