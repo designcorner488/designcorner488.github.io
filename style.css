@@ -1314,16 +1314,204 @@ body.edit-mode .glb-action-btn {
     flex: 0 0 auto;
   }
 }
+
+
+/* ========================================================
+   COMPREHENSIVE RESPONSIVE STYLING (MOBILE & TABLET)
+   ======================================================== */
 @media (max-width: 768px) {
+  /* NAVBAR MOBILE PERFECTION */
+  .navbar {
+    padding: 0.75rem 4% !important;
+  }
+  .nav-logo {
+    font-size: 1.1rem !important;
+    white-space: nowrap !important;
+    gap: 3px !important;
+  }
+  .logo-text {
+    font-size: 1.05rem !important;
+  }
+  .btn-edit-nav {
+    display: none !important; /* Floating edit button handles mobile cleanly */
+  }
+  .btn-hire {
+    padding: 0.42rem 0.85rem !important;
+    font-size: 0.78rem !important;
+    margin-right: 2px !important;
+  }
+  .btn-admin-nav {
+    width: 32px !important;
+    height: 32px !important;
+    font-size: 0.85rem !important;
+  }
+
+  /* HERO MOBILE CLEAN & BALANCED */
+  .hero {
+    min-height: auto !important;
+    padding: 5.5rem 5% 4rem !important;
+    flex-direction: column !important;
+    text-align: center !important;
+    gap: 1.8rem !important;
+  }
+  .hero-content {
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    text-align: center !important;
+    width: 100% !important;
+    max-width: 100% !important;
+  }
+  .hero-title {
+    font-size: 2.15rem !important;
+    line-height: 1.2 !important;
+    margin-bottom: 0.9rem !important;
+  }
+  .hero-desc {
+    font-size: 0.92rem !important;
+    line-height: 1.55 !important;
+    margin-bottom: 1.4rem !important;
+    max-width: 95% !important;
+  }
+  .hero-btns {
+    justify-content: center !important;
+    width: 100% !important;
+    gap: 0.75rem !important;
+  }
+  .hero-btns .btn-primary,
+  .hero-btns .btn-secondary {
+    padding: 0.72rem 1.3rem !important;
+    font-size: 0.86rem !important;
+  }
+
+  /* STATS: CLEAN 3-COLUMN GRID IN ONE ROW */
+  .hero-stats {
+    display: grid !important;
+    grid-template-columns: repeat(3, 1fr) !important;
+    gap: 0.4rem !important;
+    width: 100% !important;
+    max-width: 360px !important;
+    margin: 1.6rem auto 0 !important;
+    padding: 0 !important;
+    justify-content: center !important;
+    align-items: center !important;
+  }
+  .stat {
+    padding: 0.2rem !important;
+    text-align: center !important;
+  }
+  .stat-num {
+    font-size: 1.45rem !important;
+  }
+  .stat span {
+    font-size: 1.1rem !important;
+  }
+  .stat-label {
+    font-size: 0.68rem !important;
+  }
+  .stat-divider {
+    display: none !important;
+  }
+
+  /* SCI-FI PORTAL MOBILE PERFECTION */
+  .hero-scifi-portal {
+    margin: 1.2rem auto 1rem !important;
+    flex: 0 0 auto !important;
+    width: 100% !important;
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    justify-content: center !important;
+  }
   .scifi-portal-inner {
-    width: 220px;
-    height: 220px;
+    width: 250px !important;
+    height: 250px !important;
   }
   .scifi-flip-card {
-    width: 190px;
-    height: 190px;
+    width: 215px !important;
+    height: 215px !important;
   }
+  .scifi-avatar-wrap {
+    width: 125px !important;
+    height: 125px !important;
+  }
+  .scifi-tag {
+    font-size: 0.58rem !important;
+    padding: 1px 7px !important;
+  }
+  .scifi-name {
+    font-size: 0.82rem !important;
+  }
+  .terminal-hud-header {
+    font-size: 0.62rem !important;
+    margin-bottom: 3px !important;
+  }
+  .terminal-hud-title {
+    font-size: 0.95rem !important;
+    margin-bottom: 3px !important;
+  }
+  .terminal-hud-desc {
+    font-size: 0.65rem !important;
+    line-height: 1.3 !important;
+    max-height: 3.6em !important;
+    overflow: hidden !important;
+    margin-bottom: 6px !important;
+  }
+  .hud-pill {
+    font-size: 0.62rem !important;
+    padding: 2px 7px !important;
+  }
+  .terminal-hud-footer {
+    font-size: 0.58rem !important;
+  }
+
+  /* PHOTO UPLOAD BUTTON IN EDIT MODE */
+  .scifi-edit-actions {
+    display: none;
+    margin-top: 1rem;
+    justify-content: center;
+    width: 100%;
+  }
+  body.edit-mode .scifi-edit-actions {
+    display: flex !important;
+  }
+  .btn-change-scifi-photo {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.6rem 1.3rem;
+    background: linear-gradient(135deg, rgba(0, 240, 255, 0.25), rgba(168, 85, 247, 0.35));
+    border: 1.5px solid #00f0ff;
+    color: #fff;
+    border-radius: 50px;
+    font-size: 0.82rem;
+    font-weight: 700;
+    cursor: pointer;
+    box-shadow: 0 4px 18px rgba(0, 240, 255, 0.35);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+  }
+  .btn-change-scifi-photo:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 22px rgba(0, 240, 255, 0.5);
+  }
+
+  /* FLOATING EDIT TOGGLE BUTTON ON MOBILE */
+  .edit-toggle-btn {
+    bottom: 1.2rem !important;
+    right: 1.2rem !important;
+    padding: 0.52rem 0.95rem !important;
+    font-size: 0.76rem !important;
+    box-shadow: 0 6px 18px rgba(124, 58, 237, 0.5) !important;
+  }
+
+  /* PREVENT SCROLL INDICATOR OVERLAP */
+  .scroll-indicator {
+    display: none !important;
+  }
+
+  /* ADDONS GRID ON MOBILE */
   .addons-grid {
-    grid-template-columns: 1fr;
+    grid-template-columns: 1fr !important;
+    gap: 1.2rem !important;
   }
 }

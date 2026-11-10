@@ -8,7 +8,7 @@ window.addEventListener('error', function(e) {
 </script>
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <meta name="description" content="Professional Architecture & 3D Visualization Portfolio â€” Photorealistic Renderings, Animations, Interior Design"/>
+  <meta name="description" content="Professional Architecture & 3D Visualization Portfolio — Photorealistic Renderings, Animations, Interior Design"/>
   <meta property="og:title" content="Architecture & 3D Visualization Portfolio"/>
   <meta property="og:type" content="website"/>
   <title>Architecture & 3D Visualization</title>
@@ -16,7 +16,7 @@ window.addEventListener('error', function(e) {
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
-  <link rel="stylesheet" href="style.css?v=21.2"/>
+  <link rel="stylesheet" href="style.css?v=21.4"/>
   <script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/3.4.0/model-viewer.min.js"></script>
 </head>
 <body>
@@ -48,6 +48,7 @@ window.addEventListener('error', function(e) {
 
 <!-- Hidden file input for profile photo -->
 <input type="file" id="fileInputPhoto" accept="image/*" style="display:none"/>
+<input type="file" id="scifiAvatarInput" accept="image/*" style="display:none"/>
 
 <!-- LOADER -->
 <div class="loader" id="loader">
@@ -124,7 +125,7 @@ window.addEventListener('error', function(e) {
       <span class="line gradient-text editable" data-key="heroLine2" id="hero-tagline">3D Visualization</span>
       <span class="line editable" data-key="heroLine3">& Design</span>
     </h1>
-    <p class="hero-desc editable" data-key="heroDesc" id="hero-desc">Transforming ideas into stunning 3D realities â€” from architectural masterpieces to mesmerizing animations and product designs.</p>
+    <p class="hero-desc editable" data-key="heroDesc" id="hero-desc">Transforming ideas into stunning 3D realities — from architectural masterpieces to mesmerizing animations and product designs.</p>
     <div class="hero-btns">
       <a href="#work" class="btn-primary"><span>View My Work</span><i class="fas fa-arrow-right"></i></a>
       <a href="#contact" class="btn-secondary"><span>Get In Touch</span></a>
@@ -198,7 +199,7 @@ window.addEventListener('error', function(e) {
             <div class="scifi-holo-glow"></div>
             <label class="btn-scifi-upload" id="btnScifiUpload" title="Change Sci-Fi Avatar" onclick="event.stopPropagation()">
               <i class="fas fa-camera"></i>
-              <input type="file" id="scifiAvatarInput" accept="image/*" style="display:none;" />
+              
             </label>
           </div>
           <div class="scifi-avatar-info">
@@ -231,6 +232,12 @@ window.addEventListener('error', function(e) {
       <!-- Quick manual flip button -->
       <button type="button" class="btn-portal-flip-toggle" onclick="event.stopPropagation(); manualFlipPortal()" title="Rotate Circle">
         <i class="fas fa-arrows-rotate"></i>
+      </button>
+    </div>
+    <!-- Dedicated Mobile & Desktop Change Photo Button in Edit Mode -->
+    <div class="scifi-edit-actions" id="scifiEditActions">
+      <button type="button" class="btn-change-scifi-photo" onclick="triggerScifiAvatarUpload(event)">
+        <i class="fas fa-camera"></i> Change Avatar Photo
       </button>
     </div>
   </div>
@@ -405,7 +412,7 @@ window.addEventListener('error', function(e) {
       <h2 class="section-title"><span class="editable" data-key="workTitle1">Featured </span><span class="gradient-text editable" data-key="workTitle2">Projects</span></h2>
       <p class="section-sub editable" data-key="workSub">A showcase of my best work across different domains</p>
     </div>
-    <!-- FILTER TABS â€” built by JS from portfolio.json -->
+    <!-- FILTER TABS — built by JS from portfolio.json -->
     <div class="filter-tabs" id="filter-bar" data-aos="fade-up">
       <button class="filter-btn active" data-cat="all">All</button>
       <button class="filter-btn" data-cat="architecture">Architecture</button>
@@ -415,7 +422,7 @@ window.addEventListener('error', function(e) {
       <button class="filter-btn" data-cat="graphics">Graphics</button>
     </div>
 
-    <!-- GALLERY GRID â€” dynamic from portfolio.json -->
+    <!-- GALLERY GRID — dynamic from portfolio.json -->
     <div class="projects-grid gallery-masonry" id="gallery-grid" data-aos="fade-up">
       <div class="gallery-loading" id="gallery-loading">
         <div class="loading-spinner"></div>
@@ -532,7 +539,7 @@ window.addEventListener('error', function(e) {
         </div>
         <div class="contact-item">
           <div class="contact-icon"><i class="fas fa-clock"></i></div>
-          <div><strong>Availability</strong><span class="editable" data-key="cAvail">Monâ€“Sat, 9am â€“ 7pm PKT</span></div>
+          <div><strong>Availability</strong><span class="editable" data-key="cAvail">Mon–Sat, 9am – 7pm PKT</span></div>
         </div>
         <div class="contact-socials">
           <a href="https://web.whatsapp.com/send?phone=923392332272" target="_blank" rel="noopener noreferrer" class="csocial social-link" data-platform="whatsapp" title="Chat on WhatsApp"><i class="fab fa-whatsapp"></i></a>
@@ -583,7 +590,7 @@ window.addEventListener('error', function(e) {
       <span class="logo-text" id="footer-name">YOUR NAME</span>
       <span class="logo-bracket">]</span>
     </div>
-    <p>Â© <span id="footer-year"></span> â€” All Rights Reserved. Hosted on <a href="https://pages.github.com" target="_blank" style="color:var(--accent2)">GitHub Pages</a></p>
+    <p>© <span id="footer-year"></span> — All Rights Reserved. Hosted on <a href="https://pages.github.com" target="_blank" style="color:var(--accent2)">GitHub Pages</a></p>
     <div class="footer-links">
       <a href="#home">Home</a>
       <a href="#work">Portfolio</a>
@@ -681,7 +688,7 @@ window.addEventListener('error', function(e) {
   </div>
 </div>
 
-<script src="script.js?v=21.2"></script>
+<script src="script.js?v=21.4"></script>
 <!-- REORDER MODELS & ANIMATIONS MODAL -->
 <div class="modal-overlay" id="glbReorderModal">
   <div class="modal-box" style="max-width:520px;">

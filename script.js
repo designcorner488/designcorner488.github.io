@@ -1192,6 +1192,13 @@ function toggleEditMode() {
   document.getElementById('editToolbar')?.classList.toggle('active', editMode);
   btn?.classList.toggle('editing', editMode);
   document.getElementById('navbar')?.classList.toggle('edit-pushed', editMode);
+  // In Edit Mode, pause 5s timer and show Face A so user can see photo and edit easily
+  if (editMode) {
+    if (typeof flipPortal === 'function') flipPortal(false);
+    if (scifiTimer) clearInterval(scifiTimer);
+  } else {
+    if (typeof startScifiTimer === 'function') startScifiTimer();
+  }
   if (icon)  icon.className   = editMode ? 'fas fa-xmark' : 'fas fa-pen-to-square';
   if (label) label.textContent = editMode ? 'Exit Edit' : 'Edit Mode';
 
@@ -2052,6 +2059,55 @@ function startScifiTimer() {
   }, 5000);
 }
 
+
+/* ============================================================
+   IMAGE COMPRESSION UTILITY (Downscales mobile photos to ~60KB)
+   ============================================================ */
+function compressImage(file, maxDim = 600, quality = 0.85) {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = e => {
+      const img = new Image();
+      img.onload = () => {
+        let w = img.width;
+        let h = img.height;
+        if (w > h) {
+          if (w > maxDim) {
+            h = Math.round((h * maxDim) / w);
+            w = maxDim;
+          }
+        } else {
+          if (h > maxDim) {
+            w = Math.round((w * maxDim) / h);
+            h = maxDim;
+          }
+        }
+        const canvas = document.createElement('canvas');
+        canvas.width = w;
+        canvas.height = h;
+        const ctx = canvas.getContext('2d');
+        ctx.drawImage(img, 0, 0, w, h);
+        resolve(canvas.toDataURL('image/jpeg', quality));
+      };
+      img.onerror = () => reject(new Error('Image load failed'));
+      img.src = e.target.result;
+    };
+    reader.onerror = () => reject(new Error('File read failed'));
+    reader.readAsDataURL(file);
+  });
+}
+
+function triggerScifiAvatarUpload(e) {
+  if (e) {
+    if (typeof e.preventDefault === 'function') e.preventDefault();
+    if (typeof e.stopPropagation === 'function') e.stopPropagation();
+  }
+  if (typeof flipPortal === 'function') flipPortal(false); // Show Face A (photo)
+  const input = document.getElementById('scifiAvatarInput');
+  if (input) input.click();
+}
+window.triggerScifiAvatarUpload = triggerScifiAvatarUpload;
+
 function initScifiPortal() {
   startScifiTimer();
 
@@ -2066,27 +2122,33 @@ function initScifiPortal() {
     });
   }
 
-  // Handle Sci-Fi Avatar Upload
+  // Handle Sci-Fi Avatar Upload (with automatic mobile photo compression)
   const avatarInput = document.getElementById('scifiAvatarInput');
   if (avatarInput) {
-    avatarInput.addEventListener('change', function() {
+    avatarInput.addEventListener('change', async function() {
       const file = this.files[0];
       if (!file) return;
-      const reader = new FileReader();
-      reader.onload = e => {
-        const dataUrl = e.target.result;
+      showToast('⏳ Photo process ho rahi hai...', 'info');
+      try {
+        const compressedDataUrl = await compressImage(file, 600, 0.85);
         const img = document.getElementById('scifiAvatarImg');
-        if (img) img.src = dataUrl;
+        if (img) {
+          img.src = compressedDataUrl;
+          img.style.display = 'block';
+        }
         const d = getSavedData();
-        d.scifiAvatar = dataUrl;
+        d.scifiAvatar = compressedDataUrl;
         saveData(d);
         if (portfolioData) {
           portfolioData.settings = portfolioData.settings || {};
-          portfolioData.settings.scifiAvatar = dataUrl;
+          portfolioData.settings.scifiAvatar = compressedDataUrl;
         }
-        showToast('📸 Sci-Fi Profile Avatar update ho gaya!');
-      };
-      reader.readAsDataURL(file);
+        if (typeof flipPortal === 'function') flipPortal(false);
+        showToast('📸 Profile Photo update ho gayi! Save ya Publish karein.');
+      } catch (err) {
+        console.error('Avatar upload error:', err);
+        showToast('❌ Photo upload error: ' + err.message, 'error');
+      }
       this.value = '';
     });
   }
