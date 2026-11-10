@@ -52,6 +52,8 @@ function buildPublishPayload() {
     updatedJson.settings.softwareTags = currentSoftwareTags;
   const saved = getSavedData();
   if (saved.text) updatedJson._textOverrides = saved.text;
+  if (saved.scifiAvatar) updatedJson.settings.scifiAvatar = saved.scifiAvatar;
+  if (typeof getAddons === 'function') updatedJson.addons = getAddons();
   return updatedJson;
 }
 
@@ -1418,6 +1420,13 @@ function loadSavedEdits() {
     if (img) { img.src = data.profilePhoto; img.style.display = 'block'; }
     if (ph)  ph.style.display = 'none';
   }
+  // Sci-Fi Avatar in Dynamic Circle
+  const scifiImg = document.getElementById('scifiAvatarImg');
+  if (scifiImg) {
+    const scifiSrc = data.scifiAvatar || portfolioData?.settings?.scifiAvatar;
+    if (scifiSrc) scifiImg.src = scifiSrc;
+  }
+  if (typeof renderAddons === 'function') renderAddons();
   if (data.socialLinks) {
     Object.entries(data.socialLinks).forEach(([platform, url]) => {
       document.querySelectorAll(`[data-platform="${platform}"]`).forEach(el => {
@@ -1945,6 +1954,359 @@ function renderMediaDots() {
 /* ============================================================
    BOOT PORTFOLIO (EXECUTES AFTER ALL DEFINITIONS)
    ============================================================ */
+
+/* ============================================================
+   SCI-FI CINEMATIC DYNAMIC CIRCLE PORTAL (5s ROTATION)
+   ============================================================ */
+let scifiTimer = null;
+let scifiFlipped = false;
+
+function flipPortal(forceState) {
+  const card = document.getElementById('scifiFlipCard');
+  if (!card) return;
+  if (typeof forceState === 'boolean') {
+    scifiFlipped = forceState;
+  } else {
+    scifiFlipped = !scifiFlipped;
+  }
+  card.classList.toggle('flipped', scifiFlipped);
+}
+
+function manualFlipPortal() {
+  flipPortal();
+  startScifiTimer(); // Reset timer after manual interaction
+}
+
+function startScifiTimer() {
+  if (scifiTimer) clearInterval(scifiTimer);
+  scifiTimer = setInterval(() => {
+    // If user is actively typing in an editable field inside the portal, pause
+    const active = document.activeElement;
+    if (active && active.closest('#scifiPortal') && active.classList.contains('editable')) {
+      return;
+    }
+    flipPortal();
+  }, 5000);
+}
+
+function initScifiPortal() {
+  startScifiTimer();
+
+  // Pause on mouse hover, resume on mouse leave
+  const portal = document.getElementById('scifiPortal');
+  if (portal) {
+    portal.addEventListener('mouseenter', () => {
+      if (scifiTimer) clearInterval(scifiTimer);
+    });
+    portal.addEventListener('mouseleave', () => {
+      startScifiTimer();
+    });
+  }
+
+  // Handle Sci-Fi Avatar Upload
+  const avatarInput = document.getElementById('scifiAvatarInput');
+  if (avatarInput) {
+    avatarInput.addEventListener('change', function() {
+      const file = this.files[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = e => {
+        const dataUrl = e.target.result;
+        const img = document.getElementById('scifiAvatarImg');
+        if (img) img.src = dataUrl;
+        const d = getSavedData();
+        d.scifiAvatar = dataUrl;
+        saveData(d);
+        if (portfolioData) {
+          portfolioData.settings = portfolioData.settings || {};
+          portfolioData.settings.scifiAvatar = dataUrl;
+        }
+        showToast('📸 Sci-Fi Profile Avatar update ho gaya!');
+      };
+      reader.readAsDataURL(file);
+      this.value = '';
+    });
+  }
+}
+window.manualFlipPortal = manualFlipPortal;
+
+
+/* ============================================================
+   BLENDER ADDONS SYSTEM (Upload / Download / Manage)
+   ============================================================ */
+const DEFAULT_ADDONS = [
+  {
+    id: 'addon_1',
+    title: 'ArchViz QuickTools Pro',
+    version: 'v2.4',
+    blender: 'Blender 3.6 / 4.x',
+    category: 'ArchViz & Lighting',
+    desc: 'Automated parametric wall generation, trim moldings, and photorealistic lighting studio setups for Blender Cycles & Eevee.',
+    icon: 'fa-building',
+    fileUrl: '#',
+    downloads: '1.4k+'
+  },
+  {
+    id: 'addon_2',
+    title: 'Parametric Stairs & Railings',
+    version: 'v1.8',
+    blender: 'Blender 4.0 / 4.2+',
+    category: 'Geometry Nodes',
+    desc: 'Interactive geometry-nodes generator for spiral, cantilever, and modern industrial staircases with dynamic balustrade controls.',
+    icon: 'fa-stairs',
+    fileUrl: '#',
+    downloads: '890+'
+  },
+  {
+    id: 'addon_3',
+    title: 'Cinematic Camera Rigs',
+    version: 'v1.2',
+    blender: 'Blender 3.6+',
+    category: 'Animation',
+    desc: 'One-click architectural flythrough rigs with smooth camera easing, drone pathing, target tracking, and rack focus presets.',
+    icon: 'fa-video',
+    fileUrl: '#',
+    downloads: '620+'
+  }
+];
+
+function getAddons() {
+  const saved = getSavedData();
+  if (saved.addons && Array.isArray(saved.addons) && saved.addons.length > 0) {
+    return saved.addons;
+  }
+  if (portfolioData && portfolioData.addons && Array.isArray(portfolioData.addons) && portfolioData.addons.length > 0) {
+    return portfolioData.addons;
+  }
+  return DEFAULT_ADDONS;
+}
+
+function saveAddons(addonsList) {
+  const d = getSavedData();
+  d.addons = addonsList;
+  saveData(d);
+  if (portfolioData) {
+    portfolioData.addons = addonsList;
+  }
+}
+
+function renderAddons() {
+  const grid = document.getElementById('addonsGrid');
+  if (!grid) return;
+  const addons = getAddons();
+
+  grid.innerHTML = addons.map(addon => {
+    const isEdit = editMode;
+    const downloadAction = (addon.fileUrl && addon.fileUrl !== '#') 
+      ? `href="${addon.fileUrl}" download="${addon.title.replace(/[^a-zA-Z0-9_-]/g, '_')}.zip" target="_blank"`
+      : `href="javascript:void(0)" onclick="triggerSampleAddonDownload('${addon.id}')"`;
+
+    return `
+      <div class="addon-card" id="card-${addon.id}">
+        <div>
+          <div class="addon-card-top">
+            <div class="addon-icon-box">
+              <i class="fa-solid ${addon.icon || 'fa-cube'}"></i>
+            </div>
+            <div class="addon-meta-badges">
+              <span class="addon-version-pill">${addon.version || 'v1.0'}</span>
+              <span class="addon-cat-pill">${addon.category || 'Blender Addon'}</span>
+            </div>
+          </div>
+          <h3 class="addon-title">${addon.title}</h3>
+          <div class="addon-compat">
+            <i class="fa-brands fa-blender"></i> ${addon.blender || 'Blender 3.6 / 4.x'}
+          </div>
+          <p class="addon-desc">${addon.desc || ''}</p>
+        </div>
+        <div class="addon-card-bottom">
+          <div class="addon-downloads-stat">
+            <i class="fas fa-download"></i> ${addon.downloads || 'Free'}
+          </div>
+          <div style="display:flex;align-items:center;gap:.6rem;">
+            <div class="addon-edit-actions">
+              <button class="btn-addon-action" onclick="openAddonModal('${addon.id}')" title="Edit Addon"><i class="fas fa-pen"></i></button>
+              <button class="btn-addon-action del" onclick="deleteAddon('${addon.id}')" title="Delete Addon"><i class="fas fa-trash"></i></button>
+            </div>
+            <a ${downloadAction} class="btn-addon-download">
+              <i class="fas fa-cloud-arrow-down"></i> Download
+            </a>
+          </div>
+        </div>
+      </div>
+    `;
+  }).join('');
+}
+
+function openAddonModal(addonId) {
+  const modal = document.getElementById('addonModal');
+  if (!modal) return;
+  modal.style.display = 'flex';
+
+  const modalTitle = document.getElementById('addonModalTitle');
+  const editId = document.getElementById('addonEditId');
+  const inTitle = document.getElementById('addonInputTitle');
+  const inVersion = document.getElementById('addonInputVersion');
+  const inBlender = document.getElementById('addonInputBlender');
+  const inCat = document.getElementById('addonInputCategory');
+  const inDesc = document.getElementById('addonInputDesc');
+  const inUrl = document.getElementById('addonInputUrl');
+
+  if (addonId) {
+    const addon = getAddons().find(a => a.id === addonId);
+    if (addon) {
+      if (modalTitle) modalTitle.textContent = 'Edit Blender Addon';
+      if (editId) editId.value = addon.id;
+      if (inTitle) inTitle.value = addon.title || '';
+      if (inVersion) inVersion.value = addon.version || '';
+      if (inBlender) inBlender.value = addon.blender || '';
+      if (inCat) inCat.value = addon.category || '';
+      if (inDesc) inDesc.value = addon.desc || '';
+      if (inUrl) inUrl.value = addon.fileUrl || '';
+      return;
+    }
+  }
+
+  // New addon
+  if (modalTitle) modalTitle.textContent = 'Add New Blender Addon';
+  if (editId) editId.value = '';
+  if (inTitle) inTitle.value = '';
+  if (inVersion) inVersion.value = 'v1.0';
+  if (inBlender) inBlender.value = 'Blender 4.0 / 4.2+';
+  if (inCat) inCat.value = 'ArchViz / Tools';
+  if (inDesc) inDesc.value = '';
+  if (inUrl) inUrl.value = '';
+}
+
+function closeAddonModal() {
+  const modal = document.getElementById('addonModal');
+  if (modal) modal.style.display = 'none';
+}
+
+function saveAddonFromModal() {
+  const editId = document.getElementById('addonEditId')?.value?.trim();
+  const title = document.getElementById('addonInputTitle')?.value?.trim();
+  const version = document.getElementById('addonInputVersion')?.value?.trim() || 'v1.0';
+  const blender = document.getElementById('addonInputBlender')?.value?.trim() || 'Blender 4.x';
+  const category = document.getElementById('addonInputCategory')?.value?.trim() || 'Addon';
+  const desc = document.getElementById('addonInputDesc')?.value?.trim() || '';
+  const fileUrl = document.getElementById('addonInputUrl')?.value?.trim() || '#';
+
+  if (!title) {
+    showToast('Addon Name enter karein!', 'error');
+    return;
+  }
+
+  const addons = getAddons();
+  if (editId) {
+    // Edit existing
+    const idx = addons.findIndex(a => a.id === editId);
+    if (idx !== -1) {
+      addons[idx] = { ...addons[idx], title, version, blender, category, desc, fileUrl };
+    }
+  } else {
+    // Add new
+    const newId = 'addon_' + Date.now();
+    addons.unshift({
+      id: newId,
+      title,
+      version,
+      blender,
+      category,
+      desc,
+      fileUrl,
+      icon: 'fa-cube',
+      downloads: '0'
+    });
+  }
+
+  saveAddons(addons);
+  renderAddons();
+  closeAddonModal();
+  showToast('✅ Blender Addon save ho gaya! (Publish Live kar ke online bhejein)');
+}
+
+function deleteAddon(addonId) {
+  if (!confirm('Kya aap is Blender Addon ko delete karna chahte hain?')) return;
+  const addons = getAddons().filter(a => a.id !== addonId);
+  saveAddons(addons);
+  renderAddons();
+  showToast('🗑️ Addon delete ho gaya!');
+}
+
+function handleAddonFileUpload(input) {
+  const file = input.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = e => {
+    const dataUrl = e.target.result;
+    const inUrl = document.getElementById('addonInputUrl');
+    if (inUrl) inUrl.value = dataUrl;
+    showToast(`📦 "${file.name}" ready for download!`);
+  };
+  reader.readAsDataURL(file);
+}
+
+function triggerSampleAddonDownload(addonId) {
+  const addon = getAddons().find(a => a.id === addonId);
+  const title = addon ? addon.title : 'Design_Corner_Addon';
+  const pyCode = `# Blender Addon: ${title}
+# Created for Design Corner Portfolio
+bl_info = {
+    "name": "${title}",
+    "author": "Design Corner",
+    "version": (1, 0),
+    "blender": (4, 0, 0),
+    "location": "View3D > Sidebar > Design Corner",
+    "description": "Architectural visualization and 3D utility tools",
+    "category": "3D View",
+}
+
+import bpy
+
+class DESIGN_PT_MainPanel(bpy.types.Panel):
+    bl_label = "Design Corner Tools"
+    bl_idname = "DESIGN_PT_main_panel"
+    bl_space_type = 'VIEW_3D'
+    bl_region_type = 'UI'
+    bl_category = 'Design Corner'
+
+    def draw(self, context):
+        layout = self.layout
+        layout.label(text="Welcome to ${title}!", icon='SOLO_ON')
+        layout.operator("wm.url_open", text="Visit Design Corner").url = "https://designcorner488.github.io"
+
+def register():
+    bpy.utils.register_class(DESIGN_PT_MainPanel)
+
+def unregister():
+    bpy.utils.unregister_class(DESIGN_PT_MainPanel)
+
+if __name__ == "__main__":
+    register()
+`;
+  const blob = new Blob([pyCode], { type: 'text/x-python' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = `${title.replace(/[^a-zA-Z0-9_-]/g, '_')}.py`;
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  showToast(`⚡ "${title}.py" download ho gaya!`);
+}
+
+function initAddonsSystem() {
+  renderAddons();
+}
+
+window.openAddonModal = openAddonModal;
+window.closeAddonModal = closeAddonModal;
+window.saveAddonFromModal = saveAddonFromModal;
+window.deleteAddon = deleteAddon;
+window.handleAddonFileUpload = handleAddonFileUpload;
+window.triggerSampleAddonDownload = triggerSampleAddonDownload;
+
+
 function bootPortfolio() {
   try { initLoader(); } catch(e) { console.warn(e); }
   try { initCursor(); } catch(e) { console.warn(e); }
@@ -1957,6 +2319,8 @@ function bootPortfolio() {
   try { setFooterYear(); } catch(e) { console.warn(e); }
   try { initEditMode(); } catch(e) { console.warn(e); }
   try { initGLBViewer(); } catch(e) { console.warn(e); }
+  try { initScifiPortal(); } catch(e) { console.warn(e); }
+  try { initAddonsSystem(); } catch(e) { console.warn(e); }
   loadPortfolio().catch(err => {
     console.error('loadPortfolio error:', err);
     showGalleryEmpty();

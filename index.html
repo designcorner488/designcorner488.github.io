@@ -16,7 +16,7 @@ window.addEventListener('error', function(e) {
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
-  <link rel="stylesheet" href="style.css?v=20.8"/>
+  <link rel="stylesheet" href="style.css?v=20.9"/>
   <script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/3.4.0/model-viewer.min.js"></script>
 </head>
 <body>
@@ -97,6 +97,7 @@ window.addEventListener('error', function(e) {
     <a href="#skills"   class="nav-link">Skills</a>
     <a href="#work"     class="nav-link">Portfolio</a>
     <a href="#gallery"  class="nav-link">Gallery</a>
+    <a href="#addons"   class="nav-link">Addons</a>
     <a href="#contact"  class="nav-link">Contact</a>
   </div>
   <div class="nav-actions">
@@ -165,6 +166,71 @@ window.addEventListener('error', function(e) {
     <div class="orbit-actions-bar">
       <button type="button" class="btn-orbit-add-pill" id="orbitAddBtn" onclick="triggerAddSoftware()">
         <i class="fas fa-plus-circle"></i> Manage Software Tags
+      </button>
+    </div>
+  </div>
+
+  <!-- SCI-FI CINEMATIC DYNAMIC CIRCLE PORTAL -->
+  <div class="hero-scifi-portal" id="scifiPortal" data-aos="fade-left" data-aos-delay="300">
+    <div class="scifi-portal-inner">
+      <!-- Holographic Sci-Fi HUD HUD Rings & Markings -->
+      <div class="scifi-hud-frame">
+        <div class="hud-ring hud-ring-outer"></div>
+        <div class="hud-ring hud-ring-tech"></div>
+        <div class="hud-ring hud-ring-radar"></div>
+        <div class="hud-corner c-tl"></div>
+        <div class="hud-corner c-tr"></div>
+        <div class="hud-corner c-bl"></div>
+        <div class="hud-corner c-br"></div>
+        <div class="hud-status-badge">
+          <span class="hud-pulse-dot"></span>
+          <span class="editable" data-key="scifiStatus">SYS // ONLINE</span>
+        </div>
+      </div>
+
+      <!-- 3D Flip Card: Alternates every 5 seconds -->
+      <div class="scifi-flip-card" id="scifiFlipCard" onclick="manualFlipPortal()" title="Click to rotate (Auto 5s)">
+        <!-- Face A: Holographic Avatar / Profile Image -->
+        <div class="scifi-face scifi-face-front">
+          <div class="scifi-avatar-wrap">
+            <img id="scifiAvatarImg" src="hero-bg.png" alt="Profile Avatar" class="scifi-avatar-img" />
+            <div class="scifi-scanlines"></div>
+            <div class="scifi-holo-glow"></div>
+            <label class="btn-scifi-upload" id="btnScifiUpload" title="Change Sci-Fi Avatar" onclick="event.stopPropagation()">
+              <i class="fas fa-camera"></i>
+              <input type="file" id="scifiAvatarInput" accept="image/*" style="display:none;" />
+            </label>
+          </div>
+          <div class="scifi-avatar-info">
+            <span class="scifi-tag editable" data-key="scifiRank">ARCHITECT &amp; 3D ARTIST</span>
+            <span class="scifi-name editable" data-key="scifiCallsign">DESIGN CORNER</span>
+          </div>
+        </div>
+
+        <!-- Face B: High-Tech Sci-Fi Data Terminal / Text -->
+        <div class="scifi-face scifi-face-back">
+          <div class="scifi-terminal-content">
+            <div class="terminal-hud-header">
+              <i class="fa-solid fa-microchip"></i>
+              <span class="editable" data-key="scifiTermTag">CORE // 3D MATRIX</span>
+              <span class="terminal-beacon"></span>
+            </div>
+            <h4 class="terminal-hud-title editable" data-key="scifiTermTitle">BLENDER 3D // BIM</h4>
+            <p class="terminal-hud-desc editable" data-key="scifiTermDesc">Photorealistic architectural renders, parametric geometry nodes &amp; motion design.</p>
+            <div class="terminal-hud-pills">
+              <span class="hud-pill editable" data-key="scifiBadge1"><i class="fa-brands fa-blender"></i> Blender 4.x</span>
+              <span class="hud-pill editable" data-key="scifiBadge2"><i class="fas fa-cube"></i> Revit &amp; D5</span>
+            </div>
+            <div class="terminal-hud-footer">
+              <span class="cycle-hint"><i class="fas fa-rotate"></i> 5s AUTO-CYCLE</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Quick manual flip button -->
+      <button type="button" class="btn-portal-flip-toggle" onclick="event.stopPropagation(); manualFlipPortal()" title="Rotate Circle">
+        <i class="fas fa-arrows-rotate"></i>
       </button>
     </div>
   </div>
@@ -419,6 +485,29 @@ window.addEventListener('error', function(e) {
   </div>
 </section>
 
+<!-- BLENDER ADDONS SECTION -->
+<section class="addons-section section" id="addons">
+  <div class="container">
+    <div class="section-header" data-aos="fade-up">
+      <div class="section-tag editable" data-key="addonsTag">Blender Scripts &amp; Addons</div>
+      <h2 class="section-title"><span class="editable" data-key="addonsTitle1">Blender </span><span class="gradient-text editable" data-key="addonsTitle2">Addons &amp; Tools</span></h2>
+      <p class="section-sub editable" data-key="addonsSub">Custom Python addons, parametric geometry nodes, and production scripts built to accelerate architectural and 3D visualization workflows.</p>
+    </div>
+
+    <!-- Action bar in Edit Mode to add addons -->
+    <div class="addons-toolbar" id="addonsToolbar" style="display:none; text-align:center; margin-bottom:2.5rem;">
+      <button type="button" class="btn-primary" id="btnAddAddon" onclick="openAddonModal()">
+        <i class="fa-brands fa-blender"></i> + Add New Blender Addon
+      </button>
+    </div>
+
+    <!-- Addons Grid -->
+    <div class="addons-grid" id="addonsGrid" data-aos="fade-up">
+      <!-- Injected dynamically via script.js -->
+    </div>
+  </div>
+</section>
+
 <!-- CONTACT -->
 <section class="contact section" id="contact">
   <div class="container">
@@ -592,7 +681,7 @@ window.addEventListener('error', function(e) {
   </div>
 </div>
 
-<script src="script.js?v=20.8"></script>
+<script src="script.js?v=20.9"></script>
 <!-- REORDER MODELS & ANIMATIONS MODAL -->
 <div class="modal-overlay" id="glbReorderModal">
   <div class="modal-box" style="max-width:520px;">
@@ -642,6 +731,59 @@ window.addEventListener('error', function(e) {
     </div>
     <div class="modal-footer" style="display:flex;justify-content:flex-end;padding:1rem 1.5rem">
       <button class="btn-primary" onclick="closeGhTokenModal()"><i class="fas fa-check"></i> Samajh Gaya!</button>
+    </div>
+  </div>
+</div>
+
+<!-- BLENDER ADDON MODAL -->
+<div class="modal-overlay" id="addonModal" style="display:none" onclick="if(event.target===this)closeAddonModal()">
+  <div class="modal-box" style="max-width:540px">
+    <div class="modal-header">
+      <h3 style="display:flex;align-items:center;gap:.6rem">
+        <i class="fa-brands fa-blender" style="color:#f59e0b"></i>
+        <span id="addonModalTitle">Add Blender Addon</span>
+      </h3>
+      <button class="modal-close" onclick="closeAddonModal()"><i class="fas fa-times"></i></button>
+    </div>
+    <div class="modal-body" style="padding:1.5rem">
+      <input type="hidden" id="addonEditId" value="" />
+      <div class="mfield">
+        <label>Addon Name / Title *</label>
+        <input type="text" id="addonInputTitle" placeholder="e.g. ArchViz QuickTools Pro" />
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:.8rem;">
+        <div class="mfield">
+          <label>Version</label>
+          <input type="text" id="addonInputVersion" placeholder="e.g. v2.4" />
+        </div>
+        <div class="mfield">
+          <label>Blender Compatibility</label>
+          <input type="text" id="addonInputBlender" placeholder="e.g. Blender 3.6 / 4.x" />
+        </div>
+      </div>
+      <div class="mfield">
+        <label>Category</label>
+        <input type="text" id="addonInputCategory" placeholder="e.g. Geometry Nodes / ArchViz / Lighting" />
+      </div>
+      <div class="mfield">
+        <label>Description</label>
+        <textarea id="addonInputDesc" rows="3" placeholder="Briefly explain what this addon does and key features..."></textarea>
+      </div>
+      <div class="mfield">
+        <label>Addon File / Download Link</label>
+        <div style="display:flex;gap:.5rem;margin-bottom:.4rem;">
+          <input type="text" id="addonInputUrl" placeholder="Direct download URL or paste link" style="flex:1" />
+          <label class="btn-secondary" style="margin:0;cursor:pointer;display:inline-flex;align-items:center;gap:.4rem;padding:.7rem 1rem;font-size:.85rem;white-space:nowrap;">
+            <i class="fas fa-upload"></i> Upload .zip
+            <input type="file" id="addonFileInput" accept=".zip,.py" style="display:none" onchange="handleAddonFileUpload(this)" />
+          </label>
+        </div>
+        <small style="color:#888;font-size:.78rem;">Upload .zip/.py file or paste link (GitHub, Google Drive, Gumroad)</small>
+      </div>
+    </div>
+    <div class="modal-footer" style="display:flex;gap:.75rem;justify-content:flex-end;padding:1rem 1.5rem">
+      <button type="button" class="btn-secondary" onclick="closeAddonModal()">Cancel</button>
+      <button type="button" class="btn-primary" onclick="saveAddonFromModal()"><i class="fas fa-check"></i> Save Addon</button>
     </div>
   </div>
 </div>

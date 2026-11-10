@@ -12,7 +12,18 @@
       "rhino",
       "vectorworks",
       "Bim Modelling"
-    ]
+    ],
+    "scifiPortal": {
+      "profileImg": "hero-bg.png",
+      "rank": "ARCHITECT & 3D ARTIST",
+      "callsign": "DESIGN CORNER",
+      "status": "SYS // ONLINE",
+      "termTag": "CORE MATRIX",
+      "termTitle": "BLENDER 3D // BIM",
+      "termDesc": "Photorealistic architectural visualizations, parametric designs, custom geometry node addons & cinematic motion animations.",
+      "badge1": "Blender 4.x Pro",
+      "badge2": "Revit & D5 Render"
+    }
   },
   "_textOverrides": {
     "navName": "Design Corner",
@@ -136,6 +147,146 @@
       "displayName": "bim animation 1",
       "type": "video",
       "url": "https://designcorner488.github.io/media/bim_animation_1.mp4"
+    }
+  ],
+  "categories": [
+    {
+      "id": "all",
+      "label": "All Work"
+    },
+    {
+      "id": "architecture",
+      "label": "Architecture"
+    },
+    {
+      "id": "interior",
+      "label": "Interiors"
+    },
+    {
+      "id": "product",
+      "label": "Product Design"
+    },
+    {
+      "id": "graphics",
+      "label": "Graphics"
+    },
+    {
+      "id": "animation",
+      "label": "Animations"
+    }
+  ],
+  "projects": [
+    {
+      "id": "proj_1793906516032",
+      "title": "USA   house Design",
+      "category": "architecture",
+      "type": "image",
+      "src": "https://raw.githubusercontent.com/designcorner488/designcorner488.github.io/master/images/1793906345433-44.jpeg",
+      "thumbnail": "https://raw.githubusercontent.com/designcorner488/designcorner488.github.io/master/images/1793906345433-44.jpeg",
+      "description": "A contemporary two-story American suburban residence designed with a focus on seamless indoor-outdoor living, spatial ergonomics, and modern aesthetic elegance. The architecture features expansive floor-to-ceiling glass windows that flood the interior with natural daylight, complemented by warm evening facade lighting, a spacious multi-level balcony, and an integrated outdoor poolside entertainment deck. The material palette blends clean white vertical paneling with rich timber accents, balancing modern minimalism with timeless residential comfort.",
+      "featured": false,
+      "date": "2026-11-05"
+    },
+    {
+      "id": "demo-1",
+      "title": "Modern Villa Rendering",
+      "category": "architecture",
+      "description": "Photorealistic exterior rendering of a luxury modern villa with pool and landscaping.",
+      "type": "image",
+      "src": "https://images.unsplash.com/photo-1613490493576-7fde63acd811?w=1200",
+      "thumbnail": "https://images.unsplash.com/photo-1613490493576-7fde63acd811?w=600",
+      "featured": true,
+      "date": "2024-01-15"
+    },
+    {
+      "id": "demo-2",
+      "title": "Luxury Interior Design",
+      "category": "interior",
+      "description": "High-end living room interior visualization with custom furniture and lighting.",
+      "type": "image",
+      "src": "https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?w=1200",
+      "thumbnail": "https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?w=600",
+      "featured": true,
+      "date": "2024-02-10"
+    },
+    {
+      "id": "demo-3",
+      "title": "Office Tower Flythrough",
+      "category": "animation",
+      "description": "Cinematic animation showcasing a commercial office tower from exterior to interior spaces.",
+      "type": "youtube",
+      "src": "https://www.youtube.com/embed/dQw4w9WgXcQ",
+      "thumbnail": "https://images.unsplash.com/photo-1486325212027-8081e485255e?w=600",
+      "featured": true,
+      "date": "2024-03-05"
+    },
+    {
+      "id": "demo-4",
+      "title": "Product Visualization",
+      "category": "product",
+      "description": "360-degree product rendering for a premium furniture brand.",
+      "type": "image",
+      "src": "https://images.unsplash.com/photo-1555041469-a586c61ea9bc?w=1200",
+      "thumbnail": "https://images.unsplash.com/photo-1555041469-a586c61ea9bc?w=600",
+      "featured": false,
+      "date": "2024-03-20"
+    },
+    {
+      "id": "demo-5",
+      "title": "Commercial Complex",
+      "category": "architecture",
+      "description": "Large-scale commercial complex night rendering with dramatic lighting effects.",
+      "type": "image",
+      "src": "https://images.unsplash.com/photo-1486325212027-8081e485255e?w=1200",
+      "thumbnail": "https://images.unsplash.com/photo-1486325212027-8081e485255e?w=600",
+      "featured": false,
+      "date": "2024-04-01"
+    },
+    {
+      "id": "demo-6",
+      "title": "Brand Identity Design",
+      "category": "graphics",
+      "description": "Complete brand identity and visual design system for an architecture firm.",
+      "type": "image",
+      "src": "https://images.unsplash.com/photo-1626785774573-4b799315345d?w=1200",
+      "thumbnail": "https://images.unsplash.com/photo-1626785774573-4b799315345d?w=600",
+      "featured": false,
+      "date": "2024-04-15"
+    }
+  ],
+  "addons": [
+    {
+      "id": "addon_1",
+      "title": "ArchViz QuickTools Pro",
+      "version": "v2.4",
+      "blender": "Blender 3.6 / 4.x",
+      "category": "ArchViz & Lighting",
+      "desc": "Automated parametric wall generation, trim moldings, and photorealistic lighting studio setups for Blender Cycles & Eevee.",
+      "icon": "fa-building",
+      "fileUrl": "#",
+      "downloads": "1.4k+"
+    },
+    {
+      "id": "addon_2",
+      "title": "Parametric Stairs & Railings",
+      "version": "v1.8",
+      "blender": "Blender 4.0 / 4.2+",
+      "category": "Geometry Nodes",
+      "desc": "Interactive geometry-nodes generator for spiral, cantilever, and modern industrial staircases with dynamic balustrade controls.",
+      "icon": "fa-stairs",
+      "fileUrl": "#",
+      "downloads": "890+"
+    },
+    {
+      "id": "addon_3",
+      "title": "Cinematic Camera Rigs",
+      "version": "v1.2",
+      "blender": "Blender 3.6+",
+      "category": "Animation",
+      "desc": "One-click architectural flythrough rigs with smooth camera easing, drone pathing, target tracking, and rack focus presets.",
+      "icon": "fa-video",
+      "fileUrl": "#",
+      "downloads": "620+"
     }
   ]
 }

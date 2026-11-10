@@ -760,3 +760,570 @@ body.edit-mode .glb-action-btn {
 .etool-publish:hover{background:rgba(99,102,241,.8)}
 .etool-token{background:rgba(255,255,255,.1);border-color:rgba(255,255,255,.25);padding:.4rem .7rem}
 .etool-token:hover{background:rgba(255,255,255,.25)}
+
+
+/* ============================================================
+   SCI-FI CINEMATIC DYNAMIC CIRCLE PORTAL
+   ============================================================ */
+.hero-scifi-portal {
+  position: relative;
+  z-index: 5;
+  flex: 0 0 290px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-left: auto;
+}
+.scifi-portal-inner {
+  position: relative;
+  width: 270px;
+  height: 270px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Outer Sci-Fi HUD Radar & Tech Frame */
+.scifi-hud-frame {
+  position: absolute;
+  inset: -15px;
+  pointer-events: none;
+  z-index: 2;
+}
+.hud-ring {
+  position: absolute;
+  border-radius: 50%;
+  inset: 0;
+}
+.hud-ring-outer {
+  border: 1.5px solid rgba(0, 240, 255, 0.35);
+  box-shadow: 0 0 25px rgba(0, 240, 255, 0.2), inset 0 0 20px rgba(0, 240, 255, 0.1);
+  animation: hudPulseGlow 3s ease-in-out infinite alternate;
+}
+.hud-ring-tech {
+  inset: 6px;
+  border: 2px dashed rgba(168, 85, 247, 0.45);
+  animation: spinClockwise 25s linear infinite;
+}
+.hud-ring-radar {
+  inset: 12px;
+  border: 2px solid transparent;
+  border-top-color: #00f0ff;
+  border-right-color: rgba(0, 240, 255, 0.2);
+  animation: spinCounter 12s linear infinite;
+}
+.hud-corner {
+  position: absolute;
+  width: 14px;
+  height: 14px;
+  border-color: #00f0ff;
+  border-style: solid;
+  opacity: 0.85;
+}
+.hud-corner.c-tl { top: -6px; left: -6px; border-width: 2px 0 0 2px; }
+.hud-corner.c-tr { top: -6px; right: -6px; border-width: 2px 2px 0 0; }
+.hud-corner.c-bl { bottom: -6px; left: -6px; border-width: 0 0 2px 2px; }
+.hud-corner.c-br { bottom: -6px; right: -6px; border-width: 0 2px 2px 0; }
+
+.hud-status-badge {
+  position: absolute;
+  top: -18px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(8, 10, 24, 0.9);
+  border: 1px solid rgba(0, 240, 255, 0.5);
+  padding: 3px 12px;
+  border-radius: 50px;
+  font-family: 'Space Grotesk', monospace;
+  font-size: 0.68rem;
+  letter-spacing: 1px;
+  color: #00f0ff;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  white-space: nowrap;
+  box-shadow: 0 0 12px rgba(0, 240, 255, 0.3);
+}
+.hud-pulse-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #00f0ff;
+  box-shadow: 0 0 8px #00f0ff;
+  animation: beaconBlink 1.2s ease-in-out infinite;
+}
+
+/* 3D Flip Card Container */
+.scifi-flip-card {
+  position: relative;
+  width: 230px;
+  height: 230px;
+  border-radius: 50%;
+  transform-style: preserve-3d;
+  transition: transform 0.85s cubic-bezier(0.34, 1.56, 0.64, 1);
+  cursor: pointer;
+  z-index: 3;
+}
+.scifi-flip-card.flipped {
+  transform: rotateY(180deg);
+}
+
+/* Faces */
+.scifi-face {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  backface-visibility: hidden;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  box-shadow: 0 0 35px rgba(0, 0, 0, 0.8);
+}
+
+/* Face A: Holographic Avatar */
+.scifi-face-front {
+  background: radial-gradient(circle, rgba(16, 20, 42, 0.9), rgba(5, 7, 18, 0.98));
+  border: 2px solid rgba(0, 240, 255, 0.4);
+}
+.scifi-avatar-wrap {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  overflow: hidden;
+}
+.scifi-avatar-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  filter: contrast(1.1) brightness(1.02);
+  transition: transform 0.5s ease;
+}
+.scifi-flip-card:hover .scifi-avatar-img {
+  transform: scale(1.05);
+}
+.scifi-scanlines {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 240, 255, 0.12) 50%);
+  background-size: 100% 4px;
+  pointer-events: none;
+  animation: scanlinesMove 8s linear infinite;
+}
+.scifi-holo-glow {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  background: radial-gradient(circle, transparent 60%, rgba(0, 240, 255, 0.35) 100%);
+  pointer-events: none;
+}
+.scifi-avatar-info {
+  position: absolute;
+  bottom: 12px;
+  left: 0;
+  right: 0;
+  text-align: center;
+  z-index: 4;
+  padding: 0 10px;
+}
+.scifi-tag {
+  display: block;
+  font-size: 0.62rem;
+  letter-spacing: 1px;
+  color: #00f0ff;
+  font-family: 'Space Grotesk', monospace;
+  font-weight: 700;
+  text-shadow: 0 0 8px rgba(0, 240, 255, 0.8);
+}
+.scifi-name {
+  display: inline-block;
+  font-size: 0.76rem;
+  font-weight: 800;
+  color: #fff;
+  background: rgba(10, 14, 30, 0.85);
+  padding: 2px 10px;
+  border-radius: 50px;
+  border: 1px solid rgba(0, 240, 255, 0.35);
+  margin-top: 2px;
+  letter-spacing: 0.5px;
+}
+.btn-scifi-upload {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) scale(0.85);
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: rgba(0, 240, 255, 0.9);
+  color: #000;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.1rem;
+  cursor: pointer;
+  z-index: 10;
+  box-shadow: 0 0 20px #00f0ff;
+  transition: transform 0.2s ease;
+}
+.btn-scifi-upload:hover {
+  transform: translate(-50%, -50%) scale(1.05);
+}
+.edit-mode .btn-scifi-upload {
+  display: flex !important;
+}
+
+/* Face B: Sci-Fi Terminal */
+.scifi-face-back {
+  transform: rotateY(180deg);
+  background: radial-gradient(circle at 50% 40%, rgba(20, 24, 52, 0.98), rgba(8, 10, 24, 0.98));
+  border: 2px solid rgba(168, 85, 247, 0.5);
+  box-shadow: inset 0 0 30px rgba(168, 85, 247, 0.25), 0 0 25px rgba(0, 240, 255, 0.2);
+  padding: 1.2rem;
+  text-align: center;
+}
+.scifi-terminal-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  width: 100%;
+}
+.terminal-hud-header {
+  font-family: 'Space Grotesk', monospace;
+  font-size: 0.65rem;
+  letter-spacing: 1px;
+  color: #a855f7;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  margin-bottom: 6px;
+}
+.terminal-beacon {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: #a855f7;
+  box-shadow: 0 0 6px #a855f7;
+}
+.terminal-hud-title {
+  font-size: 0.95rem;
+  font-weight: 800;
+  color: #fff;
+  letter-spacing: 0.5px;
+  margin-bottom: 6px;
+  line-height: 1.2;
+}
+.terminal-hud-desc {
+  font-size: 0.68rem;
+  line-height: 1.45;
+  color: rgba(255, 255, 255, 0.75);
+  margin-bottom: 8px;
+  max-width: 180px;
+}
+.terminal-hud-pills {
+  display: flex;
+  gap: 5px;
+  flex-wrap: wrap;
+  justify-content: center;
+  margin-bottom: 6px;
+}
+.hud-pill {
+  font-size: 0.62rem;
+  font-weight: 600;
+  color: #00f0ff;
+  background: rgba(0, 240, 255, 0.1);
+  border: 1px solid rgba(0, 240, 255, 0.25);
+  padding: 2px 7px;
+  border-radius: 20px;
+}
+.terminal-hud-footer {
+  font-family: 'Space Grotesk', monospace;
+  font-size: 0.58rem;
+  color: rgba(255, 255, 255, 0.45);
+  letter-spacing: 0.8px;
+}
+
+/* Manual Quick Flip Button */
+.btn-portal-flip-toggle {
+  position: absolute;
+  bottom: -14px;
+  right: -10px;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: rgba(16, 20, 42, 0.9);
+  border: 1px solid rgba(0, 240, 255, 0.5);
+  color: #00f0ff;
+  font-size: 0.78rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  z-index: 10;
+  transition: all 0.3s ease;
+  box-shadow: 0 0 10px rgba(0, 240, 255, 0.3);
+}
+.btn-portal-flip-toggle:hover {
+  background: #00f0ff;
+  color: #000;
+  transform: rotate(180deg);
+}
+
+/* Animations */
+@keyframes spinClockwise {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+@keyframes spinCounter {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(-360deg); }
+}
+@keyframes hudPulseGlow {
+  0% { box-shadow: 0 0 15px rgba(0, 240, 255, 0.15), inset 0 0 10px rgba(0, 240, 255, 0.08); }
+  100% { box-shadow: 0 0 35px rgba(0, 240, 255, 0.4), inset 0 0 25px rgba(0, 240, 255, 0.2); }
+}
+@keyframes beaconBlink {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.3; transform: scale(0.7); }
+}
+@keyframes scanlinesMove {
+  0% { background-position: 0 0; }
+  100% { background-position: 0 100px; }
+}
+
+/* ============================================================
+   BLENDER ADDONS SECTION
+   ============================================================ */
+.addons-section {
+  position: relative;
+  background: radial-gradient(ellipse 70% 50% at 50% 0%, rgba(245, 158, 11, 0.06), transparent 70%),
+              radial-gradient(ellipse 60% 40% at 80% 100%, rgba(124, 58, 237, 0.05), transparent 70%);
+}
+.addons-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 2rem;
+  margin-top: 2rem;
+}
+.addon-card {
+  position: relative;
+  background: rgba(16, 18, 30, 0.75);
+  backdrop-filter: blur(16px);
+  border: 1px solid rgba(245, 158, 11, 0.2);
+  border-radius: 20px;
+  padding: 2.2rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+  overflow: hidden;
+}
+.addon-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, #f59e0b, #ec4899, transparent);
+  opacity: 0;
+  transition: opacity 0.35s ease;
+}
+.addon-card:hover {
+  transform: translateY(-6px);
+  border-color: rgba(245, 158, 11, 0.5);
+  box-shadow: 0 20px 45px rgba(0, 0, 0, 0.5), 0 0 30px rgba(245, 158, 11, 0.15);
+}
+.addon-card:hover::before {
+  opacity: 1;
+}
+
+/* Card Header */
+.addon-card-top {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 1.2rem;
+}
+.addon-icon-box {
+  width: 52px;
+  height: 52px;
+  border-radius: 14px;
+  background: rgba(245, 158, 11, 0.12);
+  border: 1px solid rgba(245, 158, 11, 0.3);
+  color: #f59e0b;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.4rem;
+  flex-shrink: 0;
+  box-shadow: 0 0 15px rgba(245, 158, 11, 0.15);
+}
+.addon-meta-badges {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 0.35rem;
+}
+.addon-version-pill {
+  font-family: 'Space Grotesk', monospace;
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: #f59e0b;
+  background: rgba(245, 158, 11, 0.15);
+  border: 1px solid rgba(245, 158, 11, 0.3);
+  padding: 3px 9px;
+  border-radius: 50px;
+}
+.addon-cat-pill {
+  font-size: 0.7rem;
+  color: rgba(255, 255, 255, 0.6);
+  background: rgba(255, 255, 255, 0.05);
+  padding: 2px 8px;
+  border-radius: 6px;
+}
+
+/* Card Content */
+.addon-title {
+  font-size: 1.28rem;
+  font-weight: 700;
+  color: #fff;
+  margin-bottom: 0.6rem;
+  line-height: 1.3;
+}
+.addon-compat {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.78rem;
+  color: #38bdf8;
+  background: rgba(56, 189, 248, 0.1);
+  border: 1px solid rgba(56, 189, 248, 0.25);
+  padding: 3px 10px;
+  border-radius: 50px;
+  margin-bottom: 0.9rem;
+}
+.addon-desc {
+  font-size: 0.92rem;
+  color: var(--text-muted);
+  line-height: 1.65;
+  margin-bottom: 1.6rem;
+}
+
+/* Card Bottom */
+.addon-card-bottom {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding-top: 1.2rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+}
+.addon-downloads-stat {
+  font-size: 0.78rem;
+  color: var(--text-muted);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.addon-downloads-stat i {
+  color: #10b981;
+}
+.btn-addon-download {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: linear-gradient(135deg, #f59e0b, #d97706);
+  color: #000 !important;
+  font-weight: 700;
+  font-size: 0.88rem;
+  padding: 0.65rem 1.3rem;
+  border-radius: 10px;
+  text-decoration: none;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 15px rgba(245, 158, 11, 0.3);
+  cursor: pointer;
+}
+.btn-addon-download:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(245, 158, 11, 0.5);
+  background: linear-gradient(135deg, #fbbf24, #f59e0b);
+}
+
+/* Addon Edit Actions (Edit Mode Only) */
+.addon-edit-actions {
+  display: none;
+  align-items: center;
+  gap: 0.4rem;
+}
+.edit-mode .addon-edit-actions {
+  display: flex !important;
+}
+.edit-mode .addons-toolbar {
+  display: block !important;
+}
+.btn-addon-action {
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: #fff;
+  font-size: 0.8rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: var(--transition);
+}
+.btn-addon-action:hover {
+  background: rgba(255, 255, 255, 0.25);
+}
+.btn-addon-action.del:hover {
+  background: rgba(239, 68, 68, 0.4);
+  color: #f87171;
+  border-color: rgba(239, 68, 68, 0.6);
+}
+
+/* Responsive */
+@media (max-width: 1200px) {
+  .hero-scifi-portal {
+    flex: 0 0 250px;
+  }
+  .scifi-portal-inner {
+    width: 240px;
+    height: 240px;
+  }
+  .scifi-flip-card {
+    width: 205px;
+    height: 205px;
+  }
+}
+@media (max-width: 1024px) {
+  .hero {
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 3rem;
+  }
+  .hero-scifi-portal {
+    margin: 1.5rem auto 0;
+    flex: 0 0 auto;
+  }
+}
+@media (max-width: 768px) {
+  .scifi-portal-inner {
+    width: 220px;
+    height: 220px;
+  }
+  .scifi-flip-card {
+    width: 190px;
+    height: 190px;
+  }
+  .addons-grid {
+    grid-template-columns: 1fr;
+  }
+}
