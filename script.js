@@ -1192,6 +1192,9 @@ function toggleEditMode() {
   document.getElementById('editToolbar')?.classList.toggle('active', editMode);
   btn?.classList.toggle('editing', editMode);
   document.getElementById('navbar')?.classList.toggle('edit-pushed', editMode);
+  // Show / Hide Sci-Fi edit actions
+  const scifiActions = document.getElementById('scifiEditActions');
+  if (scifiActions) scifiActions.style.display = editMode ? 'flex' : 'none';
   // In Edit Mode, pause 5s timer and show Face A so user can see photo and edit easily
   if (editMode) {
     if (typeof flipPortal === 'function') flipPortal(false);

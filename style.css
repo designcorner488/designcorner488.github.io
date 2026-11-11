@@ -770,9 +770,42 @@ body.edit-mode .glb-action-btn {
   z-index: 5;
   flex: 0 0 290px;
   display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
   margin-left: auto;
+}
+
+/* SCI-FI EDIT ACTIONS (100% HIDDEN FROM REGULAR VISITORS, ONLY SHOWN IN EDIT MODE) */
+.scifi-edit-actions {
+  display: none !important;
+  margin-top: 1.2rem;
+  gap: 0.5rem;
+  justify-content: center;
+  flex-wrap: wrap;
+  width: 100%;
+}
+body.edit-mode .scifi-edit-actions {
+  display: flex !important;
+}
+.btn-change-scifi-photo {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  padding: 0.5rem 1rem;
+  background: linear-gradient(135deg, rgba(0, 240, 255, 0.2), rgba(168, 85, 247, 0.25));
+  border: 1.5px solid #00f0ff;
+  color: #fff;
+  border-radius: 50px;
+  font-size: 0.78rem;
+  font-weight: 700;
+  cursor: pointer;
+  box-shadow: 0 4px 15px rgba(0, 240, 255, 0.25);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+.btn-change-scifi-photo:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(0, 240, 255, 0.4);
 }
 .scifi-portal-inner {
   position: relative;
