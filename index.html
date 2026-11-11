@@ -16,7 +16,7 @@ window.addEventListener('error', function(e) {
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
-  <link rel="stylesheet" href="style.css?v=22.2"/>
+  <link rel="stylesheet" href="style.css?v=22.3"/>
   <script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/3.4.0/model-viewer.min.js"></script>
 </head>
 <body>
@@ -97,7 +97,6 @@ window.addEventListener('error', function(e) {
     <a href="#about"    class="nav-link">About</a>
     <a href="#skills"   class="nav-link">Skills</a>
     <a href="#work"     class="nav-link">Portfolio</a>
-    <a href="#gallery"  class="nav-link">Gallery</a>
     <a href="#addons"   class="nav-link">Addons</a>
     <a href="#contact"  class="nav-link">Contact</a>
   </div>
@@ -653,19 +652,7 @@ window.addEventListener('error', function(e) {
   </div>
 </section>
 
-<!-- GALLERY SECTION (All renders masonry) -->
-<section class="gallery-section section" id="gallery">
-  <div class="container">
-    <div class="section-header" data-aos="fade-up">
-      <div class="section-tag editable" data-key="galleryTag">My Gallery</div>
-      <h2 class="section-title"><span class="editable" data-key="galleryTitle1">Work </span><span class="gradient-text editable" data-key="galleryTitle2">Showcase</span></h2>
-      <p class="section-sub editable" data-key="gallerySub">All renders, animations and designs in one place</p>
-    </div>
-    <div class="gallery-grid-masonry" id="gallery-all-grid" data-aos="fade-up">
-      <!-- Populated from portfolio.json -->
-    </div>
-  </div>
-</section>
+
 
 <!-- SERVICES -->
 <section class="services section" id="services">
@@ -805,7 +792,6 @@ window.addEventListener('error', function(e) {
     <div class="footer-links">
       <a href="#home">Home</a>
       <a href="#work">Portfolio</a>
-      <a href="#gallery">Gallery</a>
       <a href="#contact">Contact</a>
       <a href="admin/">Admin</a>
     </div>
@@ -899,7 +885,7 @@ window.addEventListener('error', function(e) {
   </div>
 </div>
 
-<script src="script.js?v=22.2"></script>
+<script src="script.js?v=22.3"></script>
 <!-- REORDER MODELS & ANIMATIONS MODAL -->
 <div class="modal-overlay" id="glbReorderModal">
   <div class="modal-box" style="max-width:520px;">
