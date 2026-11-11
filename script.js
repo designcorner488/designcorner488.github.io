@@ -53,6 +53,8 @@ function buildPublishPayload() {
   const saved = getSavedData();
   if (saved.text) updatedJson._textOverrides = saved.text;
   if (saved.scifiAvatar) updatedJson.settings.scifiAvatar = saved.scifiAvatar;
+  const savedSkillMedia = saved.skillMedia || portfolioData?.settings?.skillMedia;
+  if (savedSkillMedia) updatedJson.settings.skillMedia = savedSkillMedia;
   if (typeof getAddons === 'function') updatedJson.addons = getAddons();
   return updatedJson;
 }
@@ -440,6 +442,7 @@ async function loadPortfolio() {
   renderAllGallery();
   initCounters();
   try { await loadSavedMedia(); } catch(e) { console.warn(e); }
+  try { initSkillShowcase(); } catch(e){ console.warn(e); }
   setTimeout(initCursor, 100);
 }
 
@@ -1201,6 +1204,7 @@ function toggleEditMode() {
     if (scifiTimer) clearInterval(scifiTimer);
   } else {
     if (typeof startScifiTimer === 'function') startScifiTimer();
+    if (typeof startSkillAutoTimer === 'function') startSkillAutoTimer();
   }
   if (icon)  icon.className   = editMode ? 'fas fa-xmark' : 'fas fa-pen-to-square';
   if (label) label.textContent = editMode ? 'Exit Edit' : 'Edit Mode';
@@ -2572,3 +2576,272 @@ function saveScifiModal() {
 window.openScifiModal  = openScifiModal;
 window.closeScifiModal = closeScifiModal;
 window.saveScifiModal  = saveScifiModal;
+
+
+/* ============================================================
+   TOOLS & SKILLS INTERACTIVE 3D & MP4 SHOWCASE ENGINE
+   ============================================================ */
+const DEFAULT_SKILL_TOOLS = [
+  {
+    idx: 0,
+    name: 'Blender 3D',
+    tag: 'CYCLES & EEVEE RENDER',
+    type: 'video',
+    url: 'https://designcorner488.github.io/media/hvac_samply_.mp4'
+  },
+  {
+    idx: 1,
+    name: 'Autodesk Revit',
+    tag: 'BIM ARCHITECTURE',
+    type: 'video',
+    url: 'https://designcorner488.github.io/media/bim_animation_1.mp4'
+  },
+  {
+    idx: 2,
+    name: 'D5 Render',
+    tag: 'REAL-TIME PHOTOREAL',
+    type: 'video',
+    url: 'https://designcorner488.github.io/media/2_7.mp4'
+  },
+  {
+    idx: 3,
+    name: '3D Animation',
+    tag: 'CINEMATIC MOTION',
+    type: 'video',
+    url: 'https://github.com/designcorner488/designcorner488.github.io/releases/download/v1.0/all_in_one_try.mp4'
+  },
+  {
+    idx: 4,
+    name: 'Architecture',
+    tag: 'FLYTHROUGH & 3D VIZ',
+    type: 'video',
+    url: 'https://designcorner488.github.io/media/2_3.mp4'
+  },
+  {
+    idx: 5,
+    name: 'Product Design',
+    tag: 'INTERACTIVE 3D MODEL',
+    type: 'glb',
+    url: 'https://designcorner488.github.io/media/Meshy_AI_Ornate_Wooden_Dining__1031072807_texture.glb'
+  }
+];
+
+let currentSkillToolIdx = 0;
+let skillAutoTimer = null;
+let currentUploadingToolIdx = 0;
+
+function getSkillToolData(idx) {
+  const saved = getSavedData()?.skillMedia?.[idx] || portfolioData?.settings?.skillMedia?.[idx];
+  if (saved && saved.url) {
+    return { ...DEFAULT_SKILL_TOOLS[idx], ...saved };
+  }
+  return DEFAULT_SKILL_TOOLS[idx] || DEFAULT_SKILL_TOOLS[0];
+}
+
+function selectSkillTool(idx, manual = true) {
+  if (idx < 0 || idx >= DEFAULT_SKILL_TOOLS.length) idx = 0;
+  currentSkillToolIdx = idx;
+
+  const tool = getSkillToolData(idx);
+
+  // Update Skill Cards Active State
+  const cards = document.querySelectorAll('.skills-grid .skill-card');
+  cards.forEach((card, i) => {
+    card.classList.toggle('active', i === idx);
+  });
+
+  // Update Viewport HUD Info
+  const nameEl = document.getElementById('vpToolName');
+  const tagEl  = document.getElementById('vpToolTag');
+  const typeEl = document.getElementById('vpTypeBadge');
+  const btnToolEl = document.getElementById('vpUploadBtnToolName');
+
+  if (nameEl) nameEl.textContent = tool.name;
+  if (tagEl)  tagEl.textContent  = tool.tag || 'RENDER PREVIEW';
+  if (btnToolEl) btnToolEl.textContent = tool.name;
+
+  // Update Dots
+  const dots = document.querySelectorAll('.viewport-dots .vp-dot');
+  dots.forEach((dot, i) => {
+    dot.classList.toggle('active', i === idx);
+  });
+
+  // Switch Media (Video vs 3D Model)
+  const video = document.getElementById('vpVideo');
+  const model = document.getElementById('vpModel');
+  const hint3d = document.getElementById('vp3dHint');
+  const loader = document.getElementById('vpLoading');
+
+  const isGlb = tool.type === 'glb' || (tool.url && tool.url.toLowerCase().includes('.glb'));
+
+  if (typeEl) {
+    typeEl.innerHTML = isGlb 
+      ? '<i class="fas fa-cube"></i> 3D GLB MODEL' 
+      : '<i class="fas fa-video"></i> MP4 VIDEO';
+    typeEl.style.color = isGlb ? '#00f0ff' : '#a855f7';
+    typeEl.style.borderColor = isGlb ? 'rgba(0,240,255,0.4)' : 'rgba(168,85,247,0.4)';
+  }
+
+  if (isGlb) {
+    if (video) { video.pause(); video.style.display = 'none'; }
+    if (model) {
+      model.style.display = 'block';
+      if (model.src !== tool.url) {
+        if (loader) loader.style.display = 'flex';
+        model.src = tool.url;
+        model.onload = () => { if (loader) loader.style.display = 'none'; };
+        setTimeout(() => { if (loader) loader.style.display = 'none'; }, 1800);
+      }
+    }
+    if (hint3d) hint3d.style.display = 'flex';
+  } else {
+    if (model) { model.style.display = 'none'; }
+    if (hint3d) hint3d.style.display = 'none';
+    if (video) {
+      video.style.display = 'block';
+      if (video.src !== tool.url) {
+        if (loader) loader.style.display = 'flex';
+        video.src = tool.url;
+        video.onloadeddata = () => { if (loader) loader.style.display = 'none'; };
+        video.play().catch(() => {});
+        setTimeout(() => { if (loader) loader.style.display = 'none'; }, 1000);
+      } else {
+        video.play().catch(() => {});
+      }
+    }
+  }
+
+  if (manual && !document.body.classList.contains('edit-mode')) {
+    startSkillAutoTimer();
+  }
+}
+
+function nextSkillTool() {
+  selectSkillTool((currentSkillToolIdx + 1) % DEFAULT_SKILL_TOOLS.length, true);
+}
+
+function prevSkillTool() {
+  selectSkillTool((currentSkillToolIdx + DEFAULT_SKILL_TOOLS.length - 1) % DEFAULT_SKILL_TOOLS.length, true);
+}
+
+function startSkillAutoTimer() {
+  if (skillAutoTimer) {
+    clearInterval(skillAutoTimer);
+    skillAutoTimer = null;
+  }
+  if (document.body.classList.contains('edit-mode')) return;
+
+  skillAutoTimer = setInterval(() => {
+    if (document.body.classList.contains('edit-mode')) {
+      if (skillAutoTimer) { clearInterval(skillAutoTimer); skillAutoTimer = null; }
+      return;
+    }
+    selectSkillTool((currentSkillToolIdx + 1) % DEFAULT_SKILL_TOOLS.length, false);
+  }, 5000);
+}
+
+function triggerToolMediaUpload(idx) {
+  currentUploadingToolIdx = idx;
+  selectSkillTool(idx, true);
+  const input = document.getElementById('skillMediaFileInput');
+  if (input) input.click();
+}
+
+function triggerActiveToolMediaUpload() {
+  triggerToolMediaUpload(currentSkillToolIdx);
+}
+
+function initSkillShowcase() {
+  const panel = document.getElementById('skillsViewportPanel');
+  if (panel) {
+    // Pause auto-cycle when hovering over viewport screen
+    panel.addEventListener('mouseenter', () => {
+      if (skillAutoTimer) clearInterval(skillAutoTimer);
+    });
+    panel.addEventListener('mouseleave', () => {
+      if (!document.body.classList.contains('edit-mode')) startSkillAutoTimer();
+    });
+  }
+
+  // Handle Skill Media File Upload
+  const fileInput = document.getElementById('skillMediaFileInput');
+  if (fileInput) {
+    fileInput.addEventListener('change', async function() {
+      const file = this.files[0];
+      if (!file) return;
+
+      const toolIdx = currentUploadingToolIdx;
+      const toolName = DEFAULT_SKILL_TOOLS[toolIdx]?.name || 'Tool';
+      const isGlb = file.name.toLowerCase().endsWith('.glb');
+      const ext = isGlb ? '.glb' : '.mp4';
+      const safeName = `skill_${toolIdx}_` + file.name.replace(/[^a-zA-Z0-9._-]/g, '_');
+
+      showToast(`⏳ ${toolName} ka media process ho raha hai...`, 'info');
+
+      try {
+        // Read as Blob & DataURL
+        const blob = file;
+        const dataUrl = await new Promise((res, rej) => {
+          const r = new FileReader();
+          r.onload = e => res(e.target.result);
+          r.onerror = rej;
+          r.readAsDataURL(file);
+        });
+
+        // Store in IndexedDB for persistent local & publish pipeline
+        try {
+          await dbSaveItem({
+            id: 'skill_media_' + toolIdx,
+            name: safeName,
+            type: isGlb ? 'glb' : 'video',
+            blob: blob,
+            size: file.size,
+            date: new Date().toISOString()
+          });
+        } catch(e) { console.warn('IDB skill media save note:', e); }
+
+        // Update local memory
+        const d = getSavedData();
+        d.skillMedia = d.skillMedia || {};
+        d.skillMedia[toolIdx] = {
+          idx: toolIdx,
+          name: toolName,
+          type: isGlb ? 'glb' : 'video',
+          url: dataUrl
+        };
+        saveData(d);
+
+        // Update portfolioData
+        if (portfolioData) {
+          portfolioData.settings = portfolioData.settings || {};
+          portfolioData.settings.skillMedia = portfolioData.settings.skillMedia || {};
+          portfolioData.settings.skillMedia[toolIdx] = {
+            idx: toolIdx,
+            name: toolName,
+            type: isGlb ? 'glb' : 'video',
+            url: dataUrl
+          };
+        }
+
+        // Immediately update display screen
+        selectSkillTool(toolIdx, true);
+        showToast(`✅ ${toolName} ke liye ${isGlb ? '3D GLB' : 'MP4 Video'} update ho gaya! "Publish Live" karein.`);
+      } catch(err) {
+        console.error('Skill media upload error:', err);
+        showToast('❌ Upload error: ' + err.message, 'error');
+      }
+
+      this.value = '';
+    });
+  }
+
+  // Load first tool
+  selectSkillTool(0, false);
+  startSkillAutoTimer();
+}
+
+window.selectSkillTool = selectSkillTool;
+window.nextSkillTool = nextSkillTool;
+window.prevSkillTool = prevSkillTool;
+window.triggerToolMediaUpload = triggerToolMediaUpload;
+window.triggerActiveToolMediaUpload = triggerActiveToolMediaUpload;
