@@ -2043,27 +2043,36 @@ function flipPortal(forceState) {
 }
 
 function manualFlipPortal(e) {
-  // If user clicked an editable element or button, DO NOT flip!
-  if (e && e.target && (e.target.closest('.editable') || e.target.closest('button') || e.target.closest('input') || e.target.closest('.scifi-edit-actions'))) {
+  // If user clicked an editable element, input, button or modal, NEVER flip!
+  if (e && e.target && (e.target.closest('.editable') || e.target.closest('button') || e.target.closest('input') || e.target.closest('textarea') || e.target.closest('.scifi-edit-actions') || e.target.closest('.modal-overlay'))) {
     return;
   }
-  // If in Edit Mode, do not flip on card click (only flip via the toggle button)
-  if (document.body.classList.contains('edit-mode')) {
-    if (e && e.target && e.target.closest('.btn-portal-flip-toggle')) {
-      flipPortal();
-    }
-    return;
-  }
+  // In Edit Mode: rotate ONLY when explicitly intended
   flipPortal();
-  startScifiTimer();
+  // ONLY start auto-timer if NOT in edit mode!
+  if (!document.body.classList.contains('edit-mode')) {
+    startScifiTimer();
+  }
 }
 
 function startScifiTimer() {
-  if (scifiTimer) clearInterval(scifiTimer);
+  if (scifiTimer) {
+    clearInterval(scifiTimer);
+    scifiTimer = null;
+  }
+  // CRITICAL: NEVER run auto-timer while in Edit Mode!
+  if (document.body.classList.contains('edit-mode')) {
+    return;
+  }
   scifiTimer = setInterval(() => {
-    // If user is actively typing in an editable field inside the portal, pause
+    // If edit mode became active, terminate timer immediately
+    if (document.body.classList.contains('edit-mode')) {
+      if (scifiTimer) { clearInterval(scifiTimer); scifiTimer = null; }
+      return;
+    }
+    // If user is focusing/typing in any editable element, do not flip
     const active = document.activeElement;
-    if (active && active.closest('#scifiPortal') && active.classList.contains('editable')) {
+    if (active && (active.classList.contains('editable') || active.closest('#scifiPortal')?.querySelector('.editable:focus'))) {
       return;
     }
     flipPortal();
@@ -2129,7 +2138,7 @@ function initScifiPortal() {
       if (scifiTimer) clearInterval(scifiTimer);
     });
     portal.addEventListener('mouseleave', () => {
-      startScifiTimer();
+      if (!document.body.classList.contains('edit-mode')) startScifiTimer();
     });
   }
 
