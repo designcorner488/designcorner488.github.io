@@ -16,7 +16,7 @@ window.addEventListener('error', function(e) {
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
-  <link rel="stylesheet" href="style.css?v=22.1"/>
+  <link rel="stylesheet" href="style.css?v=22.2"/>
   <script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/3.4.0/model-viewer.min.js"></script>
 </head>
 <body>
@@ -496,6 +496,7 @@ window.addEventListener('error', function(e) {
 </section></section>
 
 <!-- PORTFOLIO / WORK SECTION -->
+<!-- PORTFOLIO / WORK SECTION (CINEMATIC SHOWCASE SLIDER) -->
 <section class="projects section" id="work">
   <div class="container">
     <div class="section-header" data-aos="fade-up">
@@ -503,18 +504,137 @@ window.addEventListener('error', function(e) {
       <h2 class="section-title"><span class="editable" data-key="workTitle1">Featured </span><span class="gradient-text editable" data-key="workTitle2">Projects</span></h2>
       <p class="section-sub editable" data-key="workSub">A showcase of my best work across different domains</p>
     </div>
-    <!-- FILTER TABS — built by JS from portfolio.json -->
-    <div class="filter-tabs" id="filter-bar" data-aos="fade-up">
-      <button class="filter-btn active" data-cat="all">All</button>
-      <button class="filter-btn" data-cat="architecture">Architecture</button>
-      <button class="filter-btn" data-cat="interior">Interiors</button>
-      <button class="filter-btn" data-cat="animation">Animation</button>
-      <button class="filter-btn" data-cat="product">Product</button>
-      <button class="filter-btn" data-cat="graphics">Graphics</button>
+
+    <!-- FILTER BAR & ACTION CONTROLS -->
+    <div class="filter-controls-wrap" data-aos="fade-up">
+      <!-- FILTER TABS — dynamic from portfolio.json -->
+      <div class="filter-tabs" id="filter-bar">
+        <button class="filter-btn active" data-cat="all">All Work</button>
+        <button class="filter-btn" data-cat="architecture">Architecture</button>
+        <button class="filter-btn" data-cat="interior">Interiors</button>
+        <button class="filter-btn" data-cat="product">Product Design</button>
+        <button class="filter-btn" data-cat="graphics">Graphics</button>
+        <button class="filter-btn" data-cat="animation">Animations</button>
+      </div>
+
+      <!-- EDIT & VIEW CONTROLS (Only visible in Edit Mode or View Toggle) -->
+      <div class="projects-toolbar">
+        <button type="button" class="btn-add-project-slide" id="btnAddProjectSlide" onclick="openAddProjectModal()">
+          <i class="fas fa-plus-circle"></i> <span id="btnAddSlideText">Add Slide</span>
+        </button>
+        <div class="view-toggle-wrap">
+          <button type="button" class="view-toggle-btn active" id="viewBtnSlider" onclick="switchProjectsView('slider')" title="Cinematic Slider View">
+            <i class="fas fa-film"></i> <span>Slider</span>
+          </button>
+          <button type="button" class="view-toggle-btn" id="viewBtnGrid" onclick="switchProjectsView('grid')" title="Masonry Grid View">
+            <i class="fas fa-th"></i> <span>Grid</span>
+          </button>
+        </div>
+      </div>
     </div>
 
-    <!-- GALLERY GRID — dynamic from portfolio.json -->
-    <div class="projects-grid gallery-masonry" id="gallery-grid" data-aos="fade-up">
+    <!-- 1. CINEMATIC SHOWCASE SLIDER (PRIMARY DEFAULT VIEW) -->
+    <div class="projects-slider-container" id="projectsSliderContainer" data-aos="fade-up">
+      <div class="slider-progress-track">
+        <div class="slider-progress-bar" id="sliderProgressBar"></div>
+      </div>
+
+      <div class="slider-stage-wrapper">
+        <!-- LEFT: MEDIA VIEWPORT (Images / MP4 Video / 3D GLB) -->
+        <div class="slider-media-stage" id="sliderMediaStage">
+          <div class="slider-media-badge" id="sliderMediaBadge">
+            <i class="fas fa-image"></i> <span>RENDER</span>
+          </div>
+
+          <img id="sliderImg" src="" alt="Project Render" style="display:none;" />
+          <video id="sliderVideo" autoplay muted loop playsinline style="display:none;"></video>
+          <model-viewer id="sliderGlb" auto-rotate camera-controls shadow-intensity="1.5" exposure="1.1" style="display:none; width:100%; height:100%;"></model-viewer>
+          <iframe id="sliderIframe" style="display:none; width:100%; height:100%; border:none;" allowfullscreen></iframe>
+
+          <div class="slider-glb-hint" id="sliderGlbHint" style="display:none;">
+            <i class="fas fa-hand-pointer"></i> Drag to rotate in 3D
+          </div>
+
+          <!-- Video Audio Toggle Button -->
+          <button type="button" class="btn-media-audio" id="sliderAudioBtn" onclick="toggleSlideVideoAudio()" title="Mute/Unmute Audio" style="display:none;">
+            <i class="fas fa-volume-mute" id="sliderAudioIcon"></i>
+          </button>
+
+          <!-- Expand / Lightbox overlay button -->
+          <button type="button" class="btn-media-expand" onclick="openCurrentSlideLightbox()" title="View Fullscreen / HD">
+            <i class="fas fa-expand"></i>
+          </button>
+        </div>
+
+        <!-- RIGHT: DETAILS & DESCRIPTION PANEL -->
+        <div class="slider-details-panel">
+          <div>
+            <div class="slider-details-header">
+              <span class="slider-cat-pill" id="sliderCatPill">ARCHITECTURE</span>
+              <span class="slider-counter" id="sliderCounter">01 / 07</span>
+            </div>
+
+            <h3 class="slider-title" id="sliderTitle">Modern Architecture Villa</h3>
+
+            <div class="slider-meta-tags" id="sliderMetaTags">
+              <!-- populated by JS -->
+            </div>
+
+            <div class="slider-desc" id="sliderDesc">
+              Photorealistic architectural visualization with modern aesthetics.
+            </div>
+          </div>
+
+          <div class="slider-details-footer">
+            <div class="slider-actions">
+              <button type="button" class="btn-slider-action btn-slider-primary" onclick="openCurrentSlideLightbox()">
+                <i class="fas fa-expand"></i> <span>View Fullscreen</span>
+              </button>
+
+              <!-- Edit Mode Action Buttons -->
+              <button type="button" class="slider-edit-btn" onclick="openEditCurrentProjectModal()" title="Edit Title, Description & Media">
+                <i class="fas fa-pen"></i> <span>Edit Slide</span>
+              </button>
+              <button type="button" class="slider-edit-btn slider-del-btn" onclick="deleteCurrentProjectSlide()" title="Delete This Slide">
+                <i class="fas fa-trash"></i>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- BOTTOM HUD & THUMBNAILS -->
+      <div class="slider-bottom-hud">
+        <div class="slider-thumbnail-strip" id="sliderThumbStrip">
+          <!-- Dynamic thumbnails by JS -->
+        </div>
+
+        <div class="slider-nav-btns">
+          <button type="button" class="btn-slider-nav" onclick="prevProjectSlide()" title="Previous Slide">
+            <i class="fas fa-chevron-left"></i>
+          </button>
+          <div class="slider-auto-pill" id="sliderAutoPill" onclick="toggleProjectSliderAutoplay()" title="Toggle Auto-Slide">
+            <i class="fas fa-rotate" id="sliderAutoIcon"></i> <span id="sliderAutoText">5s AUTO</span>
+          </div>
+          <button type="button" class="btn-slider-nav" onclick="nextProjectSlide()" title="Next Slide">
+            <i class="fas fa-chevron-right"></i>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- EMPTY STATE FOR CATEGORY WITHOUT SLIDES -->
+    <div class="slider-empty-card" id="sliderEmptyCard" style="display:none;">
+      <div class="slider-empty-icon"><i class="fas fa-folder-open"></i></div>
+      <h3 id="sliderEmptyTitle">No Projects in this Category</h3>
+      <p id="sliderEmptySub">Is category mein abhi koi project nahi hai. Edit mode on kar ke "Add Slide" se render, video ya 3D model add karein!</p>
+      <button type="button" class="btn-add-project-slide" onclick="openAddProjectModal()" style="display:inline-flex; margin-top:1.2rem;">
+        <i class="fas fa-plus"></i> <span>Add Slide Now</span>
+      </button>
+    </div>
+
+    <!-- 2. GALLERY GRID (ACCESSIBLE VIA GRID VIEW TOGGLE) -->
+    <div class="projects-grid gallery-masonry" id="gallery-grid" style="display:none;">
       <div class="gallery-loading" id="gallery-loading">
         <div class="loading-spinner"></div>
         <p>Loading portfolio...</p>
@@ -527,7 +647,7 @@ window.addEventListener('error', function(e) {
       <p>Go to the <a href="admin/">Admin Panel</a> to add your first project.</p>
     </div>
 
-    <div class="projects-cta" data-aos="fade-up" id="load-more-wrap" style="display:none;">
+    <div class="projects-cta" id="load-more-wrap" style="display:none;">
       <button class="btn-primary" id="load-more-btn"><span>Load More Work</span><i class="fas fa-arrow-down"></i></button>
     </div>
   </div>
@@ -779,7 +899,7 @@ window.addEventListener('error', function(e) {
   </div>
 </div>
 
-<script src="script.js?v=22.1"></script>
+<script src="script.js?v=22.2"></script>
 <!-- REORDER MODELS & ANIMATIONS MODAL -->
 <div class="modal-overlay" id="glbReorderModal">
   <div class="modal-box" style="max-width:520px;">
@@ -954,6 +1074,78 @@ window.addEventListener('error', function(e) {
 </div>
 
 <input type="file" id="skillMediaFileInput" accept="video/mp4,model/gltf-binary,.glb,.mp4" style="display:none;" />
+
+<!-- ADD / EDIT PROJECT SLIDE MODAL -->
+<div class="modal-overlay" id="projectSlideModal">
+  <div class="modal-box" style="max-width: 620px;">
+    <div class="modal-header">
+      <h3 id="modalProjectHeading"><i class="fas fa-layer-group"></i> Add Project Slide</h3>
+      <button type="button" class="btn-close-modal" onclick="closeProjectSlideModal()">&times;</button>
+    </div>
+    <form id="projectSlideForm" onsubmit="handleSaveProjectSlide(event)">
+      <input type="hidden" id="pSlideId" value="" />
+      
+      <div class="form-group">
+        <label>Project Title *</label>
+        <input type="text" id="pSlideTitle" class="form-input" placeholder="e.g. Modern Residential Villa" required />
+      </div>
+
+      <div class="form-row" style="display:flex; gap:1rem;">
+        <div class="form-group" style="flex:1;">
+          <label>Category *</label>
+          <select id="pSlideCategory" class="form-input" required>
+            <option value="architecture">Architecture</option>
+            <option value="interior">Interiors</option>
+            <option value="product">Product Design</option>
+            <option value="graphics">Graphics</option>
+            <option value="animation">Animations</option>
+          </select>
+        </div>
+        <div class="form-group" style="flex:1;">
+          <label>Media Type *</label>
+          <select id="pSlideType" class="form-input" onchange="onSlideMediaTypeChange(this.value)">
+            <option value="image">🖼️ Picture / Render (JPG/PNG)</option>
+            <option value="video">🎬 MP4 Video</option>
+            <option value="glb">🧊 3D Model (GLB)</option>
+            <option value="youtube">📺 YouTube Embed</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label id="pSlideUploadLabel">Choose File (Picture / MP4 / GLB)</label>
+        <input type="file" id="pSlideFile" class="form-input" accept="image/*" onchange="handleSlideFileSelect(event)" />
+        <small style="color:var(--text-muted); font-size:0.75rem; display:block; margin-top:4px;">
+          Ya online link / URL yahan paste karein:
+        </small>
+        <input type="text" id="pSlideUrl" class="form-input" style="margin-top:6px;" placeholder="https://..." oninput="handleSlideUrlInput(this.value)" />
+      </div>
+
+      <!-- Live Media Preview -->
+      <div class="form-group" id="pSlidePreviewBox" style="display:none; text-align:center; padding:12px; background:rgba(0,0,0,0.5); border:1px solid rgba(0,240,255,0.25); border-radius:12px;">
+        <div style="font-size:0.75rem; color:#00f0ff; margin-bottom:8px; font-weight:700;">LIVE PREVIEW:</div>
+        <div id="pSlidePreviewContent" style="max-height:200px; overflow:hidden; display:flex; align-items:center; justify-content:center;"></div>
+      </div>
+
+      <div class="form-group">
+        <label>Description (Details, Features &amp; Materials) *</label>
+        <textarea id="pSlideDesc" class="form-input" rows="4" placeholder="Detail description of this architectural rendering, interior project, or 3D model..." required></textarea>
+      </div>
+
+      <div class="form-group">
+        <label>Software / Tool Tags (Optional)</label>
+        <input type="text" id="pSlideTags" class="form-input" placeholder="e.g. Blender 4.2, Revit BIM, D5 Render" />
+      </div>
+
+      <div class="modal-footer" style="display:flex; justify-content:flex-end; gap:0.8rem; margin-top:1.5rem;">
+        <button type="button" class="btn-modal-cancel" onclick="closeProjectSlideModal()">Cancel</button>
+        <button type="submit" class="btn-modal-save" id="btnSaveProjectSlide">
+          <i class="fas fa-check"></i> Save Project Slide
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
 </body>
 </html>
 

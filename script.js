@@ -56,6 +56,7 @@ function buildPublishPayload() {
   const savedSkillMedia = saved.skillMedia || portfolioData?.settings?.skillMedia;
   if (savedSkillMedia) updatedJson.settings.skillMedia = savedSkillMedia;
   if (typeof getAddons === 'function') updatedJson.addons = getAddons();
+  if (typeof getProjects === 'function') updatedJson.projects = getProjects();
   return updatedJson;
 }
 
@@ -443,6 +444,7 @@ async function loadPortfolio() {
   initCounters();
   try { await loadSavedMedia(); } catch(e) { console.warn(e); }
   try { initSkillShowcase(); } catch(e){ console.warn(e); }
+  try { initProjectShowcaseSlider(); } catch(e){ console.warn(e); }
   setTimeout(initCursor, 100);
 }
 
@@ -500,6 +502,7 @@ function buildFilterBar(categories) {
       document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
       btn.classList.add('active');
       filteredProjects = cat.id === 'all' ? (portfolioData.projects || []) : (portfolioData.projects || []).filter(p => p.category === cat.id);
+      if (typeof switchProjectCategory === 'function') switchProjectCategory(cat.id);
       visibleCount = PAGE_SIZE;
       renderGallery();
     });
@@ -2845,3 +2848,672 @@ window.nextSkillTool = nextSkillTool;
 window.prevSkillTool = prevSkillTool;
 window.triggerToolMediaUpload = triggerToolMediaUpload;
 window.triggerActiveToolMediaUpload = triggerActiveToolMediaUpload;
+
+
+/* ============================================================
+   FEATURED PROJECTS: CINEMATIC SHOWCASE SLIDER ENGINE (v22.2)
+   ============================================================ */
+
+let activeSlideCategory        = 'all';
+let categorySlideProjects      = [];
+let currentProjectSlideIdx     = 0;
+let projectSliderTimer         = null;
+let projectSliderProgressTimer = null;
+let projectSliderStartTime     = 0;
+let isProjectSliderPaused      = false;
+const PROJECT_SLIDE_DURATION   = 5000;
+let currentProjectsViewMode    = 'slider';
+let pendingSlideMedia          = null;
+
+function getProjects() {
+  const saved = getSavedData();
+  if (saved && saved.projects && Array.isArray(saved.projects) && saved.projects.length > 0) {
+    return saved.projects;
+  }
+  if (portfolioData && portfolioData.projects && Array.isArray(portfolioData.projects) && portfolioData.projects.length > 0) {
+    return portfolioData.projects;
+  }
+  return [];
+}
+
+function saveProjects(projectsList) {
+  const d = getSavedData();
+  d.projects = projectsList;
+  saveData(d);
+  if (portfolioData) {
+    portfolioData.projects = projectsList;
+  }
+  filteredProjects = activeSlideCategory === 'all'
+    ? projectsList
+    : projectsList.filter(p => p.category === activeSlideCategory);
+  renderGallery();
+}
+
+function initProjectShowcaseSlider() {
+  const container = document.getElementById('projectsSliderContainer');
+  if (!container) return;
+
+  // Hover & touch pause listeners
+  container.addEventListener('mouseenter', () => pauseProjectSlider(true));
+  container.addEventListener('mouseleave', () => pauseProjectSlider(false));
+  container.addEventListener('touchstart', () => pauseProjectSlider(true), { passive: true });
+  container.addEventListener('touchend',   () => pauseProjectSlider(false), { passive: true });
+
+  // Keyboard navigation when hovering
+  container.addEventListener('keydown', (e) => {
+    if (e.key === 'ArrowLeft') prevProjectSlide();
+    if (e.key === 'ArrowRight') nextProjectSlide();
+  });
+
+  // Initial category setup
+  switchProjectCategory('all', true);
+}
+
+function switchProjectCategory(catId, forceInit = false) {
+  activeSlideCategory = catId;
+  const allProjects = getProjects();
+
+  categorySlideProjects = (catId === 'all')
+    ? allProjects
+    : allProjects.filter(p => p.category === catId);
+
+  currentProjectSlideIdx = 0;
+
+  // Update Add Slide button text to match category
+  const addBtn = document.getElementById('btnAddSlideText');
+  if (addBtn) {
+    const catLabel = getCategoryLabel(catId);
+    addBtn.textContent = (catId === 'all') ? 'Add Slide' : `Add ${catLabel} Slide`;
+  }
+
+  // Sync category filter buttons
+  document.querySelectorAll('.filter-btn').forEach(btn => {
+    btn.classList.toggle('active', btn.dataset.cat === catId);
+  });
+
+  const container = document.getElementById('projectsSliderContainer');
+  const emptyCard = document.getElementById('sliderEmptyCard');
+
+  if (!categorySlideProjects.length) {
+    if (container) container.style.display = 'none';
+    if (emptyCard) {
+      emptyCard.style.display = 'block';
+      const catLabel = getCategoryLabel(catId);
+      const titleEl = document.getElementById('sliderEmptyTitle');
+      const subEl = document.getElementById('sliderEmptySub');
+      if (titleEl) titleEl.textContent = `No Projects in ${catLabel}`;
+      if (subEl) subEl.textContent = `Abhi ${catLabel} category mein koi slide nahi hai. Edit mode on kar ke "Add Slide" se animation, video ya 3D model upload karein!`;
+    }
+    stopProjectSliderAutoplay();
+    return;
+  }
+
+  if (currentProjectsViewMode === 'slider') {
+    if (container) container.style.display = 'block';
+    if (emptyCard) emptyCard.style.display = 'none';
+  }
+
+  renderCurrentProjectSlide();
+  startProjectSliderAutoplay();
+}
+
+function renderCurrentProjectSlide() {
+  if (!categorySlideProjects.length) return;
+
+  if (currentProjectSlideIdx >= categorySlideProjects.length) currentProjectSlideIdx = 0;
+  if (currentProjectSlideIdx < 0) currentProjectSlideIdx = categorySlideProjects.length - 1;
+
+  const p = categorySlideProjects[currentProjectSlideIdx];
+  if (!p) return;
+
+  // Media elements
+  const imgEl       = document.getElementById('sliderImg');
+  const videoEl     = document.getElementById('sliderVideo');
+  const glbEl       = document.getElementById('sliderGlb');
+  const iframeEl    = document.getElementById('sliderIframe');
+  const glbHint     = document.getElementById('sliderGlbHint');
+  const badgeEl     = document.getElementById('sliderMediaBadge');
+  const audioBtn    = document.getElementById('sliderAudioBtn');
+
+  // Hide all initially
+  if (imgEl)    imgEl.style.display = 'none';
+  if (videoEl)  { videoEl.style.display = 'none'; videoEl.pause(); }
+  if (glbEl)    glbEl.style.display = 'none';
+  if (iframeEl) iframeEl.style.display = 'none';
+  if (glbHint)  glbHint.style.display = 'none';
+  if (audioBtn) audioBtn.style.display = 'none';
+
+  const mediaSrc = p.src || p.url || p.thumbnail || '';
+  const mediaType = (p.type || '').toLowerCase();
+
+  // 1. 3D GLB Model
+  if (mediaType === 'glb' || mediaSrc.match(/\.(glb|gltf)($|\?)/i)) {
+    if (glbEl) {
+      glbEl.src = mediaSrc;
+      glbEl.style.display = 'block';
+    }
+    if (glbHint) glbHint.style.display = 'flex';
+    if (badgeEl) badgeEl.innerHTML = '<i class="fas fa-cube"></i> <span>3D GLB MODEL</span>';
+  }
+  // 2. MP4 / WebM Native Video
+  else if (mediaType === 'video' || mediaSrc.match(/\.(mp4|webm|mov)($|\?)/i)) {
+    if (videoEl) {
+      videoEl.src = mediaSrc;
+      videoEl.muted = true;
+      videoEl.style.display = 'block';
+      videoEl.play().catch(() => {});
+    }
+    if (audioBtn) audioBtn.style.display = 'flex';
+    if (badgeEl) badgeEl.innerHTML = '<i class="fas fa-film"></i> <span>MP4 VIDEO</span>';
+  }
+  // 3. YouTube / Vimeo Video Embed
+  else if (mediaType === 'youtube' || mediaType === 'vimeo' || mediaSrc.includes('youtube.com') || mediaSrc.includes('vimeo.com')) {
+    if (iframeEl) {
+      let embedUrl = mediaSrc;
+      if (mediaSrc.includes('watch?v=')) {
+        embedUrl = mediaSrc.replace('watch?v=', 'embed/');
+      }
+      iframeEl.src = embedUrl;
+      iframeEl.style.display = 'block';
+    }
+    if (badgeEl) badgeEl.innerHTML = '<i class="fab fa-youtube"></i> <span>VIDEO EMBED</span>';
+  }
+  // 4. Picture / High-Res Render
+  else {
+    if (imgEl) {
+      imgEl.src = mediaSrc || 'https://images.unsplash.com/photo-1613490493576-7fde63acd811?w=1200';
+      imgEl.style.display = 'block';
+    }
+    if (badgeEl) badgeEl.innerHTML = '<i class="fas fa-image"></i> <span>4K RENDER</span>';
+  }
+
+  // Description & Details
+  const catPillEl = document.getElementById('sliderCatPill');
+  const counterEl = document.getElementById('sliderCounter');
+  const titleEl   = document.getElementById('sliderTitle');
+  const descEl    = document.getElementById('sliderDesc');
+  const tagsWrap  = document.getElementById('sliderMetaTags');
+
+  if (catPillEl) catPillEl.textContent = getCategoryLabel(p.category).toUpperCase();
+  if (counterEl) {
+    const cur = String(currentProjectSlideIdx + 1).padStart(2, '0');
+    const tot = String(categorySlideProjects.length).padStart(2, '0');
+    counterEl.textContent = `${cur} / ${tot}`;
+  }
+  if (titleEl) titleEl.textContent = p.title || 'Untitled Project';
+  if (descEl)  descEl.textContent  = p.description || 'No description provided. Click "Edit Slide" in edit mode to add details.';
+
+  // Render Tags
+  if (tagsWrap) {
+    tagsWrap.innerHTML = '';
+    const tagsList = p.tags
+      ? (Array.isArray(p.tags) ? p.tags : p.tags.split(',').map(t => t.trim()))
+      : [getCategoryLabel(p.category), p.date ? p.date.slice(0,4) : '2026', 'Blender 4.x'];
+    tagsList.forEach(t => {
+      if (!t) return;
+      const span = document.createElement('span');
+      span.className = 'slider-tag';
+      span.textContent = t;
+      tagsWrap.appendChild(span);
+    });
+  }
+
+  // Thumbnails Strip
+  renderSliderThumbnails();
+}
+
+function renderSliderThumbnails() {
+  const strip = document.getElementById('sliderThumbStrip');
+  if (!strip) return;
+  strip.innerHTML = '';
+
+  categorySlideProjects.forEach((proj, idx) => {
+    const thumbItem = document.createElement('div');
+    thumbItem.className = 'slider-thumb-item' + (idx === currentProjectSlideIdx ? ' active' : '');
+    const thumbUrl = proj.thumbnail || proj.src || 'https://images.unsplash.com/photo-1613490493576-7fde63acd811?w=200';
+    const isVid = ['video', 'youtube', 'vimeo'].includes(proj.type);
+    const isGlb = proj.type === 'glb';
+
+    thumbItem.innerHTML = `
+      <img src="${thumbUrl}" alt="${proj.title}" onerror="this.src='https://images.unsplash.com/photo-1613490493576-7fde63acd811?w=200'" />
+      ${isVid ? '<span class="thumb-type-icon"><i class="fas fa-play"></i></span>' : ''}
+      ${isGlb ? '<span class="thumb-type-icon"><i class="fas fa-cube"></i></span>' : ''}
+    `;
+
+    thumbItem.addEventListener('click', (e) => {
+      e.stopPropagation();
+      selectProjectSlide(idx);
+    });
+    strip.appendChild(thumbItem);
+  });
+
+  // Auto-scroll active thumb into view
+  const activeEl = strip.children[currentProjectSlideIdx];
+  if (activeEl) {
+    activeEl.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+  }
+}
+
+function nextProjectSlide() {
+  if (!categorySlideProjects.length) return;
+  currentProjectSlideIdx = (currentProjectSlideIdx + 1) % categorySlideProjects.length;
+  renderCurrentProjectSlide();
+  resetProgressTrack();
+}
+
+function prevProjectSlide() {
+  if (!categorySlideProjects.length) return;
+  currentProjectSlideIdx = (currentProjectSlideIdx - 1 + categorySlideProjects.length) % categorySlideProjects.length;
+  renderCurrentProjectSlide();
+  resetProgressTrack();
+}
+
+function selectProjectSlide(idx) {
+  if (idx < 0 || idx >= categorySlideProjects.length) return;
+  currentProjectSlideIdx = idx;
+  renderCurrentProjectSlide();
+  resetProgressTrack();
+}
+
+// 5s Auto-Slide Timer & Progress Bar
+function startProjectSliderAutoplay() {
+  stopProjectSliderAutoplay();
+  if (categorySlideProjects.length <= 1) return;
+
+  projectSliderStartTime = Date.now();
+  const progressBar = document.getElementById('sliderProgressBar');
+
+  projectSliderProgressTimer = setInterval(() => {
+    if (isProjectSliderPaused) {
+      projectSliderStartTime += 50; // pause progress
+      return;
+    }
+    const elapsed = Date.now() - projectSliderStartTime;
+    const pct = Math.min(100, (elapsed / PROJECT_SLIDE_DURATION) * 100);
+    if (progressBar) progressBar.style.width = pct + '%';
+
+    if (elapsed >= PROJECT_SLIDE_DURATION) {
+      projectSliderStartTime = Date.now();
+      if (progressBar) progressBar.style.width = '0%';
+      nextProjectSlide();
+    }
+  }, 50);
+}
+
+function stopProjectSliderAutoplay() {
+  if (projectSliderProgressTimer) {
+    clearInterval(projectSliderProgressTimer);
+    projectSliderProgressTimer = null;
+  }
+  const progressBar = document.getElementById('sliderProgressBar');
+  if (progressBar) progressBar.style.width = '0%';
+}
+
+function resetProgressTrack() {
+  projectSliderStartTime = Date.now();
+  const progressBar = document.getElementById('sliderProgressBar');
+  if (progressBar) progressBar.style.width = '0%';
+}
+
+function pauseProjectSlider(pause) {
+  isProjectSliderPaused = pause;
+  const pill = document.getElementById('sliderAutoPill');
+  const icon = document.getElementById('sliderAutoIcon');
+  const text = document.getElementById('sliderAutoText');
+  if (pill) {
+    pill.classList.toggle('paused', pause);
+    if (icon) icon.className = pause ? 'fas fa-pause' : 'fas fa-rotate';
+    if (text) text.textContent = pause ? 'PAUSED' : '5s AUTO';
+  }
+}
+
+function toggleProjectSliderAutoplay() {
+  pauseProjectSlider(!isProjectSliderPaused);
+}
+
+function toggleSlideVideoAudio() {
+  const videoEl = document.getElementById('sliderVideo');
+  const icon = document.getElementById('sliderAudioIcon');
+  if (!videoEl) return;
+  videoEl.muted = !videoEl.muted;
+  if (icon) {
+    icon.className = videoEl.muted ? 'fas fa-volume-mute' : 'fas fa-volume-up';
+  }
+}
+
+// View Mode Toggle (Slider vs Grid)
+function switchProjectsView(mode) {
+  currentProjectsViewMode = mode;
+  const sliderWrap = document.getElementById('projectsSliderContainer');
+  const gridWrap   = document.getElementById('gallery-grid');
+  const loadMore   = document.getElementById('load-more-wrap');
+  const emptyCard  = document.getElementById('sliderEmptyCard');
+
+  const btnSlider  = document.getElementById('viewBtnSlider');
+  const btnGrid    = document.getElementById('viewBtnGrid');
+
+  if (btnSlider) btnSlider.classList.toggle('active', mode === 'slider');
+  if (btnGrid)   btnGrid.classList.toggle('active', mode === 'grid');
+
+  if (mode === 'slider') {
+    if (categorySlideProjects.length > 0) {
+      if (sliderWrap) sliderWrap.style.display = 'block';
+      if (emptyCard)  emptyCard.style.display = 'none';
+      startProjectSliderAutoplay();
+    } else {
+      if (sliderWrap) sliderWrap.style.display = 'none';
+      if (emptyCard)  emptyCard.style.display = 'block';
+    }
+    if (gridWrap) gridWrap.style.display = 'none';
+    if (loadMore) loadMore.style.display = 'none';
+  } else {
+    stopProjectSliderAutoplay();
+    if (sliderWrap) sliderWrap.style.display = 'none';
+    if (emptyCard)  emptyCard.style.display = 'none';
+    if (gridWrap)   gridWrap.style.display = '';
+    renderGallery();
+  }
+}
+
+function openCurrentSlideLightbox() {
+  if (!categorySlideProjects.length) return;
+  const curProject = categorySlideProjects[currentProjectSlideIdx];
+  const allProjects = getProjects();
+  let targetIdx = allProjects.findIndex(p => p.id === curProject.id);
+  if (targetIdx === -1) targetIdx = 0;
+  filteredProjects = allProjects;
+  openLightbox(targetIdx);
+}
+
+// ============================================================
+// ADD / EDIT / DELETE PROJECT SLIDE MODAL
+// ============================================================
+
+function openAddProjectModal() {
+  pendingSlideMedia = null;
+  const modal = document.getElementById('projectSlideModal');
+  const heading = document.getElementById('modalProjectHeading');
+  if (heading) heading.innerHTML = '<i class="fas fa-layer-group"></i> Add Project Slide';
+
+  document.getElementById('pSlideId').value = '';
+  document.getElementById('pSlideTitle').value = '';
+  document.getElementById('pSlideDesc').value = '';
+  document.getElementById('pSlideUrl').value = '';
+  document.getElementById('pSlideTags').value = '';
+  document.getElementById('pSlideFile').value = '';
+
+  const catSelect = document.getElementById('pSlideCategory');
+  if (catSelect) {
+    catSelect.value = (activeSlideCategory === 'all') ? 'architecture' : activeSlideCategory;
+  }
+  const typeSelect = document.getElementById('pSlideType');
+  if (typeSelect) {
+    typeSelect.value = 'image';
+    onSlideMediaTypeChange('image');
+  }
+
+  const previewBox = document.getElementById('pSlidePreviewBox');
+  if (previewBox) previewBox.style.display = 'none';
+
+  if (modal) {
+    modal.classList.add('open');
+    modal.style.display = 'flex';
+  }
+}
+
+function openEditCurrentProjectModal() {
+  if (!categorySlideProjects.length) return;
+  const p = categorySlideProjects[currentProjectSlideIdx];
+  if (!p) return;
+
+  pendingSlideMedia = null;
+  const modal = document.getElementById('projectSlideModal');
+  const heading = document.getElementById('modalProjectHeading');
+  if (heading) heading.innerHTML = '<i class="fas fa-pen"></i> Edit Project Slide';
+
+  document.getElementById('pSlideId').value    = p.id || '';
+  document.getElementById('pSlideTitle').value = p.title || '';
+  document.getElementById('pSlideDesc').value  = p.description || '';
+  document.getElementById('pSlideUrl').value   = p.src || '';
+  document.getElementById('pSlideTags').value  = Array.isArray(p.tags) ? p.tags.join(', ') : (p.tags || '');
+  document.getElementById('pSlideFile').value  = '';
+
+  const catSelect = document.getElementById('pSlideCategory');
+  if (catSelect) catSelect.value = p.category || 'architecture';
+
+  const typeSelect = document.getElementById('pSlideType');
+  if (typeSelect) {
+    typeSelect.value = p.type || 'image';
+    onSlideMediaTypeChange(p.type || 'image');
+  }
+
+  // Show existing media preview
+  const previewBox = document.getElementById('pSlidePreviewBox');
+  const previewCont = document.getElementById('pSlidePreviewContent');
+  if (previewBox && previewCont && (p.src || p.thumbnail)) {
+    previewBox.style.display = 'block';
+    const src = p.src || p.thumbnail;
+    if (p.type === 'video') {
+      previewCont.innerHTML = `<video src="${src}" autoplay muted loop style="max-height:180px; max-width:100%; border-radius:8px;"></video>`;
+    } else if (p.type === 'glb') {
+      previewCont.innerHTML = `<model-viewer src="${src}" auto-rotate camera-controls style="width:200px; height:180px;"></model-viewer>`;
+    } else {
+      previewCont.innerHTML = `<img src="${src}" style="max-height:180px; max-width:100%; border-radius:8px; object-fit:cover;" />`;
+    }
+  }
+
+  if (modal) {
+    modal.classList.add('open');
+    modal.style.display = 'flex';
+  }
+}
+
+function closeProjectSlideModal() {
+  const modal = document.getElementById('projectSlideModal');
+  if (modal) {
+    modal.classList.remove('open');
+    modal.style.display = 'none';
+  }
+}
+
+function onSlideMediaTypeChange(type) {
+  const fileInput = document.getElementById('pSlideFile');
+  const uploadLabel = document.getElementById('pSlideUploadLabel');
+  if (!fileInput) return;
+
+  if (type === 'image') {
+    fileInput.accept = 'image/*';
+    if (uploadLabel) uploadLabel.textContent = 'Upload Picture (JPG / PNG / WebP)';
+  } else if (type === 'video') {
+    fileInput.accept = 'video/mp4,video/webm';
+    if (uploadLabel) uploadLabel.textContent = 'Upload MP4 / WebM Video';
+  } else if (type === 'glb') {
+    fileInput.accept = '.glb,.gltf';
+    if (uploadLabel) uploadLabel.textContent = 'Upload 3D Model (.glb / .gltf)';
+  } else {
+    fileInput.accept = '*';
+    if (uploadLabel) uploadLabel.textContent = 'Upload Optional Thumbnail File';
+  }
+}
+
+// Client-side image compressor for project slides
+function compressSlideImage(file, maxDimension = 1280, quality = 0.85) {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      const img = new Image();
+      img.onload = () => {
+        let w = img.width;
+        let h = img.height;
+        if (w > maxDimension || h > maxDimension) {
+          if (w > h) {
+            h = Math.round((h * maxDimension) / w);
+            w = maxDimension;
+          } else {
+            w = Math.round((w * maxDimension) / h);
+            h = maxDimension;
+          }
+        }
+        const canvas = document.createElement('canvas');
+        canvas.width = w;
+        canvas.height = h;
+        const ctx = canvas.getContext('2d');
+        ctx.drawImage(img, 0, 0, w, h);
+        resolve(canvas.toDataURL('image/jpeg', quality));
+      };
+      img.onerror = reject;
+      img.src = e.target.result;
+    };
+    reader.onerror = reject;
+    reader.readAsDataURL(file);
+  });
+}
+
+async function handleSlideFileSelect(event) {
+  const file = event.target.files && event.target.files[0];
+  if (!file) return;
+
+  const type = document.getElementById('pSlideType').value;
+  const previewBox = document.getElementById('pSlidePreviewBox');
+  const previewCont = document.getElementById('pSlidePreviewContent');
+
+  showToast('⏳ File process ho rahi hai...');
+
+  try {
+    if (type === 'image') {
+      const compressedUrl = await compressSlideImage(file);
+      pendingSlideMedia = { type: 'image', url: compressedUrl, file: file };
+      if (previewBox && previewCont) {
+        previewBox.style.display = 'block';
+        previewCont.innerHTML = `<img src="${compressedUrl}" style="max-height:180px; max-width:100%; border-radius:8px; object-fit:cover;" />`;
+      }
+    } else if (type === 'video') {
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        const dataUrl = e.target.result;
+        pendingSlideMedia = { type: 'video', url: dataUrl, file: file };
+        if (previewBox && previewCont) {
+          previewBox.style.display = 'block';
+          previewCont.innerHTML = `<video src="${dataUrl}" autoplay muted loop style="max-height:180px; max-width:100%; border-radius:8px;"></video>`;
+        }
+      };
+      reader.readAsDataURL(file);
+    } else if (type === 'glb') {
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        const dataUrl = e.target.result;
+        pendingSlideMedia = { type: 'glb', url: dataUrl, file: file };
+        if (previewBox && previewCont) {
+          previewBox.style.display = 'block';
+          previewCont.innerHTML = `<model-viewer src="${dataUrl}" auto-rotate camera-controls style="width:200px; height:180px;"></model-viewer>`;
+        }
+      };
+      reader.readAsDataURL(file);
+    }
+    showToast('✅ File preview tayyar hai!');
+  } catch(err) {
+    console.error('Slide file select error:', err);
+    showToast('❌ File load karne mein masla hua: ' + err.message, 'error');
+  }
+}
+
+function handleSlideUrlInput(url) {
+  if (!url || !url.startsWith('http')) return;
+  const previewBox = document.getElementById('pSlidePreviewBox');
+  const previewCont = document.getElementById('pSlidePreviewContent');
+  const type = document.getElementById('pSlideType').value;
+
+  if (previewBox && previewCont) {
+    previewBox.style.display = 'block';
+    if (type === 'video') {
+      previewCont.innerHTML = `<video src="${url}" autoplay muted loop style="max-height:180px; max-width:100%; border-radius:8px;"></video>`;
+    } else if (type === 'glb') {
+      previewCont.innerHTML = `<model-viewer src="${url}" auto-rotate camera-controls style="width:200px; height:180px;"></model-viewer>`;
+    } else {
+      previewCont.innerHTML = `<img src="${url}" style="max-height:180px; max-width:100%; border-radius:8px; object-fit:cover;" />`;
+    }
+  }
+}
+
+async function handleSaveProjectSlide(e) {
+  e.preventDefault();
+
+  const idVal    = document.getElementById('pSlideId').value.trim();
+  const title    = document.getElementById('pSlideTitle').value.trim();
+  const category = document.getElementById('pSlideCategory').value;
+  const type     = document.getElementById('pSlideType').value;
+  const desc     = document.getElementById('pSlideDesc').value.trim();
+  const tagsStr  = document.getElementById('pSlideTags').value.trim();
+  const urlVal   = document.getElementById('pSlideUrl').value.trim();
+
+  let finalSrc = urlVal;
+  let finalThumb = urlVal;
+
+  if (pendingSlideMedia && pendingSlideMedia.url) {
+    finalSrc = pendingSlideMedia.url;
+    finalThumb = (type === 'image') ? pendingSlideMedia.url : urlVal;
+  }
+
+  if (!finalSrc && !idVal) {
+    showToast('⚠️ Barahe karam image/video/GLB file choose karein ya link enter karein!', 'error');
+    return;
+  }
+
+  const tagsArr = tagsStr ? tagsStr.split(',').map(s => s.trim()).filter(Boolean) : [];
+  const allProjects = [...getProjects()];
+
+  // Editing existing project
+  if (idVal) {
+    const existingIdx = allProjects.findIndex(p => p.id === idVal);
+    if (existingIdx !== -1) {
+      allProjects[existingIdx] = {
+        ...allProjects[existingIdx],
+        title,
+        category,
+        type,
+        src: finalSrc || allProjects[existingIdx].src,
+        thumbnail: finalThumb || allProjects[existingIdx].thumbnail || finalSrc || allProjects[existingIdx].src,
+        description: desc,
+        tags: tagsArr.length ? tagsArr : allProjects[existingIdx].tags,
+      };
+      showToast('✅ Slide update ho gayi!');
+    }
+  } else {
+    // Creating new project slide
+    const newProj = {
+      id: 'proj_' + Date.now(),
+      title,
+      category,
+      type,
+      src: finalSrc,
+      thumbnail: finalThumb || finalSrc,
+      description: desc,
+      tags: tagsArr,
+      featured: true,
+      date: new Date().toISOString().split('T')[0]
+    };
+    allProjects.unshift(newProj);
+    showToast('🎉 Nayi Slide kamyabi se add ho gayi!');
+  }
+
+  saveProjects(allProjects);
+  closeProjectSlideModal();
+
+  // Switch category and display the slide
+  switchProjectCategory(category);
+  selectProjectSlide(0);
+}
+
+function deleteCurrentProjectSlide() {
+  if (!categorySlideProjects.length) return;
+  const cur = categorySlideProjects[currentProjectSlideIdx];
+  if (!cur) return;
+
+  if (!confirm(`Aap waqai "${cur.title || 'is project'}" ko delete karna chahte hain?`)) return;
+
+  const allProjects = getProjects().filter(p => p.id !== cur.id);
+  saveProjects(allProjects);
+  showToast('🗑️ Slide delete ho gayi!');
+
+  switchProjectCategory(activeSlideCategory);
+}
