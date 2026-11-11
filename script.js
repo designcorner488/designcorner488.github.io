@@ -718,7 +718,7 @@ function initContactForm() {
   const form = document.getElementById('contact-form');
   if (!form) return;
 
-  // Direct WhatsApp Button
+  // Direct WhatsApp Button (Launches native WhatsApp app directly on mobile)
   const waBtn = document.getElementById('btnSendWhatsApp');
   if (waBtn) {
     waBtn.addEventListener('click', () => {
@@ -736,8 +736,7 @@ function initContactForm() {
       if (service) waMsg += `🛠️ *Service:* ${service}\n`;
       if (msg)     waMsg += `💬 *Message:* ${msg}`;
 
-      window.open(`https://web.whatsapp.com/send?phone=${cleanPhone}&text=${encodeURIComponent(waMsg)}`, '_blank');
-      showToast('📲 WhatsApp chat khul rahi hai...');
+      openDirectWhatsApp(cleanPhone, waMsg);
     });
   }
 
@@ -1518,7 +1517,7 @@ function loadSavedEdits() {
   } else {
     // Default fallback for WhatsApp
     document.querySelectorAll('[data-platform="whatsapp"]').forEach(el => {
-      el.href = 'https://web.whatsapp.com/send?phone=923392332272';
+      el.href = 'https://wa.me/923392332272';
       el.target = '_blank';
       el.rel = 'noopener noreferrer';
     });
@@ -3838,3 +3837,128 @@ function resetSiteScale() {
 // Initialize scale immediately and on DOMContentLoaded
 initSiteScale();
 window.addEventListener('DOMContentLoaded', initSiteScale);
+
+
+/* ============================================================
+   DIRECT WHATSAPP APP & INQUIRIES MANAGEMENT (v22.6)
+   ============================================================ */
+
+function openDirectWhatsApp(phone, text = '') {
+  const clean = (phone || '923392332272').replace(/[^0-9]/g, '');
+  const encoded = text ? encodeURIComponent(text) : '';
+  const isMobile = /Android|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) || window.innerWidth <= 768;
+
+  if (isMobile) {
+    // Direct mobile app deep link — launches native WhatsApp application instantly!
+    const mobileUrl = encoded
+      ? `https://api.whatsapp.com/send?phone=${clean}&text=${encoded}`
+      : `https://api.whatsapp.com/send?phone=${clean}`;
+    window.location.href = mobileUrl;
+  } else {
+    // Desktop: opens WhatsApp Web or Desktop App
+    const desktopUrl = encoded
+      ? `https://web.whatsapp.com/send?phone=${clean}&text=${encoded}`
+      : `https://web.whatsapp.com/send?phone=${clean}`;
+    window.open(desktopUrl, '_blank', 'noopener,noreferrer');
+  }
+  showToast('📲 WhatsApp khul raha hai...');
+}
+
+function handleWhatsAppLinkClick(event, phone) {
+  const isMobile = /Android|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) || window.innerWidth <= 768;
+  if (isMobile) {
+    event.preventDefault();
+    openDirectWhatsApp(phone, 'Hello Design Corner! I visited your portfolio website and would like to discuss a project.');
+  }
+}
+
+// Inquiries Local Storage Engine
+function getLocalInquiries() {
+  try {
+    return JSON.parse(localStorage.getItem('portfolio_client_inquiries') || '[]');
+  } catch(e) {
+    return [];
+  }
+}
+
+function saveInquiryLocally(inquiry) {
+  try {
+    const list = getLocalInquiries();
+    list.unshift(inquiry);
+    localStorage.setItem('portfolio_client_inquiries', JSON.stringify(list));
+    updateInquiryBadge();
+  } catch(e) {
+    console.warn('Could not save inquiry locally:', e);
+  }
+}
+
+function updateInquiryBadge() {
+  const badge = document.getElementById('inquiryCount');
+  if (badge) {
+    const list = getLocalInquiries();
+    badge.textContent = list.length;
+  }
+}
+
+function openInquiriesModal() {
+  const modal = document.getElementById('inquiriesModal');
+  const listEl = document.getElementById('inquiriesList');
+  if (!modal || !listEl) return;
+
+  const inquiries = getLocalInquiries();
+  if (!inquiries.length) {
+    listEl.innerHTML = `
+      <div style="text-align:center; padding:2.5rem 1rem; color:var(--text-muted);">
+        <i class="fas fa-inbox" style="font-size:2.5rem; color:rgba(0,240,255,0.3); margin-bottom:0.8rem;"></i>
+        <h4 style="color:#fff; margin-bottom:0.4rem;">Koi message nahi mila</h4>
+        <p style="font-size:0.82rem;">Website form se submit hone walay messages yahan display hotay hain.</p>
+      </div>
+    `;
+  } else {
+    listEl.innerHTML = inquiries.map((inq, idx) => `
+      <div style="background:rgba(16,20,48,0.7); border:1px solid rgba(0,240,255,0.25); border-radius:12px; padding:1.2rem; margin-bottom:0.8rem;">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.5rem; flex-wrap:wrap; gap:0.4rem;">
+          <strong style="color:#fff; font-size:0.95rem;">👤 ${inq.name}</strong>
+          <span style="font-size:0.72rem; color:#00f0ff; background:rgba(0,240,255,0.1); border:1px solid rgba(0,240,255,0.3); border-radius:50px; padding:2px 8px;">${inq.service || 'General'}</span>
+        </div>
+        <div style="font-size:0.82rem; color:rgba(255,255,255,0.75); margin-bottom:0.5rem;">
+          <a href="mailto:${inq.email}" style="color:#a855f7;"><i class="fas fa-envelope"></i> ${inq.email}</a>
+          <span style="margin:0 6px; color:rgba(255,255,255,0.3);">•</span>
+          <span style="color:var(--text-muted);"><i class="fas fa-clock"></i> ${inq.date || 'Recent'}</span>
+        </div>
+        <div style="font-size:0.85rem; line-height:1.5; color:#fff; background:rgba(0,0,0,0.3); padding:0.8rem; border-radius:8px; border-left:3px solid #00f0ff;">
+          ${(inq.message || '').replace(/\n/g, '<br/>')}
+        </div>
+        <div style="margin-top:0.6rem; text-align:right;">
+          <button type="button" onclick="replyViaWhatsAppDirect('${inq.name}', '${inq.message}')" style="background:linear-gradient(135deg,#10b981,#059669); color:#fff; border:none; border-radius:50px; padding:4px 12px; font-size:0.75rem; font-weight:700; cursor:pointer;">
+            <i class="fab fa-whatsapp"></i> WhatsApp Reply
+          </button>
+        </div>
+      </div>
+    `).join('');
+  }
+
+  modal.style.display = 'flex';
+  updateInquiryBadge();
+}
+
+function closeInquiriesModal() {
+  const modal = document.getElementById('inquiriesModal');
+  if (modal) modal.style.display = 'none';
+}
+
+function clearAllInquiries() {
+  if (!confirm('Kya aap tamam inquiries delete karna chahte hain?')) return;
+  localStorage.removeItem('portfolio_client_inquiries');
+  updateInquiryBadge();
+  openInquiriesModal();
+  showToast('🗑️ Inquiries clear ho gayin!');
+}
+
+function replyViaWhatsAppDirect(name, clientMsg) {
+  const msg = `Hello ${name}! Thank you for contacting Design Corner. Regarding your message: "${clientMsg.slice(0, 80)}..."`;
+  openDirectWhatsApp('+923392332272', msg);
+}
+
+// Initial badge check
+window.addEventListener('DOMContentLoaded', updateInquiryBadge);

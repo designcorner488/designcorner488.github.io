@@ -16,7 +16,7 @@ window.addEventListener('error', function(e) {
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
-  <link rel="stylesheet" href="style.css?v=22.5"/>
+  <link rel="stylesheet" href="style.css?v=22.6"/>
   <script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/3.4.0/model-viewer.min.js"></script>
 </head>
 <body>
@@ -29,6 +29,7 @@ window.addEventListener('error', function(e) {
       <button class="etool etool-save" id="btnSave" onclick="saveAll()"><i class="fas fa-floppy-disk"></i> Save</button>
       <button class="etool etool-publish" id="btnPublish" onclick="publishToGitHub()"><i class="fas fa-cloud-upload-alt"></i> Publish Live</button>
       <button class="etool etool-token" id="btnToken" onclick="openGhTokenModal()" title="GitHub Token Setup"><i class="fab fa-github"></i></button>
+      <button class="etool etool-inquiries" id="btnInquiries" onclick="openInquiriesModal()" title="View Client Messages"><i class="fas fa-inbox"></i> Inquiries (<span id="inquiryCount">0</span>)</button>
       <button class="etool etool-softwares" id="btnManageSoftwares" onclick="openSoftwareModal()"><i class="fas fa-tags"></i> Software Tags</button>
       <button class="etool etool-reset" id="btnReset"><i class="fas fa-rotate-left"></i> Reset</button>
       <button class="etool etool-lock" id="btnLock" onclick="lockEditMode()" title="Lock & Logout"><i class="fas fa-lock"></i> Lock</button>
@@ -807,7 +808,7 @@ window.addEventListener('error', function(e) {
           <div><strong>Availability</strong><span class="editable" data-key="cAvail">Mon–Sat, 9am – 7pm PKT</span></div>
         </div>
         <div class="contact-socials">
-          <a href="https://web.whatsapp.com/send?phone=923392332272" target="_blank" rel="noopener noreferrer" class="csocial social-link" data-platform="whatsapp" title="Chat on WhatsApp"><i class="fab fa-whatsapp"></i></a>
+          <a href="https://wa.me/923392332272" onclick="handleWhatsAppLinkClick(event, '923392332272')" target="_blank" rel="noopener noreferrer" class="csocial social-link" data-platform="whatsapp" title="Chat on WhatsApp"><i class="fab fa-whatsapp"></i></a>
           <a href="#" class="csocial social-link" data-platform="behance"><i class="fab fa-behance"></i></a>
           <a href="#" class="csocial social-link" data-platform="linkedin"><i class="fab fa-linkedin"></i></a>
           <a href="#" class="csocial social-link" data-platform="instagram"><i class="fab fa-instagram"></i></a>
@@ -952,7 +953,7 @@ window.addEventListener('error', function(e) {
   </div>
 </div>
 
-<script src="script.js?v=22.5"></script>
+<script src="script.js?v=22.6"></script>
 <!-- REORDER MODELS & ANIMATIONS MODAL -->
 <div class="modal-overlay" id="glbReorderModal">
   <div class="modal-box" style="max-width:520px;">
@@ -1197,6 +1198,29 @@ window.addEventListener('error', function(e) {
         </button>
       </div>
     </form>
+  </div>
+</div>
+
+<!-- INQUIRIES INBOX MODAL (FOR WEBSITE OWNER IN EDIT MODE) -->
+<div class="modal-overlay" id="inquiriesModal" style="display:none;" onclick="if(event.target===this)closeInquiriesModal()">
+  <div class="modal-box" style="max-width: 650px;">
+    <div class="modal-header">
+      <h3 style="display:flex; align-items:center; gap:0.6rem; color:#fff;">
+        <i class="fas fa-inbox" style="color:#00f0ff;"></i> Client Messages &amp; Inquiries
+      </h3>
+      <button class="modal-close" onclick="closeInquiriesModal()"><i class="fas fa-times"></i></button>
+    </div>
+    <div class="modal-body" style="padding:1.5rem; max-height:480px; overflow-y:auto;" id="inquiriesList">
+      <!-- Populated by JS -->
+    </div>
+    <div style="display:flex; justify-content:space-between; align-items:center; padding:1rem 1.5rem; border-top:1px solid rgba(255,255,255,0.1);">
+      <small style="color:var(--text-muted); font-size:0.75rem;">
+        <i class="fas fa-shield-alt"></i> Client messages automatically yahan backup hotay hain.
+      </small>
+      <button type="button" class="btn-secondary" onclick="clearAllInquiries()" style="padding:0.4rem 0.9rem; font-size:0.75rem; border-color:rgba(239,68,68,0.4); color:#ef4444;">
+        <i class="fas fa-trash"></i> Clear All
+      </button>
+    </div>
   </div>
 </div>
 </body>
