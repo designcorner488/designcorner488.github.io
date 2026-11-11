@@ -2245,13 +2245,90 @@ function saveAddons(addonsList) {
   }
 }
 
-function renderAddons() {
-  const grid = document.getElementById('addonsGrid');
-  if (!grid) return;
-  const addons = getAddons();
+/* ============================================================
+   BLENDER ADDONS: SLIDE VIEW CAROUSEL ENGINE (v22.4)
+   Supports up to 100+ Addons with Carousel Sliding, Filter & Search
+   ============================================================ */
 
-  grid.innerHTML = addons.map(addon => {
-    const isEdit = editMode;
+let currentAddonCategory     = 'all';
+let currentAddonSearchQuery  = '';
+let currentAddonSlideIndex   = 0;
+let lastFilteredAddons       = [];
+let addonAutoSlideTimer      = null;
+let isAddonAutoSlidePaused   = false;
+const ADDON_AUTO_INTERVAL    = 6000;
+let addonListenersBound      = false;
+
+function getCardsPerPage() {
+  const w = window.innerWidth;
+  if (w <= 680) return 1;
+  if (w <= 1080) return 2;
+  return 3;
+}
+
+function getFilteredAddons() {
+  const allAddons = getAddons();
+  return allAddons.filter(addon => {
+    // 1. Category filter
+    let matchCat = true;
+    if (currentAddonCategory !== 'all') {
+      const catLower = (addon.category || '').toLowerCase();
+      const targetLower = currentAddonCategory.toLowerCase();
+      matchCat = catLower.includes(targetLower);
+    }
+
+    // 2. Search query filter
+    let matchQuery = true;
+    if (currentAddonSearchQuery) {
+      const q = currentAddonSearchQuery.toLowerCase();
+      const title = (addon.title || '').toLowerCase();
+      const desc = (addon.desc || '').toLowerCase();
+      const cat = (addon.category || '').toLowerCase();
+      const blender = (addon.blender || '').toLowerCase();
+      matchQuery = title.includes(q) || desc.includes(q) || cat.includes(q) || blender.includes(q);
+    }
+
+    return matchCat && matchQuery;
+  });
+}
+
+function renderAddons() {
+  const track = document.getElementById('addonsTrack');
+  const empty = document.getElementById('addonsEmptyState');
+  const carouselWrap = document.getElementById('addonsCarouselWrap');
+  const footerWrap = document.querySelector('.addons-carousel-footer');
+  const countNum = document.getElementById('addonsCountNum');
+  if (!track) return;
+
+  lastFilteredAddons = getFilteredAddons();
+
+  // Update counter badge
+  if (countNum) countNum.textContent = lastFilteredAddons.length;
+
+  // Handle empty state
+  if (!lastFilteredAddons.length) {
+    track.innerHTML = '';
+    if (carouselWrap) carouselWrap.style.display = 'none';
+    if (footerWrap) footerWrap.style.display = 'none';
+    if (empty) {
+      empty.style.display = 'block';
+      const msg = document.getElementById('addonsEmptyMsg');
+      if (msg) {
+        msg.textContent = currentAddonSearchQuery
+          ? `"${currentAddonSearchQuery}" se match karne wala koi addon nahi mila.`
+          : 'Is category mein filhal koi addon nahi hai.';
+      }
+    }
+    stopAddonAutoSlide();
+    return;
+  }
+
+  if (carouselWrap) carouselWrap.style.display = 'block';
+  if (footerWrap) footerWrap.style.display = 'flex';
+  if (empty) empty.style.display = 'none';
+
+  // Render cards
+  track.innerHTML = lastFilteredAddons.map(addon => {
     const downloadAction = (addon.fileUrl && addon.fileUrl !== '#') 
       ? `href="${addon.fileUrl}" download="${addon.title.replace(/[^a-zA-Z0-9_-]/g, '_')}.zip" target="_blank"`
       : `href="javascript:void(0)" onclick="triggerSampleAddonDownload('${addon.id}')"`;
@@ -2272,7 +2349,7 @@ function renderAddons() {
           <div class="addon-compat">
             <i class="fa-brands fa-blender"></i> ${addon.blender || 'Blender 3.6 / 4.x'}
           </div>
-          <p class="addon-desc">${addon.desc || ''}</p>
+          <p class="addon-desc" title="${addon.desc || ''}">${addon.desc || 'Parametric tools and workflows for Blender.'}</p>
         </div>
         <div class="addon-card-bottom">
           <div class="addon-downloads-stat">
@@ -2280,8 +2357,8 @@ function renderAddons() {
           </div>
           <div style="display:flex;align-items:center;gap:.6rem;">
             <div class="addon-edit-actions">
-              <button class="btn-addon-action" onclick="openAddonModal('${addon.id}')" title="Edit Addon"><i class="fas fa-pen"></i></button>
-              <button class="btn-addon-action del" onclick="deleteAddon('${addon.id}')" title="Delete Addon"><i class="fas fa-trash"></i></button>
+              <button type="button" class="btn-addon-action" onclick="openAddonModal('${addon.id}')" title="Edit Addon"><i class="fas fa-pen"></i></button>
+              <button type="button" class="btn-addon-action del" onclick="deleteAddon('${addon.id}')" title="Delete Addon"><i class="fas fa-trash"></i></button>
             </div>
             <a ${downloadAction} class="btn-addon-download">
               <i class="fas fa-cloud-arrow-down"></i> Download
@@ -2291,7 +2368,192 @@ function renderAddons() {
       </div>
     `;
   }).join('');
+
+  // Render dots
+  renderAddonDots();
+
+  // Position track
+  updateAddonsTrackPosition();
+
+  // Start auto-slide if more than cardsPerPage
+  const cardsPerPage = getCardsPerPage();
+  if (lastFilteredAddons.length > cardsPerPage) {
+    startAddonAutoSlide();
+  } else {
+    stopAddonAutoSlide();
+  }
+
+  // Bind mouse/touch listeners once
+  bindAddonCarouselListeners();
 }
+
+function renderAddonDots() {
+  const dotsContainer = document.getElementById('addonsPaginationDots');
+  if (!dotsContainer) return;
+
+  const cardsPerPage = getCardsPerPage();
+  const maxIdx = Math.max(0, lastFilteredAddons.length - cardsPerPage);
+  const totalSteps = maxIdx + 1;
+
+  if (totalSteps <= 1) {
+    dotsContainer.innerHTML = '';
+    return;
+  }
+
+  // To prevent overcrowding when having 100 addons, limit dots to at most 10 or pages
+  const stepCount = Math.min(totalSteps, 10);
+  let html = '';
+  for (let i = 0; i < stepCount; i++) {
+    const targetIdx = Math.round((i / (stepCount - 1)) * maxIdx);
+    html += `<span class="addon-dot" onclick="jumpToAddonSlide(${targetIdx})" title="Slide ${targetIdx + 1}"></span>`;
+  }
+  dotsContainer.innerHTML = html;
+}
+
+function updateAddonsTrackPosition() {
+  const track = document.getElementById('addonsTrack');
+  const viewport = document.getElementById('addonsViewport');
+  if (!track || !viewport) return;
+
+  const cardsPerPage = getCardsPerPage();
+  const maxIdx = Math.max(0, lastFilteredAddons.length - cardsPerPage);
+  if (currentAddonSlideIndex > maxIdx) currentAddonSlideIndex = maxIdx;
+  if (currentAddonSlideIndex < 0) currentAddonSlideIndex = 0;
+
+  const firstCard = track.querySelector('.addon-card');
+  if (!firstCard) return;
+
+  const cardRect = firstCard.getBoundingClientRect();
+  const gap = parseFloat(window.getComputedStyle(track).gap) || 24;
+  const step = cardRect.width + gap;
+
+  track.style.transform = `translateX(-${currentAddonSlideIndex * step}px)`;
+
+  // Update dots
+  const dots = document.querySelectorAll('.addon-dot');
+  if (dots.length > 0) {
+    const activeDotIdx = Math.round((currentAddonSlideIndex / (maxIdx || 1)) * (dots.length - 1));
+    dots.forEach((dot, idx) => {
+      dot.classList.toggle('active', idx === activeDotIdx);
+    });
+  }
+
+  // Update counter
+  const counter = document.getElementById('addonsPageCounter');
+  if (counter) {
+    const total = lastFilteredAddons.length;
+    const start = Math.min(total, currentAddonSlideIndex + 1);
+    const end = Math.min(total, currentAddonSlideIndex + cardsPerPage);
+    counter.textContent = `Showing ${start}-${end} of ${total} Addons`;
+  }
+}
+
+function nextAddonSlide() {
+  const cardsPerPage = getCardsPerPage();
+  const maxIdx = Math.max(0, lastFilteredAddons.length - cardsPerPage);
+  if (maxIdx === 0) return;
+
+  currentAddonSlideIndex = (currentAddonSlideIndex >= maxIdx) ? 0 : currentAddonSlideIndex + 1;
+  updateAddonsTrackPosition();
+}
+
+function prevAddonSlide() {
+  const cardsPerPage = getCardsPerPage();
+  const maxIdx = Math.max(0, lastFilteredAddons.length - cardsPerPage);
+  if (maxIdx === 0) return;
+
+  currentAddonSlideIndex = (currentAddonSlideIndex <= 0) ? maxIdx : currentAddonSlideIndex - 1;
+  updateAddonsTrackPosition();
+}
+
+function jumpToAddonSlide(idx) {
+  const cardsPerPage = getCardsPerPage();
+  const maxIdx = Math.max(0, lastFilteredAddons.length - cardsPerPage);
+  currentAddonSlideIndex = Math.min(idx, maxIdx);
+  updateAddonsTrackPosition();
+}
+
+// Category filter
+function filterAddonsByCategory(cat) {
+  currentAddonCategory = cat;
+  currentAddonSlideIndex = 0;
+
+  document.querySelectorAll('.addon-filter-btn').forEach(btn => {
+    btn.classList.toggle('active', btn.dataset.cat === cat);
+  });
+
+  renderAddons();
+}
+
+// Search filter
+function handleAddonSearch(query) {
+  currentAddonSearchQuery = (query || '').trim();
+  currentAddonSlideIndex = 0;
+
+  const clearBtn = document.getElementById('btnClearAddonSearch');
+  if (clearBtn) clearBtn.style.display = currentAddonSearchQuery ? 'inline-block' : 'none';
+
+  renderAddons();
+}
+
+function clearAddonSearch() {
+  const input = document.getElementById('addonSearchInput');
+  if (input) input.value = '';
+  handleAddonSearch('');
+}
+
+// Auto-Slide Controls
+function startAddonAutoSlide() {
+  stopAddonAutoSlide();
+  addonAutoSlideTimer = setInterval(() => {
+    if (!isAddonAutoSlidePaused) {
+      nextAddonSlide();
+    }
+  }, ADDON_AUTO_INTERVAL);
+}
+
+function stopAddonAutoSlide() {
+  if (addonAutoSlideTimer) {
+    clearInterval(addonAutoSlideTimer);
+    addonAutoSlideTimer = null;
+  }
+}
+
+function pauseAddonAutoSlide(paused) {
+  isAddonAutoSlidePaused = paused;
+  const pill = document.getElementById('addonAutoPill');
+  const icon = document.getElementById('addonAutoIcon');
+  const text = document.getElementById('addonAutoText');
+  if (pill) {
+    pill.classList.toggle('paused', paused);
+    if (icon) icon.className = paused ? 'fas fa-pause' : 'fas fa-rotate';
+    if (text) text.textContent = paused ? 'PAUSED' : '6s AUTO';
+  }
+}
+
+function toggleAddonAutoSlide() {
+  pauseAddonAutoSlide(!isAddonAutoSlidePaused);
+}
+
+function bindAddonCarouselListeners() {
+  if (addonListenersBound) return;
+  addonListenersBound = true;
+
+  const vp = document.getElementById('addonsViewport');
+  if (vp) {
+    vp.addEventListener('mouseenter', () => pauseAddonAutoSlide(true));
+    vp.addEventListener('mouseleave', () => pauseAddonAutoSlide(false));
+    vp.addEventListener('touchstart', () => pauseAddonAutoSlide(true), { passive: true });
+    vp.addEventListener('touchend',   () => pauseAddonAutoSlide(false), { passive: true });
+  }
+
+  window.addEventListener('resize', () => {
+    renderAddonDots();
+    updateAddonsTrackPosition();
+  });
+}
+
+
 
 function openAddonModal(addonId) {
   const modal = document.getElementById('addonModal');
