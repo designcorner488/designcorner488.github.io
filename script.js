@@ -3130,7 +3130,13 @@ let pendingSlideMedia          = null;
 function getProjects() {
   const saved = getSavedData();
   if (saved && saved.projects && Array.isArray(saved.projects) && saved.projects.length > 0) {
-    return saved.projects;
+    // If local cache contains old youtube demo entries or has less than 10 items, purge it to show fresh 25 client examples
+    if (saved.projects.some(p => p.type === 'youtube' || p.id === 'demo-3') || saved.projects.length < 15) {
+      delete saved.projects;
+      saveData(saved);
+    } else {
+      return saved.projects;
+    }
   }
   if (portfolioData && portfolioData.projects && Array.isArray(portfolioData.projects) && portfolioData.projects.length > 0) {
     return portfolioData.projects;
@@ -3349,10 +3355,11 @@ function renderSliderThumbnails() {
     strip.appendChild(thumbItem);
   });
 
-  // Auto-scroll active thumb into view
+  // Auto-scroll active thumb inside the strip container ONLY (never scroll window)
   const activeEl = strip.children[currentProjectSlideIdx];
-  if (activeEl) {
-    activeEl.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+  if (activeEl && strip) {
+    const targetScroll = activeEl.offsetLeft - (strip.clientWidth - activeEl.clientWidth) / 2;
+    strip.scrollTo({ left: targetScroll, behavior: 'smooth' });
   }
 }
 
@@ -3779,3 +3786,55 @@ function deleteCurrentProjectSlide() {
 
   switchProjectCategory(activeSlideCategory);
 }
+
+
+/* ============================================================
+   SITE TEXT & PAGE SCALE CONTROLLER (v22.5)
+   Allows scaling text & UI up / down (80% to 140%)
+   ============================================================ */
+
+let currentSiteScale = 1.0;
+
+function initSiteScale() {
+  try {
+    const savedScale = parseFloat(localStorage.getItem('site_text_scale') || '1.0');
+    if (!isNaN(savedScale) && savedScale >= 0.8 && savedScale <= 1.5) {
+      currentSiteScale = savedScale;
+    }
+  } catch (e) {}
+  applySiteScale(currentSiteScale, false);
+}
+
+function applySiteScale(scale, save = true) {
+  currentSiteScale = Math.round(scale * 10) / 10;
+  if (currentSiteScale < 0.8) currentSiteScale = 0.8;
+  if (currentSiteScale > 1.4) currentSiteScale = 1.4;
+
+  const basePx = Math.round(16.5 * currentSiteScale);
+  document.documentElement.style.fontSize = basePx + 'px';
+  document.documentElement.style.setProperty('--site-scale', currentSiteScale);
+
+  const label = document.getElementById('siteScaleLabel');
+  if (label) {
+    label.textContent = Math.round(currentSiteScale * 100) + '%';
+  }
+
+  if (save) {
+    try {
+      localStorage.setItem('site_text_scale', currentSiteScale.toString());
+      showToast(`🔍 Website Scale: ${Math.round(currentSiteScale * 100)}%`);
+    } catch (e) {}
+  }
+}
+
+function changeSiteScale(delta) {
+  applySiteScale(currentSiteScale + delta, true);
+}
+
+function resetSiteScale() {
+  applySiteScale(1.0, true);
+}
+
+// Initialize scale immediately and on DOMContentLoaded
+initSiteScale();
+window.addEventListener('DOMContentLoaded', initSiteScale);

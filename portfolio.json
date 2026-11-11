@@ -190,81 +190,429 @@
   ],
   "projects": [
     {
-      "id": "proj_1793906516032",
-      "title": "USA   house Design",
+      "id": "arch_1_villa",
+      "title": "Modern Hillside Villa & Cantilever Deck",
       "category": "architecture",
       "type": "image",
       "src": "https://raw.githubusercontent.com/designcorner488/designcorner488.github.io/master/images/1793906345433-44.jpeg",
       "thumbnail": "https://raw.githubusercontent.com/designcorner488/designcorner488.github.io/master/images/1793906345433-44.jpeg",
-      "description": "A contemporary two-story American suburban residence designed with a focus on seamless indoor-outdoor living, spatial ergonomics, and modern aesthetic elegance. The architecture features expansive floor-to-ceiling glass windows that flood the interior with natural daylight, complemented by warm evening facade lighting, a spacious multi-level balcony, and an integrated outdoor poolside entertainment deck. The material palette blends clean white vertical paneling with rich timber accents, balancing modern minimalism with timeless residential comfort.",
-      "featured": false,
+      "description": "Contemporary two-story luxury residence designed with spatial ergonomics and seamless indoor-outdoor living. Features expansive floor-to-ceiling curtain glass, evening perimeter lighting, swimming pool deck, and timber acoustic cladding.",
+      "tags": [
+        "Blender 4.2",
+        "Revit BIM",
+        "D5 Render",
+        "Exterior 4K"
+      ],
+      "featured": true,
       "date": "2026-11-05"
     },
     {
-      "id": "demo-1",
-      "title": "Modern Villa Rendering",
+      "id": "arch_2_poolhouse",
+      "title": "Minimalist Waterfront Pavilion Villa",
       "category": "architecture",
-      "description": "Photorealistic exterior rendering of a luxury modern villa with pool and landscaping.",
       "type": "image",
-      "src": "https://images.unsplash.com/photo-1613490493576-7fde63acd811?w=1200",
+      "src": "https://images.unsplash.com/photo-1613490493576-7fde63acd811?w=1600",
       "thumbnail": "https://images.unsplash.com/photo-1613490493576-7fde63acd811?w=600",
+      "description": "Photorealistic architectural exterior visualization of an ultra-modern cantilevered villa with an integrated infinity pool, polished travertine walls, architectural louvers, and warm sunset illumination.",
+      "tags": [
+        "Architectural Viz",
+        "Lumion",
+        "D5 Render",
+        "Daylight Study"
+      ],
       "featured": true,
-      "date": "2024-01-15"
+      "date": "2026-10-15"
     },
     {
-      "id": "demo-2",
-      "title": "Luxury Interior Design",
-      "category": "interior",
-      "description": "High-end living room interior visualization with custom furniture and lighting.",
-      "type": "image",
-      "src": "https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?w=1200",
-      "thumbnail": "https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?w=600",
-      "featured": true,
-      "date": "2024-02-10"
-    },
-    {
-      "id": "demo-3",
-      "title": "Office Tower Flythrough",
-      "category": "animation",
-      "description": "Cinematic animation showcasing a commercial office tower from exterior to interior spaces.",
-      "type": "youtube",
-      "src": "https://www.youtube.com/embed/dQw4w9WgXcQ",
-      "thumbnail": "https://images.unsplash.com/photo-1486325212027-8081e485255e?w=600",
-      "featured": true,
-      "date": "2024-03-05"
-    },
-    {
-      "id": "demo-4",
-      "title": "Product Visualization",
-      "category": "product",
-      "description": "360-degree product rendering for a premium furniture brand.",
-      "type": "image",
-      "src": "https://images.unsplash.com/photo-1555041469-a586c61ea9bc?w=1200",
-      "thumbnail": "https://images.unsplash.com/photo-1555041469-a586c61ea9bc?w=600",
-      "featured": false,
-      "date": "2024-03-20"
-    },
-    {
-      "id": "demo-5",
-      "title": "Commercial Complex",
+      "id": "arch_3_bim_tower",
+      "title": "BIM Commercial Tower & Structural Core",
       "category": "architecture",
-      "description": "Large-scale commercial complex night rendering with dramatic lighting effects.",
-      "type": "image",
-      "src": "https://images.unsplash.com/photo-1486325212027-8081e485255e?w=1200",
+      "type": "video",
+      "src": "https://designcorner488.github.io/media/bim_animation_1.mp4",
       "thumbnail": "https://images.unsplash.com/photo-1486325212027-8081e485255e?w=600",
-      "featured": false,
-      "date": "2024-04-01"
+      "description": "Complete Revit BIM model coordination and architectural flythrough showcasing multi-story structural framing, MEP integration, double-glazed curtain walls, and spatial office ergonomics.",
+      "tags": [
+        "Revit BIM",
+        "BIM 360",
+        "Structural Walkthrough",
+        "MEP Modeling"
+      ],
+      "featured": true,
+      "date": "2026-09-20"
     },
     {
-      "id": "demo-6",
-      "title": "Brand Identity Design",
-      "category": "graphics",
-      "description": "Complete brand identity and visual design system for an architecture firm.",
+      "id": "arch_4_pavilion_3d",
+      "title": "Parametric Geodesic Pavilion 3D",
+      "category": "architecture",
+      "type": "glb",
+      "src": "https://modelviewer.dev/shared-assets/models/shishkebab.glb",
+      "thumbnail": "https://images.unsplash.com/photo-1513694203232-719a280e022f?w=600",
+      "description": "Interactive 3D parametric architectural sculpture developed with Blender Geometry Nodes. Demonstrates algorithmic tessellation, structural steel joinery, and dynamic daylight apertures.",
+      "tags": [
+        "Geometry Nodes",
+        "Interactive 3D",
+        "Parametric BIM",
+        "Blender 4.x"
+      ],
+      "featured": true,
+      "date": "2026-08-10"
+    },
+    {
+      "id": "arch_5_urban_center",
+      "title": "Metropolitan Mixed-Use Civic Center",
+      "category": "architecture",
       "type": "image",
-      "src": "https://images.unsplash.com/photo-1626785774573-4b799315345d?w=1200",
+      "src": "https://images.unsplash.com/photo-1486325212027-8081e485255e?w=1600",
+      "thumbnail": "https://images.unsplash.com/photo-1486325212027-8081e485255e?w=600",
+      "description": "Large-scale urban commercial high-rise master plan featuring high-performance architectural glazing, plaza landscaping, pedestrian connectivity, and atmospheric evening lighting.",
+      "tags": [
+        "Urban Planning",
+        "Commercial Viz",
+        "3ds Max / Blender",
+        "D5 Render"
+      ],
+      "featured": true,
+      "date": "2026-07-01"
+    },
+    {
+      "id": "int_1_luxury_lounge",
+      "title": "High-End Minimalist Penthouse Living Suite",
+      "category": "interior",
+      "type": "image",
+      "src": "https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?w=1600",
+      "thumbnail": "https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?w=600",
+      "description": "Bespoke interior visualization featuring acoustic fluted wall paneling, custom floating Italian marble cabinetry, concealed cove LED ambient strips, and tactile Boucle upholstery.",
+      "tags": [
+        "Interior Design",
+        "Blender Cycles",
+        "Lighting Design",
+        "Joinery Details"
+      ],
+      "featured": true,
+      "date": "2026-10-18"
+    },
+    {
+      "id": "int_2_dining_3d",
+      "title": "Handcrafted Ornate Dining Table 3D",
+      "category": "interior",
+      "type": "glb",
+      "src": "https://designcorner488.github.io/media/Meshy_AI_Ornate_Wooden_Dining__1031072807_texture.glb",
+      "thumbnail": "https://images.unsplash.com/photo-1617806118233-18e1de247200?w=600",
+      "description": "Interactive 3D model of classic artisanal dining room furniture. Built with high-precision PBR wood grain shaders, carved cabriole legs, and realistic French-polish lacquer reflections.",
+      "tags": [
+        "Interactive 3D GLB",
+        "Custom Joinery",
+        "PBR Textures",
+        "3D Asset"
+      ],
+      "featured": true,
+      "date": "2026-09-12"
+    },
+    {
+      "id": "int_3_nordic_chair_3d",
+      "title": "Nordic Lounge Velvet Armchair 3D",
+      "category": "interior",
+      "type": "glb",
+      "src": "https://raw.githubusercontent.com/KhronosGroup/glTF-Sample-Models/master/2.0/SheenChair/glTF-Binary/SheenChair.glb",
+      "thumbnail": "https://images.unsplash.com/photo-1586023492125-27b2c045efd7?w=600",
+      "description": "Contemporary Scandinavian interior armchair with micro-fiber sheen fabric shaders, brushed matte black metal base, and ergonomic spatial positioning for high-end residential lobbies.",
+      "tags": [
+        "3D Furniture Model",
+        "Sheen Fabric Shader",
+        "Interior Staging",
+        "Real-Time GLB"
+      ],
+      "featured": true,
+      "date": "2026-08-25"
+    },
+    {
+      "id": "int_4_open_concept",
+      "title": "Contemporary Double-Height Great Room",
+      "category": "interior",
+      "type": "image",
+      "src": "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=1600",
+      "thumbnail": "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=600",
+      "description": "Volumetric architectural interior rendering showcasing double-height exposed concrete beams, integrated kitchen island with waterfall quartz, and diffuse morning daylight through clerestory windows.",
+      "tags": [
+        "Open Concept",
+        "Architectural Interiors",
+        "D5 Real-time",
+        "Photorealistic 4K"
+      ],
+      "featured": true,
+      "date": "2026-07-14"
+    },
+    {
+      "id": "int_5_japandi_bedroom",
+      "title": "Japandi Sanctuary Master Bedroom",
+      "category": "interior",
+      "type": "image",
+      "src": "https://images.unsplash.com/photo-1616486338812-3dadae4b4ace?w=1600",
+      "thumbnail": "https://images.unsplash.com/photo-1616486338812-3dadae4b4ace?w=600",
+      "description": "A tranquil fusion of Japanese wabi-sabi and Scandinavian warmth. Incorporates natural white oak slats, low-profile tatami platform bed, woven tatami textures, and serene indirect lighting.",
+      "tags": [
+        "Japandi Style",
+        "Bedroom Visualization",
+        "Blender 4.x",
+        "Material Ergonomics"
+      ],
+      "featured": true,
+      "date": "2026-06-22"
+    },
+    {
+      "id": "prod_1_damaged_helmet_3d",
+      "title": "Industrial High-Tech Headgear 3D Model",
+      "category": "product",
+      "type": "glb",
+      "src": "https://raw.githubusercontent.com/KhronosGroup/glTF-Sample-Models/master/2.0/DamagedHelmet/glTF-Binary/DamagedHelmet.glb",
+      "thumbnail": "https://images.unsplash.com/photo-1546776310-eef45dd6d63c?w=600",
+      "description": "High-detail industrial design prototype featuring multi-layered PBR metallic roughness, micro-scratches, emissive optical lenses, and complex curvature ergonomics.",
+      "tags": [
+        "Industrial Design",
+        "Interactive 3D GLB",
+        "PBR Materials",
+        "Hard Surface"
+      ],
+      "featured": true,
+      "date": "2026-10-02"
+    },
+    {
+      "id": "prod_2_ventilation_fan",
+      "title": "Aerodynamic Commercial Ventilation Fan",
+      "category": "product",
+      "type": "video",
+      "src": "https://designcorner488.github.io/media/fan_1.mp4",
+      "thumbnail": "https://images.unsplash.com/photo-1555041469-a586c61ea9bc?w=600",
+      "description": "Precision engineering motion design showing computational fluid dynamic airfoil blades, brushless motor housing, and rotational vibration dampening mechanisms.",
+      "tags": [
+        "Mechanical Animation",
+        "Product Viz",
+        "MP4 Motion",
+        "Blender Physics"
+      ],
+      "featured": true,
+      "date": "2026-09-18"
+    },
+    {
+      "id": "prod_3_velvet_armchair",
+      "title": "Emerald Velvet Accent Chair Studio Viz",
+      "category": "product",
+      "type": "image",
+      "src": "https://images.unsplash.com/photo-1555041469-a586c61ea9bc?w=1600",
+      "thumbnail": "https://images.unsplash.com/photo-1555041469-a586c61ea9bc?w=600",
+      "description": "Commercial product studio rendering showcasing tailored deep emerald velvet upholstery, solid oak legs with brass caps, and photorealistic fabric displacement.",
+      "tags": [
+        "Furniture Design",
+        "Studio Lighting",
+        "Product Viz",
+        "Blender Cycles"
+      ],
+      "featured": true,
+      "date": "2026-08-30"
+    },
+    {
+      "id": "prod_4_water_bottle_3d",
+      "title": "Ergonomic Vacuum Thermal Flask 3D",
+      "category": "product",
+      "type": "glb",
+      "src": "https://raw.githubusercontent.com/KhronosGroup/glTF-Sample-Models/master/2.0/WaterBottle/glTF-Binary/WaterBottle.glb",
+      "thumbnail": "https://images.unsplash.com/photo-1602143407151-7111542de6e8?w=600",
+      "description": "Interactive 3D consumer product model featuring double-wall stainless steel vacuum insulation, textured silicone grip ring, and leak-proof cap mechanism.",
+      "tags": [
+        "Consumer Products",
+        "Interactive GLB",
+        "Industrial Prototyping",
+        "PBR Shaders"
+      ],
+      "featured": true,
+      "date": "2026-07-25"
+    },
+    {
+      "id": "prod_5_luxury_watch",
+      "title": "Titanium Chronograph Wristwatch Macro",
+      "category": "product",
+      "type": "image",
+      "src": "https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=1600",
+      "thumbnail": "https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=600",
+      "description": "Hyper-realistic macro product visualization of a luxury timepiece with brushed Grade-5 titanium case, anti-reflective domed sapphire glass, and intricate mechanical sub-dials.",
+      "tags": [
+        "Horology Viz",
+        "Precision Macro",
+        "Hard Surface Modeling",
+        "Cycles 4K"
+      ],
+      "featured": true,
+      "date": "2026-06-19"
+    },
+    {
+      "id": "graph_1_brand_identity",
+      "title": "Architectural Studio Brand Identity System",
+      "category": "graphics",
+      "type": "image",
+      "src": "https://images.unsplash.com/photo-1626785774573-4b799315345d?w=1600",
       "thumbnail": "https://images.unsplash.com/photo-1626785774573-4b799315345d?w=600",
-      "featured": false,
-      "date": "2024-04-15"
+      "description": "Complete corporate identity system for an architecture and spatial design practice. Features dynamic parametric logomarks, embossed stationery, color systems, and digital guidelines.",
+      "tags": [
+        "Brand Identity",
+        "Graphic Design",
+        "Typography",
+        "Studio Branding"
+      ],
+      "featured": true,
+      "date": "2026-10-08"
+    },
+    {
+      "id": "graph_2_creative_suite",
+      "title": "Digital Creative Suite Visual Packaging",
+      "category": "graphics",
+      "type": "image",
+      "src": "https://images.unsplash.com/photo-1507238691740-187a5b1d37b8?w=1600",
+      "thumbnail": "https://images.unsplash.com/photo-1507238691740-187a5b1d37b8?w=600",
+      "description": "Graphic presentation mockup showcasing specialized Adobe Creative Cloud, Illustrator, and After Effects workflows customized for architectural animation post-production.",
+      "tags": [
+        "Visual Communication",
+        "App Iconography",
+        "Art Direction",
+        "Photoshop/Illustrator"
+      ],
+      "featured": true,
+      "date": "2026-09-04"
+    },
+    {
+      "id": "graph_3_parametric_poster",
+      "title": "Generative Geometry Exhibition Poster Series",
+      "category": "graphics",
+      "type": "image",
+      "src": "https://images.unsplash.com/photo-1579783900882-c0d3dad7b119?w=1600",
+      "thumbnail": "https://images.unsplash.com/photo-1579783900882-c0d3dad7b119?w=600",
+      "description": "Algorithmic visual poster created using vector mathematics and parametric curves. Designed for international architectural symposiums and digital fabrication conferences.",
+      "tags": [
+        "Poster Design",
+        "Generative Art",
+        "Swiss Typography",
+        "Vector Graphics"
+      ],
+      "featured": true,
+      "date": "2026-08-15"
+    },
+    {
+      "id": "graph_4_spatial_wayfinding",
+      "title": "Environmental Signage & BIM Wayfinding",
+      "category": "graphics",
+      "type": "image",
+      "src": "https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=1600",
+      "thumbnail": "https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=600",
+      "description": "Modern environmental signage layout designed for corporate headquarters. Integrates high-contrast directional typography, pictograms, and tactile ADA architectural signage.",
+      "tags": [
+        "Wayfinding",
+        "Environmental Graphics",
+        "Infographics",
+        "Architectural Signage"
+      ],
+      "featured": true,
+      "date": "2026-07-29"
+    },
+    {
+      "id": "graph_5_architecture_book",
+      "title": "Architectural Monograph Editorial Layout",
+      "category": "graphics",
+      "type": "image",
+      "src": "https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?w=1600",
+      "thumbnail": "https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?w=600",
+      "description": "Hardcover editorial layout celebrating modern residential projects. Crafted with strict Swiss grid systems, generous white space, and rich architectural photography printing specifications.",
+      "tags": [
+        "Editorial Design",
+        "Book Design",
+        "Print Production",
+        "Layout Design"
+      ],
+      "featured": true,
+      "date": "2026-06-11"
+    },
+    {
+      "id": "anim_1_hvac_walkthrough",
+      "title": "MEP & HVAC Technical Walkthrough Animation",
+      "category": "animation",
+      "type": "video",
+      "src": "https://designcorner488.github.io/media/hvac_samply_.mp4",
+      "thumbnail": "https://images.unsplash.com/photo-1486325212027-8081e485255e?w=600",
+      "description": "High-fidelity architectural animation demonstrating mechanical building systems, ducted air distribution, ventilation risers, and structural plenum spaces.",
+      "tags": [
+        "HVAC Visualization",
+        "Revit BIM Motion",
+        "Technical Walkthrough",
+        "MP4 Animation"
+      ],
+      "featured": true,
+      "date": "2026-10-25"
+    },
+    {
+      "id": "anim_2_bim_coordination",
+      "title": "Architectural BIM Multi-Level Coordination Flythrough",
+      "category": "animation",
+      "type": "video",
+      "src": "https://designcorner488.github.io/media/bim_animation_1.mp4",
+      "thumbnail": "https://images.unsplash.com/photo-1613490493576-7fde63acd811?w=600",
+      "description": "Smooth camera trajectory moving through multi-story architectural spaces, revealing sectional cuts, interior fitouts, and BIM component intelligence.",
+      "tags": [
+        "BIM Flythrough",
+        "Camera Rigging",
+        "Blender Eevee Next",
+        "Commercial Walkthrough"
+      ],
+      "featured": true,
+      "date": "2026-09-30"
+    },
+    {
+      "id": "anim_3_daylight_study",
+      "title": "24-Hour Solar Study & Dynamic Shadows",
+      "category": "animation",
+      "type": "video",
+      "src": "https://designcorner488.github.io/media/2_7.mp4",
+      "thumbnail": "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=600",
+      "description": "Accurate architectural solar simulation demonstrating daylight penetration, solar heat gain mitigation via facade louvers, and evening golden-hour ambiance.",
+      "tags": [
+        "Solar Study",
+        "Daylight Simulation",
+        "Time-Lapse Lighting",
+        "Architectural Motion"
+      ],
+      "featured": true,
+      "date": "2026-08-20"
+    },
+    {
+      "id": "anim_4_mechanical_kinematics",
+      "title": "Mechanical Assembly & Kinematic Motion",
+      "category": "animation",
+      "type": "video",
+      "src": "https://designcorner488.github.io/media/4.mp4",
+      "thumbnail": "https://images.unsplash.com/photo-1555041469-a586c61ea9bc?w=600",
+      "description": "Precision mechanical motion design animating component exploded views, gear tooth engagement, and structural tolerance in real-time.",
+      "tags": [
+        "Exploded View",
+        "Product Animation",
+        "Rigging & Dynamics",
+        "Blender Physics"
+      ],
+      "featured": true,
+      "date": "2026-07-15"
+    },
+    {
+      "id": "anim_5_drone_cinematic",
+      "title": "Aerial Drone Cinematography & Site Integration",
+      "category": "animation",
+      "type": "video",
+      "src": "https://designcorner488.github.io/media/2_3.mp4",
+      "thumbnail": "https://images.unsplash.com/photo-1486325212027-8081e485255e?w=600",
+      "description": "Sweeping cinematic flyover illustrating the relationship between architectural topography, surrounding terrain, access roadways, and landscape design.",
+      "tags": [
+        "Drone Cinematography",
+        "Landscape Integration",
+        "Camera Easing",
+        "4K Video"
+      ],
+      "featured": true,
+      "date": "2026-06-05"
     }
   ],
   "addons": [

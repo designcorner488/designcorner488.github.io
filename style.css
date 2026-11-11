@@ -3082,3 +3082,78 @@ body.edit-mode .addon-edit-actions {
     justify-content: center;
   }
 }
+
+
+/* ============================================================
+   SITE TEXT & PAGE SCALE CONTROLLER STYLES (v22.5)
+   ============================================================ */
+
+html {
+  font-size: 16.5px; /* Comfortable legible baseline font size */
+  transition: font-size 0.2s ease;
+}
+
+.site-scale-control {
+  display: inline-flex;
+  align-items: center;
+  background: rgba(14, 18, 42, 0.85);
+  backdrop-filter: blur(8px);
+  border: 1px solid rgba(0, 240, 255, 0.35);
+  border-radius: 50px;
+  padding: 3px 5px;
+  gap: 4px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
+}
+
+.btn-scale-step {
+  padding: 3px 9px;
+  border-radius: 50px;
+  background: rgba(0, 240, 255, 0.12);
+  border: 1px solid rgba(0, 240, 255, 0.3);
+  color: #00f0ff;
+  font-family: 'Space Grotesk', monospace;
+  font-size: 0.75rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  line-height: 1.2;
+}
+
+.btn-scale-step:hover {
+  background: rgba(0, 240, 255, 0.3);
+  border-color: #00f0ff;
+  transform: scale(1.08);
+}
+
+.btn-scale-reset {
+  background: transparent;
+  border: none;
+  font-family: 'Space Grotesk', monospace;
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: #fff;
+  cursor: pointer;
+  padding: 0 5px;
+  letter-spacing: 0.5px;
+  transition: color 0.2s ease;
+}
+
+.btn-scale-reset:hover {
+  color: #00f0ff;
+}
+
+/* Ensure mobile nav also wraps scale controller cleanly */
+@media (max-width: 768px) {
+  .site-scale-control {
+    padding: 2px 4px;
+    gap: 3px;
+  }
+  .btn-scale-step {
+    padding: 2px 7px;
+    font-size: 0.7rem;
+  }
+  .btn-scale-reset {
+    font-size: 0.68rem;
+    padding: 0 3px;
+  }
+}

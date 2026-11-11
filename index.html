@@ -16,7 +16,7 @@ window.addEventListener('error', function(e) {
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
-  <link rel="stylesheet" href="style.css?v=22.4"/>
+  <link rel="stylesheet" href="style.css?v=22.5"/>
   <script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/3.4.0/model-viewer.min.js"></script>
 </head>
 <body>
@@ -101,7 +101,14 @@ window.addEventListener('error', function(e) {
     <a href="#contact"  class="nav-link">Contact</a>
   </div>
   <div class="nav-actions">
-    <button class="btn-edit-nav" id="navEditBtn" onclick="tryToggleEditMode()" title="Direct Visual Edit"><i class="fas fa-pen-to-square"></i> <span>Edit Website</span></button>
+    
+    <!-- SITE TEXT & PAGE SCALE CONTROLLER (A- / 100% / A+) -->
+    <div class="site-scale-control" id="siteScaleControl" title="Page & Text Zoom Controller">
+      <button type="button" class="btn-scale-step" onclick="changeSiteScale(-0.1)" title="Make text smaller (A-)">A-</button>
+      <button type="button" class="btn-scale-reset" onclick="resetSiteScale()" id="siteScaleLabel" title="Reset Zoom to 100%">100%</button>
+      <button type="button" class="btn-scale-step" onclick="changeSiteScale(0.1)" title="Make text bigger (A+)">A+</button>
+    </div>
+<button class="btn-edit-nav" id="navEditBtn" onclick="tryToggleEditMode()" title="Direct Visual Edit"><i class="fas fa-pen-to-square"></i> <span>Edit Website</span></button>
     <a href="#contact" class="btn-hire">Hire Me</a>
     <a href="admin/" class="btn-admin-nav" title="Admin Panel"><i class="fas fa-cog"></i></a>
     <button class="hamburger" id="hamburger"><span></span><span></span><span></span></button>
@@ -945,7 +952,7 @@ window.addEventListener('error', function(e) {
   </div>
 </div>
 
-<script src="script.js?v=22.4"></script>
+<script src="script.js?v=22.5"></script>
 <!-- REORDER MODELS & ANIMATIONS MODAL -->
 <div class="modal-overlay" id="glbReorderModal">
   <div class="modal-box" style="max-width:520px;">
