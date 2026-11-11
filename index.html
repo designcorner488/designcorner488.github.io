@@ -16,7 +16,7 @@ window.addEventListener('error', function(e) {
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
-  <link rel="stylesheet" href="style.css?v=22.0"/>
+  <link rel="stylesheet" href="style.css?v=22.1"/>
   <script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/3.4.0/model-viewer.min.js"></script>
 </head>
 <body>
@@ -364,84 +364,9 @@ window.addEventListener('error', function(e) {
       <p class="section-sub editable" data-key="skillsSub">Cutting-edge tools I use to bring your vision to life</p>
     </div>
 
-    <!-- SIDE-BY-SIDE SPLIT VIEW: TOOLS CARDS + LIVE 3D/VIDEO DISPLAY -->
-    <div class="skills-showcase-split" data-aos="fade-up">
-      <!-- LEFT: 6 TOOL CARDS -->
-      <div class="skills-grid" id="skillsGrid">
-        <div class="skill-card active" data-tool-idx="0" onclick="selectSkillTool(0)">
-          <div class="skill-active-badge"><span class="badge-dot"></span> LIVE</div>
-          <div class="skill-icon" style="--clr:#f7931e"><img src="https://upload.wikimedia.org/wikipedia/commons/0/0c/Blender_logo_no_text.svg" alt="Blender" onerror="this.outerHTML='<i class=\'fas fa-cube\'></i>'"/></div>
-          <h3 class="editable" data-key="tool1Title">Blender 3D</h3>
-          <p class="editable" data-key="tool1Desc">Modeling, Rigging, Animation, VFX, Rendering</p>
-          <div class="skill-bar"><div class="skill-fill" data-width="90"></div></div>
-          <span class="skill-percent">90%</span>
-          <button type="button" class="btn-card-upload-media" onclick="event.stopPropagation(); triggerToolMediaUpload(0)" title="Upload MP4 or GLB for Blender 3D">
-            <i class="fas fa-video"></i> <span>Upload Render</span>
-          </button>
-        </div>
-
-        <div class="skill-card" data-tool-idx="1" onclick="selectSkillTool(1)">
-          <div class="skill-active-badge"><span class="badge-dot"></span> LIVE</div>
-          <div class="skill-icon" style="--clr:#0696d7"><i class="fas fa-drafting-compass"></i></div>
-          <h3 class="editable" data-key="tool2Title">Autodesk Revit</h3>
-          <p class="editable" data-key="tool2Desc">BIM, Architectural Design, Documentation</p>
-          <div class="skill-bar"><div class="skill-fill" data-width="85"></div></div>
-          <span class="skill-percent">85%</span>
-          <button type="button" class="btn-card-upload-media" onclick="event.stopPropagation(); triggerToolMediaUpload(1)" title="Upload MP4 or GLB for Revit">
-            <i class="fas fa-video"></i> <span>Upload Render</span>
-          </button>
-        </div>
-
-        <div class="skill-card" data-tool-idx="2" onclick="selectSkillTool(2)">
-          <div class="skill-active-badge"><span class="badge-dot"></span> LIVE</div>
-          <div class="skill-icon" style="--clr:#50fa7b"><i class="fas fa-photo-film"></i></div>
-          <h3 class="editable" data-key="tool3Title">D5 Render</h3>
-          <p class="editable" data-key="tool3Desc">Real-time Rendering, Arch-viz, Photorealism</p>
-          <div class="skill-bar"><div class="skill-fill" data-width="88"></div></div>
-          <span class="skill-percent">88%</span>
-          <button type="button" class="btn-card-upload-media" onclick="event.stopPropagation(); triggerToolMediaUpload(2)" title="Upload MP4 or GLB for D5 Render">
-            <i class="fas fa-video"></i> <span>Upload Render</span>
-          </button>
-        </div>
-
-        <div class="skill-card" data-tool-idx="3" onclick="selectSkillTool(3)">
-          <div class="skill-active-badge"><span class="badge-dot"></span> LIVE</div>
-          <div class="skill-icon" style="--clr:#ff79c6"><i class="fas fa-film"></i></div>
-          <h3 class="editable" data-key="tool4Title">3D Animation</h3>
-          <p class="editable" data-key="tool4Desc">Cinematic Animations, Motion Graphics, VFX</p>
-          <div class="skill-bar"><div class="skill-fill" data-width="82"></div></div>
-          <span class="skill-percent">82%</span>
-          <button type="button" class="btn-card-upload-media" onclick="event.stopPropagation(); triggerToolMediaUpload(3)" title="Upload MP4 or GLB for 3D Animation">
-            <i class="fas fa-video"></i> <span>Upload Render</span>
-          </button>
-        </div>
-
-        <div class="skill-card" data-tool-idx="4" onclick="selectSkillTool(4)">
-          <div class="skill-active-badge"><span class="badge-dot"></span> LIVE</div>
-          <div class="skill-icon" style="--clr:#bd93f9"><i class="fas fa-building"></i></div>
-          <h3 class="editable" data-key="tool5Title">Architecture</h3>
-          <p class="editable" data-key="tool5Desc">Residential, Commercial, Urban Planning</p>
-          <div class="skill-bar"><div class="skill-fill" data-width="87"></div></div>
-          <span class="skill-percent">87%</span>
-          <button type="button" class="btn-card-upload-media" onclick="event.stopPropagation(); triggerToolMediaUpload(4)" title="Upload MP4 or GLB for Architecture">
-            <i class="fas fa-video"></i> <span>Upload Render</span>
-          </button>
-        </div>
-
-        <div class="skill-card" data-tool-idx="5" onclick="selectSkillTool(5)">
-          <div class="skill-active-badge"><span class="badge-dot"></span> LIVE</div>
-          <div class="skill-icon" style="--clr:#ff5555"><i class="fas fa-box-open"></i></div>
-          <h3 class="editable" data-key="tool6Title">Product Design</h3>
-          <p class="editable" data-key="tool6Desc">3D Modeling, Prototyping, Product Animation</p>
-          <div class="skill-bar"><div class="skill-fill" data-width="80"></div></div>
-          <span class="skill-percent">80%</span>
-          <button type="button" class="btn-card-upload-media" onclick="event.stopPropagation(); triggerToolMediaUpload(5)" title="Upload MP4 or GLB for Product Design">
-            <i class="fas fa-cube"></i> <span>Upload 3D / Video</span>
-          </button>
-        </div>
-      </div>
-
-      <!-- RIGHT: LIVE 3D / VIDEO DISPLAY SCREEN -->
+    <!-- THEATER LAYOUT: 1. VIDEO / 3D ON TOP, 2. TOOLS NAMES PANEL BELOW -->
+    <div class="skills-theater-wrap" data-aos="fade-up">
+      <!-- 1. TOP: FULLSCREEN CINEMATIC VIEWPORT DISPLAY -->
       <div class="skills-viewport-panel" id="skillsViewportPanel">
         <div class="skills-viewport-screen" id="skillsViewportScreen">
           <!-- Top HUD Header -->
@@ -449,7 +374,7 @@ window.addEventListener('error', function(e) {
             <div class="viewport-tool-info">
               <span class="vp-live-dot"></span>
               <span class="vp-tool-name" id="vpToolName">Blender 3D</span>
-              <span class="vp-tag-pill" id="vpToolTag">RENDER PREVIEW</span>
+              <span class="vp-tag-pill" id="vpToolTag">CYCLES &amp; EEVEE RENDER</span>
             </div>
             <div class="viewport-type-badge" id="vpTypeBadge">
               <i class="fas fa-video"></i> MP4 VIDEO
@@ -462,7 +387,7 @@ window.addEventListener('error', function(e) {
             <model-viewer id="vpModel" auto-rotate camera-controls shadow-intensity="1.5" exposure="1.1" style="display:none; width:100%; height:100%;"></model-viewer>
             <div class="vp-loading" id="vpLoading" style="display:none;"><i class="fas fa-spinner fa-spin"></i></div>
             <div class="vp-3d-hint" id="vp3dHint" style="display:none;">
-              <i class="fas fa-hand-pointer"></i> Drag to inspect in 3D
+              <i class="fas fa-hand-pointer"></i> Drag to rotate in 3D
             </div>
           </div>
 
@@ -489,6 +414,81 @@ window.addEventListener('error', function(e) {
               <i class="fas fa-cloud-arrow-up"></i> Upload MP4 / GLB for <strong id="vpUploadBtnToolName">Blender 3D</strong>
             </button>
           </div>
+        </div>
+      </div>
+
+      <!-- 2. BOTTOM: THE 6 TOOLS NAMES PANEL IN A ROW -->
+      <div class="skills-grid skills-bottom-row" id="skillsGrid">
+        <div class="skill-card active" data-tool-idx="0" onclick="selectSkillTool(0)">
+          <div class="skill-active-badge"><span class="badge-dot"></span> LIVE</div>
+          <div class="skill-icon" style="--clr:#f7931e"><img src="https://upload.wikimedia.org/wikipedia/commons/0/0c/Blender_logo_no_text.svg" alt="Blender" onerror="this.outerHTML='<i class=\'fas fa-cube\'></i>'"/></div>
+          <h3 class="editable" data-key="tool1Title">Blender 3D</h3>
+          <p class="editable" data-key="tool1Desc">Modeling, VFX &amp; Cycles</p>
+          <div class="skill-bar"><div class="skill-fill" data-width="90"></div></div>
+          <span class="skill-percent">90%</span>
+          <button type="button" class="btn-card-upload-media" onclick="event.stopPropagation(); triggerToolMediaUpload(0)" title="Upload MP4/GLB">
+            <i class="fas fa-video"></i> <span>Upload</span>
+          </button>
+        </div>
+
+        <div class="skill-card" data-tool-idx="1" onclick="selectSkillTool(1)">
+          <div class="skill-active-badge"><span class="badge-dot"></span> LIVE</div>
+          <div class="skill-icon" style="--clr:#0696d7"><i class="fas fa-drafting-compass"></i></div>
+          <h3 class="editable" data-key="tool2Title">Autodesk Revit</h3>
+          <p class="editable" data-key="tool2Desc">BIM &amp; Arch Documentation</p>
+          <div class="skill-bar"><div class="skill-fill" data-width="85"></div></div>
+          <span class="skill-percent">85%</span>
+          <button type="button" class="btn-card-upload-media" onclick="event.stopPropagation(); triggerToolMediaUpload(1)" title="Upload MP4/GLB">
+            <i class="fas fa-video"></i> <span>Upload</span>
+          </button>
+        </div>
+
+        <div class="skill-card" data-tool-idx="2" onclick="selectSkillTool(2)">
+          <div class="skill-active-badge"><span class="badge-dot"></span> LIVE</div>
+          <div class="skill-icon" style="--clr:#50fa7b"><i class="fas fa-photo-film"></i></div>
+          <h3 class="editable" data-key="tool3Title">D5 Render</h3>
+          <p class="editable" data-key="tool3Desc">Real-time Photorealism</p>
+          <div class="skill-bar"><div class="skill-fill" data-width="88"></div></div>
+          <span class="skill-percent">88%</span>
+          <button type="button" class="btn-card-upload-media" onclick="event.stopPropagation(); triggerToolMediaUpload(2)" title="Upload MP4/GLB">
+            <i class="fas fa-video"></i> <span>Upload</span>
+          </button>
+        </div>
+
+        <div class="skill-card" data-tool-idx="3" onclick="selectSkillTool(3)">
+          <div class="skill-active-badge"><span class="badge-dot"></span> LIVE</div>
+          <div class="skill-icon" style="--clr:#ff79c6"><i class="fas fa-film"></i></div>
+          <h3 class="editable" data-key="tool4Title">3D Animation</h3>
+          <p class="editable" data-key="tool4Desc">Motion Design &amp; VFX</p>
+          <div class="skill-bar"><div class="skill-fill" data-width="82"></div></div>
+          <span class="skill-percent">82%</span>
+          <button type="button" class="btn-card-upload-media" onclick="event.stopPropagation(); triggerToolMediaUpload(3)" title="Upload MP4/GLB">
+            <i class="fas fa-video"></i> <span>Upload</span>
+          </button>
+        </div>
+
+        <div class="skill-card" data-tool-idx="4" onclick="selectSkillTool(4)">
+          <div class="skill-active-badge"><span class="badge-dot"></span> LIVE</div>
+          <div class="skill-icon" style="--clr:#bd93f9"><i class="fas fa-building"></i></div>
+          <h3 class="editable" data-key="tool5Title">Architecture</h3>
+          <p class="editable" data-key="tool5Desc">Urban &amp; Interior Viz</p>
+          <div class="skill-bar"><div class="skill-fill" data-width="87"></div></div>
+          <span class="skill-percent">87%</span>
+          <button type="button" class="btn-card-upload-media" onclick="event.stopPropagation(); triggerToolMediaUpload(4)" title="Upload MP4/GLB">
+            <i class="fas fa-video"></i> <span>Upload</span>
+          </button>
+        </div>
+
+        <div class="skill-card" data-tool-idx="5" onclick="selectSkillTool(5)">
+          <div class="skill-active-badge"><span class="badge-dot"></span> LIVE</div>
+          <div class="skill-icon" style="--clr:#ff5555"><i class="fas fa-box-open"></i></div>
+          <h3 class="editable" data-key="tool6Title">Product Design</h3>
+          <p class="editable" data-key="tool6Desc">3D Prototyping &amp; Models</p>
+          <div class="skill-bar"><div class="skill-fill" data-width="80"></div></div>
+          <span class="skill-percent">80%</span>
+          <button type="button" class="btn-card-upload-media" onclick="event.stopPropagation(); triggerToolMediaUpload(5)" title="Upload 3D/Video">
+            <i class="fas fa-cube"></i> <span>Upload</span>
+          </button>
         </div>
       </div>
     </div>
@@ -779,7 +779,7 @@ window.addEventListener('error', function(e) {
   </div>
 </div>
 
-<script src="script.js?v=22.0"></script>
+<script src="script.js?v=22.1"></script>
 <!-- REORDER MODELS & ANIMATIONS MODAL -->
 <div class="modal-overlay" id="glbReorderModal">
   <div class="modal-box" style="max-width:520px;">
