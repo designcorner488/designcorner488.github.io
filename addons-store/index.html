@@ -3,115 +3,157 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>$1 Dollar Shop (Special Offer) – Blender Addons Store – Design Corner</title>
+<title>$1 Dollar Shop (Special Offer) – Blender Addons & 3D Models – Design Corner</title>
 <link rel="preconnect" href="https://fonts.googleapis.com"/>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Poppins:wght@300;400;500;600;700&display=swap"/>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+<!-- Google 3D Model Viewer for interactive GLB inspection -->
+<script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/3.4.0/model-viewer.min.js"></script>
 <style>
 :root{
   --bg:#0a0b14;--bg2:#0f1120;--bg3:#141629;--card:#151728;--card2:#1a1d35;
   --accent:#7c3aed;--accent2:#00f0ff;--gold:#f59e0b;--green:#10b981;--red:#ef4444;
   --text:#e2e8f0;--text2:#94a3b8;--text3:#64748b;
-  --border:rgba(124,58,237,0.2);--border2:rgba(0,240,255,0.15);
-  --glow:0 0 20px rgba(124,58,237,0.3);--glow2:0 0 20px rgba(0,240,255,0.2);
+  --border:rgba(124,58,237,0.22);--border2:rgba(0,240,255,0.2);
+  --glow:0 0 25px rgba(124,58,237,0.35);--glow2:0 0 25px rgba(0,240,255,0.25);
+  --font-heading:'Space Grotesk',sans-serif;
 }
 *{margin:0;padding:0;box-sizing:border-box}
 body{background:var(--bg);color:var(--text);font-family:'Poppins',sans-serif;min-height:100vh;overflow-x:hidden}
 
 /* NAVBAR */
-.navbar{position:sticky;top:0;z-index:100;background:rgba(10,11,20,0.92);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);padding:0 2rem;display:flex;align-items:center;justify-content:space-between;height:64px}
+.navbar{position:sticky;top:0;z-index:100;background:rgba(10,11,20,0.94);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);padding:0 2rem;display:flex;align-items:center;justify-content:space-between;height:64px}
 .nav-logo{display:flex;align-items:center;gap:.7rem;text-decoration:none}
-.nav-logo-icon{width:36px;height:36px;background:linear-gradient(135deg,var(--accent),var(--accent2));border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:1rem;color:#fff}
-.nav-logo-text{font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:1.1rem;color:var(--text)}
-.nav-links{display:flex;align-items:center;gap:1rem}
-.nav-link{color:var(--text2);text-decoration:none;font-size:.85rem;transition:color .2s}
+.nav-logo-icon{width:36px;height:36px;background:linear-gradient(135deg,var(--accent),var(--accent2));border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:1.05rem;color:#fff}
+.nav-logo-text{font-family:var(--font-heading);font-weight:700;font-size:1.15rem;color:var(--text)}
+.nav-links{display:flex;align-items:center;gap:.8rem}
+.nav-link{color:var(--text2);text-decoration:none;font-size:.85rem;transition:color .2s;display:inline-flex;align-items:center;gap:.4rem}
 .nav-link:hover{color:var(--accent2)}
-.admin-btn{background:transparent;border:1px solid var(--gold);color:var(--gold);padding:.4rem 1rem;border-radius:6px;font-size:.82rem;cursor:pointer;transition:all .2s;font-family:inherit;font-weight:600;display:flex;align-items:center;gap:.4rem}
-.admin-btn:hover{background:var(--gold);color:#000}
+.admin-btn{background:transparent;border:1.5px solid var(--gold);color:var(--gold);padding:.4rem 1.1rem;border-radius:50px;font-size:.82rem;cursor:pointer;transition:all .2s;font-family:inherit;font-weight:700;display:flex;align-items:center;gap:.4rem}
+.admin-btn:hover{background:var(--gold);color:#000;box-shadow:0 0 15px rgba(245,158,11,0.5)}
 
 /* HERO */
-.hero{padding:4.5rem 2rem 2.5rem;text-align:center;position:relative;overflow:hidden}
-.hero::before{content:'';position:absolute;top:-50%;left:50%;transform:translateX(-50%);width:600px;height:600px;background:radial-gradient(circle,rgba(124,58,237,0.15) 0%,transparent 70%);pointer-events:none}
-.hero-badge{display:inline-flex;align-items:center;gap:.5rem;background:rgba(124,58,237,0.15);border:1px solid var(--border);border-radius:50px;padding:.4rem 1.2rem;font-size:.78rem;color:var(--accent2);letter-spacing:.08em;text-transform:uppercase;margin-bottom:1.2rem}
-.hero h1{font-family:'Space Grotesk',sans-serif;font-size:clamp(2rem,5vw,3.5rem);font-weight:800;line-height:1.15;margin-bottom:.8rem}
-.hero h1 span{background:linear-gradient(135deg,var(--accent),var(--accent2));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
-.hero p{color:var(--text2);font-size:1rem;max-width:620px;margin:0 auto 2rem;line-height:1.7}
+.hero{padding:4.5rem 2rem 2rem;text-align:center;position:relative;overflow:hidden}
+.hero::before{content:'';position:absolute;top:-50%;left:50%;transform:translateX(-50%);width:700px;height:700px;background:radial-gradient(circle,rgba(124,58,237,0.18) 0%,transparent 70%);pointer-events:none}
+.hero-badge{display:inline-flex;align-items:center;gap:.5rem;background:rgba(245,158,11,0.12);border:1.5px solid rgba(245,158,11,0.5);border-radius:50px;padding:.45rem 1.3rem;font-size:.78rem;color:#fde047;letter-spacing:.08em;text-transform:uppercase;margin-bottom:1.2rem;animation:badgeGlow 2.5s infinite alternate}
+@keyframes badgeGlow{from{box-shadow:0 0 10px rgba(245,158,11,0.3)}to{box-shadow:0 0 25px rgba(245,158,11,0.7)}}
+.hero h1{font-family:var(--font-heading);font-size:clamp(2.2rem,5vw,3.8rem);font-weight:800;line-height:1.15;margin-bottom:.8rem}
+.hero h1 span{background:linear-gradient(135deg,#f59e0b,#ef4444);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.hero p{color:var(--text2);font-size:1.02rem;max-width:640px;margin:0 auto 2rem;line-height:1.7}
 .hero-stats{display:flex;justify-content:center;gap:3rem;flex-wrap:wrap}
 .stat{text-align:center}
-.stat-num{font-size:1.6rem;font-weight:700;font-family:'Space Grotesk',sans-serif;background:linear-gradient(135deg,var(--accent),var(--accent2));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.stat-num{font-size:1.7rem;font-weight:800;font-family:var(--font-heading);background:linear-gradient(135deg,var(--accent),var(--accent2));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
 .stat-label{font-size:.75rem;color:var(--text3);text-transform:uppercase;letter-spacing:.06em}
 
-/* FILTER BAR */
-.filter-bar{padding:1.2rem 2rem;display:flex;align-items:center;justify-content:center;gap:.7rem;flex-wrap:wrap;border-bottom:1px solid var(--border)}
-.filter-btn{background:transparent;border:1px solid var(--border);color:var(--text2);padding:.4rem 1.1rem;border-radius:50px;font-size:.82rem;cursor:pointer;transition:all .2s;font-family:inherit}
-.filter-btn:hover,.filter-btn.active{background:var(--accent);border-color:var(--accent);color:#fff}
+/* MAIN SECTION TABS (BLENDER ADDONS VS 3D MODELS) */
+.section-tabs-container{display:flex;justify-content:center;padding:1rem 2rem;position:sticky;top:64px;z-index:90;background:rgba(10,11,20,0.9);backdrop-filter:blur(15px);border-bottom:1px solid rgba(255,255,255,0.06)}
+.section-tabs{display:inline-flex;background:var(--card);padding:4px;border-radius:50px;border:1.5px solid var(--border);gap:4px}
+.tab-switch-btn{background:transparent;border:none;color:var(--text2);padding:.6rem 1.8rem;border-radius:50px;font-size:.9rem;font-weight:700;cursor:pointer;transition:all .25s ease;display:inline-flex;align-items:center;gap:.6rem;font-family:inherit}
+.tab-switch-btn.active{background:linear-gradient(135deg,var(--accent),#9333ea);color:#fff;box-shadow:0 0 20px rgba(124,58,237,0.5)}
+.tab-switch-btn.models-btn.active{background:linear-gradient(135deg,#0284c7,#00f0ff);color:#000;box-shadow:0 0 20px rgba(0,240,255,0.5)}
+.tab-count-tag{background:rgba(255,255,255,0.15);padding:2px 8px;border-radius:20px;font-size:.72rem}
+.tab-switch-btn.active .tab-count-tag{background:rgba(255,255,255,0.3);color:#fff}
+.tab-switch-btn.models-btn.active .tab-count-tag{background:rgba(0,0,0,0.3);color:#000}
 
-/* GRID */
-.store-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:1.8rem;padding:2.5rem 2rem 4rem;max-width:1200px;margin:0 auto}
+/* SEARCH & SUB-FILTERS */
+.filter-wrapper{padding:1.5rem 2rem 1rem;max-width:1200px;margin:0 auto;display:flex;flex-direction:column;gap:1.2rem;align-items:center}
+.search-bar{width:100%;max-width:550px;position:relative}
+.search-bar input{width:100%;background:var(--card);border:1.5px solid var(--border);color:var(--text);padding:.7rem 1.2rem .7rem 2.8rem;border-radius:50px;font-family:inherit;font-size:.9rem;outline:none;transition:border-color .2s,box-shadow .2s}
+.search-bar input:focus{border-color:var(--accent2);box-shadow:0 0 15px rgba(0,240,255,0.25)}
+.search-bar i{position:absolute;left:1.1rem;top:50%;transform:translateY(-50%);color:var(--text3);font-size:.95rem}
+.sub-filter-pills{display:flex;gap:.5rem;flex-wrap:wrap;justify-content:center}
+.filter-btn{background:transparent;border:1px solid var(--border);color:var(--text2);padding:.35rem 1rem;border-radius:50px;font-size:.8rem;cursor:pointer;transition:all .2s;font-family:inherit}
+.filter-btn:hover,.filter-btn.active{background:rgba(124,58,237,0.3);border-color:var(--accent2);color:#fff}
+
+/* GRIDS */
+.store-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(330px,1fr));gap:1.8rem;padding:1.5rem 2rem 4rem;max-width:1200px;margin:0 auto}
 
 /* ADDON CARD */
-.addon-card{background:var(--card);border:1px solid var(--border);border-radius:16px;overflow:hidden;transition:transform .3s,box-shadow .3s,border-color .3s;position:relative;display:flex;flex-direction:column}
-.addon-card:hover{transform:translateY(-6px);box-shadow:var(--glow);border-color:rgba(124,58,237,0.5)}
-.addon-card.featured-card{border-color:var(--gold);box-shadow:0 0 25px rgba(245,158,11,0.15)}
+.addon-card{background:var(--card);border:1px solid var(--border);border-radius:18px;overflow:hidden;transition:transform .3s,box-shadow .3s,border-color .3s;position:relative;display:flex;flex-direction:column}
+.addon-card:hover{transform:translateY(-6px);box-shadow:var(--glow);border-color:rgba(124,58,237,0.6)}
+.addon-card.featured-card{border-color:var(--gold);box-shadow:0 0 25px rgba(245,158,11,0.18)}
 
 .card-thumb{position:relative;height:180px;background:linear-gradient(135deg,var(--bg3),var(--card2));display:flex;align-items:center;justify-content:center;overflow:hidden}
-.card-thumb img{width:100%;height:100%;object-fit:cover}
-.card-thumb .thumb-icon{font-size:3.5rem;opacity:.3;color:var(--accent)}
-.card-badge-row{position:absolute;top:.7rem;left:.7rem;right:.7rem;display:flex;justify-content:space-between;align-items:flex-start}
-.badge-cat{background:rgba(124,58,237,0.85);backdrop-filter:blur(6px);color:#fff;font-size:.68rem;padding:.25rem .65rem;border-radius:50px;font-weight:600}
-.badge-ver{background:rgba(0,0,0,0.6);backdrop-filter:blur(6px);color:var(--accent2);font-size:.68rem;padding:.25rem .65rem;border-radius:50px;font-weight:600}
-.badge-hot{position:absolute;top:.7rem;right:.7rem;background:var(--gold);color:#000;font-size:.62rem;padding:.2rem .6rem;border-radius:50px;font-weight:700;letter-spacing:.04em}
+.card-thumb img{width:100%;height:100%;object-fit:cover;transition:transform .4s ease}
+.addon-card:hover .card-thumb img{transform:scale(1.05)}
+.card-thumb .thumb-icon{font-size:3.8rem;opacity:.35;color:var(--accent);transition:transform .3s ease}
+.addon-card:hover .thumb-icon{transform:scale(1.1) rotate(5deg)}
+.card-badge-row{position:absolute;top:.8rem;left:.8rem;right:.8rem;display:flex;justify-content:space-between;align-items:flex-start}
+.badge-cat{background:rgba(124,58,237,0.85);backdrop-filter:blur(6px);color:#fff;font-size:.68rem;padding:.25rem .7rem;border-radius:50px;font-weight:600}
+.badge-ver{background:rgba(0,0,0,0.65);backdrop-filter:blur(6px);color:var(--accent2);font-size:.68rem;padding:.25rem .7rem;border-radius:50px;font-weight:600}
+.badge-hot{position:absolute;top:.8rem;right:.8rem;background:var(--gold);color:#000;font-size:.62rem;padding:.22rem .65rem;border-radius:50px;font-weight:800;letter-spacing:.04em}
 
-.card-body{padding:1.3rem;flex:1;display:flex;flex-direction:column}
-.card-title{font-family:'Space Grotesk',sans-serif;font-size:1.1rem;font-weight:700;margin-bottom:.4rem;color:var(--text)}
-.card-blender{display:inline-flex;align-items:center;gap:.35rem;background:rgba(0,240,255,0.08);border:1px solid var(--border2);color:var(--accent2);font-size:.7rem;padding:.2rem .6rem;border-radius:50px;margin-bottom:.8rem;font-weight:600;align-self:flex-start}
-.card-desc{color:var(--text2);font-size:.82rem;line-height:1.6;margin-bottom:1rem;flex:1}
-.card-features{display:flex;flex-wrap:wrap;gap:.35rem;margin-bottom:1rem}
-.feature-tag{background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.08);color:var(--text3);font-size:.68rem;padding:.18rem .55rem;border-radius:4px}
+.card-body{padding:1.4rem;flex:1;display:flex;flex-direction:column}
+.card-title{font-family:var(--font-heading);font-size:1.15rem;font-weight:700;margin-bottom:.4rem;color:var(--text);line-height:1.35}
+.card-blender{display:inline-flex;align-items:center;gap:.35rem;background:rgba(0,240,255,0.08);border:1px solid var(--border2);color:var(--accent2);font-size:.72rem;padding:.22rem .65rem;border-radius:50px;margin-bottom:.8rem;font-weight:600;align-self:flex-start}
+.card-desc{color:var(--text2);font-size:.83rem;line-height:1.6;margin-bottom:1rem;flex:1}
+.card-features{display:flex;flex-wrap:wrap;gap:.35rem;margin-bottom:1.1rem}
+.feature-tag{background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.08);color:var(--text3);font-size:.68rem;padding:.2rem .6rem;border-radius:4px}
 
 .card-rating{display:flex;align-items:center;gap:.5rem;margin-bottom:1rem}
-.stars{color:var(--gold);font-size:.8rem;letter-spacing:.05em}
+.stars{color:var(--gold);font-size:.82rem;letter-spacing:.05em}
 .rating-num{font-size:.8rem;color:var(--text2)}
 
 /* DUAL CURRENCY PRICE BLOCK */
-.card-price-row{display:flex;align-items:flex-end;justify-content:space-between;gap:.5rem;margin-bottom:1.1rem;padding-top:.8rem;border-top:1px solid rgba(255,255,255,0.06)}
+.card-price-row{display:flex;align-items:flex-end;justify-content:space-between;gap:.5rem;margin-bottom:1.1rem;padding-top:.9rem;border-top:1px solid rgba(255,255,255,0.07)}
 .price-block{}
 .price-label{font-size:.68rem;color:var(--text3);text-transform:uppercase;letter-spacing:.05em;margin-bottom:.2rem}
 .price-dual{display:flex;align-items:baseline;gap:.5rem;flex-wrap:wrap}
-.price-usd{font-family:'Space Grotesk',sans-serif;font-size:1.55rem;font-weight:800;color:#fff}
+.price-usd{font-family:var(--font-heading);font-size:1.6rem;font-weight:800;color:#fff}
 .price-usd span{color:var(--accent2);font-size:.9rem}
-.price-pkr{font-family:'Space Grotesk',sans-serif;font-size:1.05rem;font-weight:700;color:var(--gold)}
-.price-sub{font-size:.72rem;color:var(--text3);margin-top:.2rem}
-.downloads-badge{display:flex;align-items:center;gap:.3rem;color:var(--green);font-size:.75rem;font-weight:600}
+.price-pkr{font-family:var(--font-heading);font-size:1.1rem;font-weight:700;color:var(--gold)}
+.downloads-badge{display:flex;align-items:center;gap:.35rem;color:var(--green);font-size:.76rem;font-weight:600}
 
 /* BUTTONS */
 .card-actions{display:flex;gap:.6rem}
-.btn-buy{flex:1;background:linear-gradient(135deg,var(--accent),#9333ea);color:#fff;border:none;padding:.75rem 1rem;border-radius:8px;font-size:.85rem;font-weight:600;cursor:pointer;transition:all .2s;font-family:inherit;display:flex;align-items:center;justify-content:center;gap:.4rem}
-.btn-buy:hover{opacity:.9;transform:scale(1.02);box-shadow:var(--glow)}
-.btn-detail{background:transparent;border:1px solid var(--border);color:var(--text2);padding:.75rem .9rem;border-radius:8px;font-size:.85rem;cursor:pointer;transition:all .2s;font-family:inherit}
+.btn-buy{flex:1;background:linear-gradient(135deg,var(--accent),#9333ea);color:#fff;border:none;padding:.75rem 1rem;border-radius:10px;font-size:.85rem;font-weight:700;cursor:pointer;transition:all .2s;font-family:inherit;display:flex;align-items:center;justify-content:center;gap:.4rem}
+.btn-buy:hover{opacity:.92;transform:scale(1.02);box-shadow:var(--glow)}
+.btn-inspect-3d{background:rgba(0,240,255,0.12);border:1.5px solid var(--accent2);color:var(--accent2);padding:.75rem 1rem;border-radius:10px;font-size:.82rem;font-weight:700;cursor:pointer;transition:all .2s;font-family:inherit;display:inline-flex;align-items:center;gap:.4rem}
+.btn-inspect-3d:hover{background:var(--accent2);color:#000;box-shadow:0 0 20px rgba(0,240,255,0.5)}
+.btn-detail{background:transparent;border:1px solid var(--border);color:var(--text2);padding:.75rem .9rem;border-radius:10px;font-size:.85rem;cursor:pointer;transition:all .2s;font-family:inherit}
 .btn-detail:hover{border-color:var(--accent2);color:var(--accent2)}
 
+/* 3D MODEL CARD SPECIFIC */
+.model-spec-row{display:grid;grid-template-columns:1fr 1fr;gap:.4rem;background:rgba(0,0,0,0.3);padding:.6rem .8rem;border-radius:8px;margin-bottom:1rem;border:1px solid rgba(255,255,255,0.04)}
+.spec-item{font-size:.72rem;color:var(--text3)}
+.spec-item strong{color:var(--text);font-family:var(--font-heading)}
+
+/* 3D VIEWER MODAL */
+.viewer-modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.92);backdrop-filter:blur(12px);z-index:1500;display:none;align-items:center;justify-content:center;padding:1rem}
+.viewer-modal-overlay.open{display:flex}
+.viewer-modal{background:var(--card);border:1.5px solid var(--accent2);border-radius:24px;width:100%;max-width:850px;overflow:hidden;animation:modalIn .3s ease;box-shadow:0 0 50px rgba(0,240,255,0.25)}
+.viewer-header{background:var(--card2);padding:1.2rem 1.6rem;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between}
+.viewer-title{font-family:var(--font-heading);font-size:1.2rem;font-weight:700;color:var(--accent2);display:flex;align-items:center;gap:.6rem}
+.viewer-stage{position:relative;width:100%;height:460px;background:#090b16}
+.viewer-stage model-viewer{width:100%;height:100%;--poster-color:transparent}
+.viewer-hud{position:absolute;bottom:1rem;left:1rem;right:1rem;display:flex;justify-content:space-between;align-items:center;pointer-events:none}
+.viewer-hint{background:rgba(0,0,0,0.7);backdrop-filter:blur(6px);padding:.4rem .9rem;border-radius:50px;font-size:.75rem;color:var(--text2);pointer-events:auto;border:1px solid rgba(255,255,255,0.1)}
+.viewer-actions-row{display:flex;gap:.5rem;pointer-events:auto}
+.viewer-btn{background:rgba(10,11,20,0.85);backdrop-filter:blur(6px);border:1px solid var(--border);color:var(--text);padding:.45rem .9rem;border-radius:50px;font-size:.78rem;font-weight:600;cursor:pointer;transition:all .2s;font-family:inherit}
+.viewer-btn:hover{background:var(--accent);color:#fff}
+.viewer-footer{padding:1.3rem 1.6rem;background:var(--card2);display:flex;align-items:center;justify-content:space-between;gap:1rem;flex-wrap:wrap}
+.viewer-price-summary .v-price-label{font-size:.7rem;color:var(--text3);text-transform:uppercase}
+.viewer-price-summary .v-price-val{font-size:1.4rem;font-weight:800;font-family:var(--font-heading);color:var(--gold)}
+
 /* PAYMENT MODAL */
-.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.85);backdrop-filter:blur(8px);z-index:1000;display:none;align-items:center;justify-content:center;padding:1rem}
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.88);backdrop-filter:blur(8px);z-index:1100;display:none;align-items:center;justify-content:center;padding:1rem}
 .modal-overlay.open{display:flex}
 .modal{background:var(--card2);border:1px solid var(--border);border-radius:20px;width:100%;max-width:500px;overflow:hidden;animation:modalIn .3s ease;max-height:92vh;overflow-y:auto}
 @keyframes modalIn{from{opacity:0;transform:scale(.9) translateY(20px)}to{opacity:1;transform:scale(1) translateY(0)}}
-.modal-header{background:linear-gradient(135deg,rgba(124,58,237,0.3),rgba(0,240,255,0.1));padding:1.3rem 1.5rem;border-bottom:1px solid var(--border);display:flex;align-items:flex-start;justify-content:space-between}
-.modal-title{font-family:'Space Grotesk',sans-serif;font-size:1.15rem;font-weight:700;margin-bottom:.2rem}
+.modal-header{background:linear-gradient(135deg,rgba(124,58,237,0.35),rgba(0,240,255,0.15));padding:1.3rem 1.5rem;border-bottom:1px solid var(--border);display:flex;align-items:flex-start;justify-content:space-between}
+.modal-title{font-family:var(--font-heading);font-size:1.15rem;font-weight:700;margin-bottom:.2rem}
 .modal-subtitle{font-size:.8rem;color:var(--text2)}
 .modal-close{background:transparent;border:none;color:var(--text2);font-size:1.3rem;cursor:pointer;padding:.2rem;line-height:1;transition:color .2s}
 .modal-close:hover{color:var(--text)}
 .modal-body{padding:1.4rem;display:flex;flex-direction:column;gap:1.1rem}
 
-/* AMOUNT BOX (DUAL CURRENCY) */
 .amount-box{background:rgba(124,58,237,0.12);border:1px solid var(--border);border-radius:12px;padding:1rem 1.2rem;text-align:center}
 .amount-label{font-size:.72rem;color:var(--text3);text-transform:uppercase;letter-spacing:.06em;margin-bottom:.3rem}
 .amount-flex{display:flex;justify-content:center;align-items:baseline;gap:.8rem;flex-wrap:wrap}
-.amount-pkr{font-family:'Space Grotesk',sans-serif;font-size:1.8rem;font-weight:800;color:var(--gold)}
-.amount-usd{font-family:'Space Grotesk',sans-serif;font-size:1.4rem;font-weight:700;color:var(--accent2)}
+.amount-pkr{font-family:var(--font-heading);font-size:1.8rem;font-weight:800;color:var(--gold)}
+.amount-usd{font-family:var(--font-heading);font-size:1.4rem;font-weight:700;color:var(--accent2)}
 .amount-addon-name{font-size:.82rem;color:var(--text2);margin-top:.3rem}
 
-/* PAYMENT METHODS TABS */
 .pay-options{display:grid;grid-template-columns:1fr 1fr 1fr;gap:.6rem}
 .pay-opt{background:var(--bg3);border:2px solid transparent;border-radius:10px;padding:.7rem .5rem;cursor:pointer;text-align:center;transition:all .2s}
 .pay-opt:hover,.pay-opt.selected{border-color:var(--accent);background:rgba(124,58,237,0.15)}
@@ -119,29 +161,25 @@ body{background:var(--bg);color:var(--text);font-family:'Poppins',sans-serif;min
 .pay-opt-name{font-size:.75rem;font-weight:700;color:var(--text)}
 .pay-opt-tag{font-size:.65rem;color:var(--text3);margin-top:.1rem}
 
-/* NUMBER / PAYMENT INFO DISPLAY */
 .number-box{background:var(--bg3);border:1px solid var(--border);border-radius:10px;padding:.9rem 1.1rem;display:flex;align-items:center;justify-content:space-between;gap:.8rem}
 .number-label{font-size:.7rem;color:var(--text3);text-transform:uppercase;letter-spacing:.05em;margin-bottom:.2rem}
-.number-value{font-family:'Space Grotesk',sans-serif;font-size:1.25rem;font-weight:700;color:var(--accent2);letter-spacing:.06em}
+.number-value{font-family:var(--font-heading);font-size:1.25rem;font-weight:700;color:var(--accent2);letter-spacing:.06em}
 .number-sub{font-size:.72rem;color:var(--text3);margin-top:.15rem}
 .copy-btn{background:rgba(124,58,237,0.2);border:1px solid var(--border);color:var(--accent);padding:.5rem .8rem;border-radius:7px;cursor:pointer;font-size:.8rem;transition:all .2s;white-space:nowrap;font-family:inherit;font-weight:600}
 .copy-btn:hover{background:var(--accent);color:#fff}
 .copy-btn.copied{background:var(--green);border-color:var(--green);color:#fff}
 
-/* STEPS */
 .steps-box{}
 .steps-title{font-size:.75rem;color:var(--text2);font-weight:700;margin-bottom:.6rem;text-transform:uppercase;letter-spacing:.05em}
 .step-row{display:flex;align-items:flex-start;gap:.6rem;margin-bottom:.5rem}
 .step-num{width:20px;height:20px;background:linear-gradient(135deg,var(--accent),var(--accent2));border-radius:50%;font-size:.65rem;font-weight:700;color:#fff;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:.1rem}
 .step-text{font-size:.78rem;color:var(--text2);line-height:1.45}
 
-/* EMAIL INPUT */
 .email-row{display:flex;flex-direction:column;gap:.35rem}
 .email-row label{font-size:.75rem;color:var(--text2);font-weight:600}
 .email-row input{background:var(--bg3);border:1px solid var(--border);color:var(--text);padding:.6rem .9rem;border-radius:8px;font-family:inherit;font-size:.82rem;outline:none;transition:border-color .2s}
 .email-row input:focus{border-color:var(--accent)}
 
-/* ACTION BUTTONS */
 .modal-actions{display:flex;flex-direction:column;gap:.6rem}
 .btn-whatsapp{background:linear-gradient(135deg,#25d366,#128c7e);color:#fff;border:none;padding:.8rem;border-radius:10px;font-size:.88rem;font-weight:700;cursor:pointer;transition:all .2s;font-family:inherit;display:flex;align-items:center;justify-content:center;gap:.5rem;width:100%}
 .btn-whatsapp:hover{opacity:.9;transform:scale(1.01)}
@@ -151,9 +189,12 @@ body{background:var(--bg);color:var(--text);font-family:'Poppins',sans-serif;min
 /* ADMIN MODAL & PANEL */
 .admin-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.9);backdrop-filter:blur(10px);z-index:2000;display:none;align-items:center;justify-content:center;padding:1rem}
 .admin-overlay.open{display:flex}
-.admin-panel{background:var(--card);border:1px solid var(--border);border-radius:20px;width:100%;max-width:620px;max-height:92vh;overflow-y:auto;animation:modalIn .3s ease}
+.admin-panel{background:var(--card);border:1px solid var(--border);border-radius:20px;width:100%;max-width:650px;max-height:92vh;overflow-y:auto;animation:modalIn .3s ease}
 .admin-header{background:var(--card2);padding:1.3rem 1.5rem;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:2}
-.admin-title{font-family:'Space Grotesk',sans-serif;font-size:1.15rem;font-weight:700;color:var(--gold);display:flex;align-items:center;gap:.5rem}
+.admin-title{font-family:var(--font-heading);font-size:1.15rem;font-weight:700;color:var(--gold);display:flex;align-items:center;gap:.5rem}
+.admin-tabs{display:flex;gap:.5rem;padding:1rem 1.5rem 0;border-bottom:1px solid var(--border);background:var(--card2)}
+.admin-tab-btn{background:transparent;border:none;border-bottom:2px solid transparent;color:var(--text2);padding:.6rem 1rem;font-size:.85rem;font-weight:700;cursor:pointer;font-family:inherit;transition:all .2s}
+.admin-tab-btn.active{color:var(--accent2);border-color:var(--accent2)}
 .admin-body{padding:1.5rem;display:flex;flex-direction:column;gap:1.5rem}
 .admin-section-title{font-size:.82rem;color:var(--accent2);text-transform:uppercase;letter-spacing:.07em;font-weight:700;margin-bottom:.8rem;border-bottom:1px solid var(--border);padding-bottom:.4rem;display:flex;align-items:center;gap:.4rem}
 .form-group{display:flex;flex-direction:column;gap:.35rem;margin-bottom:.75rem}
@@ -164,22 +205,21 @@ body{background:var(--bg);color:var(--text);font-family:'Poppins',sans-serif;min
 .form-row{display:grid;grid-template-columns:1fr 1fr;gap:.8rem}
 .form-help{font-size:.7rem;color:var(--text3);margin-top:.15rem}
 
-.btn-add-addon{background:linear-gradient(135deg,var(--gold),#d97706);color:#000;border:none;padding:.75rem;border-radius:10px;font-size:.85rem;font-weight:700;cursor:pointer;width:100%;font-family:inherit;display:flex;align-items:center;justify-content:center;gap:.4rem;transition:opacity .2s}
-.btn-add-addon:hover{opacity:.9}
-.admin-addon-list{display:flex;flex-direction:column;gap:.6rem}
-.admin-addon-item{background:var(--bg3);border:1px solid var(--border);border-radius:10px;padding:.8rem 1rem;display:flex;align-items:center;justify-content:space-between;gap:.7rem}
-.admin-addon-info .addon-item-title{font-weight:700;font-size:.88rem;margin-bottom:.15rem}
-.admin-addon-info .addon-item-price{color:var(--gold);font-size:.78rem;font-weight:600}
-.admin-addon-actions{display:flex;gap:.4rem;flex-shrink:0}
+.btn-add-item{background:linear-gradient(135deg,var(--gold),#d97706);color:#000;border:none;padding:.75rem;border-radius:10px;font-size:.85rem;font-weight:700;cursor:pointer;width:100%;font-family:inherit;display:flex;align-items:center;justify-content:center;gap:.4rem;transition:opacity .2s}
+.btn-add-item:hover{opacity:.9}
+.admin-items-list{display:flex;flex-direction:column;gap:.6rem;max-height:300px;overflow-y:auto}
+.admin-item-card{background:var(--bg3);border:1px solid var(--border);border-radius:10px;padding:.8rem 1rem;display:flex;align-items:center;justify-content:space-between;gap:.7rem}
+.admin-item-info .item-title{font-weight:700;font-size:.88rem;margin-bottom:.15rem}
+.admin-item-info .item-price{color:var(--gold);font-size:.78rem;font-weight:600}
+.admin-item-actions{display:flex;gap:.4rem;flex-shrink:0}
 .btn-edit,.btn-del{background:transparent;border:1px solid;padding:.35rem .65rem;border-radius:6px;font-size:.75rem;cursor:pointer;transition:all .2s;font-family:inherit}
 .btn-edit{border-color:var(--accent2);color:var(--accent2)}
 .btn-edit:hover{background:var(--accent2);color:#000}
 .btn-del{border-color:var(--red);color:var(--red)}
 .btn-del:hover{background:var(--red);color:#fff}
 
-/* LOGIN BOX */
 .login-box{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:2rem;width:100%;max-width:360px;text-align:center;animation:modalIn .3s ease}
-.login-box h2{font-family:'Space Grotesk',sans-serif;font-size:1.2rem;font-weight:700;color:var(--gold);margin-bottom:.4rem}
+.login-box h2{font-family:var(--font-heading);font-size:1.2rem;font-weight:700;color:var(--gold);margin-bottom:.4rem}
 .login-box p{font-size:.82rem;color:var(--text2);margin-bottom:1.3rem}
 .login-box input{background:var(--bg3);border:1px solid var(--border);color:var(--text);padding:.7rem 1rem;border-radius:8px;font-family:inherit;font-size:1.1rem;outline:none;width:100%;margin-bottom:1rem;transition:border-color .2s;text-align:center;letter-spacing:.25em}
 .login-box input:focus{border-color:var(--gold)}
@@ -187,23 +227,22 @@ body{background:var(--bg);color:var(--text);font-family:'Poppins',sans-serif;min
 .btn-login:hover{opacity:.9}
 .login-err{color:var(--red);font-size:.8rem;margin-top:.5rem;display:none}
 
-/* TOAST */
 .toast{position:fixed;bottom:2rem;left:50%;transform:translateX(-50%) translateY(100px);background:var(--card2);border:1px solid var(--accent);color:var(--text);padding:.7rem 1.5rem;border-radius:50px;font-size:.85rem;font-weight:600;z-index:9999;transition:transform .3s;pointer-events:none;white-space:nowrap}
 .toast.show{transform:translateX(-50%) translateY(0)}
 
-/* FOOTER */
 footer{background:var(--bg2);border-top:1px solid var(--border);padding:2rem;text-align:center}
 footer p{font-size:.8rem;color:var(--text3)}
 footer a{color:var(--accent2);text-decoration:none}
 
-@media(max-width:600px){
-  .hero{padding:3rem 1rem 2rem}
-  .store-grid{grid-template-columns:1fr;padding:1.5rem 1rem 3rem}
+@media(max-width:768px){
+  .hero{padding:3rem 1rem 1.8rem}
+  .store-grid{grid-template-columns:1fr;padding:1.2rem 1rem 3rem}
   .pay-options{grid-template-columns:1fr}
   .form-row{grid-template-columns:1fr}
   .hero-stats{gap:1.5rem}
   .navbar{padding:0 1rem}
-  .amount-flex{flex-direction:column;gap:.2rem}
+  .tab-switch-btn{padding:.5rem 1rem;font-size:.8rem}
+  .viewer-stage{height:320px}
 }
 </style>
 </head>
@@ -225,32 +264,89 @@ footer a{color:var(--accent2);text-decoration:none}
 <section class="hero">
   <div class="hero-badge"><i class="fas fa-fire" style="color:var(--gold)"></i> SPECIAL OFFER · $1 DOLLAR SHOP</div>
   <h1>🔥 $1 Dollar <span>Shop</span></h1>
-  <p>Official Blender 3D Addons, Tools & Geometry Nodes starting at just <strong>$1 / Rs.299</strong>! Instant activation via JazzCash, EasyPaisa, or USD/International payment.</p>
+  <p>Production-ready Blender Addons & 3D Interactive GLB Models starting from just <strong>$1 / Rs.299</strong>! Instant activation via JazzCash, EasyPaisa, or USD/International payment.</p>
   <div class="hero-stats">
-    <div class="stat"><div class="stat-num" id="stat-addons">3</div><div class="stat-label">Addons</div></div>
-    <div class="stat"><div class="stat-num">2.9k+</div><div class="stat-label">Downloads</div></div>
-    <div class="stat"><div class="stat-num">4.8★</div><div class="stat-label">Avg Rating</div></div>
+    <div class="stat"><div class="stat-num" id="stat-addons">14</div><div class="stat-label">Addons</div></div>
+    <div class="stat"><div class="stat-num" id="stat-models">6</div><div class="stat-label">3D Models</div></div>
+    <div class="stat"><div class="stat-num">4.9★</div><div class="stat-label">Avg Rating</div></div>
+    <div class="stat"><div class="stat-num">3.5k+</div><div class="stat-label">Downloads</div></div>
   </div>
 </section>
 
-<!-- FILTER BAR -->
-<div class="filter-bar">
-  <button class="filter-btn active" onclick="filterAddons('all',this)">All Addons</button>
-  <button class="filter-btn" onclick="filterAddons('ArchViz & Lighting',this)">ArchViz & Lighting</button>
-  <button class="filter-btn" onclick="filterAddons('Geometry Nodes',this)">Geometry Nodes</button>
-  <button class="filter-btn" onclick="filterAddons('Animation',this)">Animation</button>
+<!-- MAIN TAB SWITCHER: BLENDER ADDONS vs 3D MODELS -->
+<div class="section-tabs-container">
+  <div class="section-tabs">
+    <button class="tab-switch-btn active" id="tabAddonsBtn" onclick="switchMainTab('addons')">
+      <i class="fas fa-puzzle-piece"></i> Blender Addons <span class="tab-count-tag" id="addonsCountTag">14</span>
+    </button>
+    <button class="tab-switch-btn models-btn" id="tabModelsBtn" onclick="switchMainTab('models')">
+      <i class="fas fa-cube"></i> 3D Models (GLB) <span class="tab-count-tag" id="modelsCountTag">6</span>
+    </button>
+  </div>
 </div>
 
-<!-- STORE GRID (Embedded items render instantly) -->
+<!-- SEARCH & SUB-CATEGORY FILTERS -->
+<div class="filter-wrapper">
+  <div class="search-bar">
+    <i class="fas fa-search"></i>
+    <input type="text" id="storeSearchInput" placeholder="Search addons, features, shaders, or 3D models..." oninput="handleSearch(this.value)" />
+  </div>
+  <div class="sub-filter-pills" id="subFilterPills">
+    <!-- Populated dynamically based on active tab -->
+  </div>
+</div>
+
+<!-- ITEMS GRID -->
 <div class="store-grid" id="storeGrid"></div>
+
+<!-- 3D MODEL INTERACTIVE VIEWER MODAL -->
+<div class="viewer-modal-overlay" id="viewerModal">
+  <div class="viewer-modal">
+    <div class="viewer-header">
+      <div class="viewer-title">
+        <i class="fas fa-cubes"></i> <span id="viewerModelTitle">3D Model Inspector</span>
+      </div>
+      <button class="modal-close" onclick="closeViewer()"><i class="fas fa-times"></i></button>
+    </div>
+    <div class="viewer-stage">
+      <model-viewer id="mainModelViewer"
+        src=""
+        alt="3D GLB Model Inspection"
+        auto-rotate
+        camera-controls
+        shadow-intensity="1.5"
+        exposure="1.1"
+        loading="lazy"
+        ar
+        ar-modes="webxr scene-viewer quick-look">
+      </model-viewer>
+      <div class="viewer-hud">
+        <div class="viewer-hint"><i class="fas fa-hand-pointer"></i> Rotate: Click &amp; Drag · Zoom: Scroll</div>
+        <div class="viewer-actions-row">
+          <button class="viewer-btn" onclick="toggleAutoRotate()"><i class="fas fa-rotate"></i> Auto-Rotate</button>
+          <button class="viewer-btn" onclick="resetViewerCamera()"><i class="fas fa-compress"></i> Reset</button>
+        </div>
+      </div>
+    </div>
+    <div class="viewer-footer">
+      <div class="viewer-price-summary">
+        <div class="v-price-label">Price / Qeemat</div>
+        <div class="v-price-val" id="viewerPriceVal">$1.00 USD / Rs. 299 PKR</div>
+      </div>
+      <button class="btn-buy" style="max-width:280px" onclick="buyCurrentModelFromViewer()">
+        <i class="fas fa-shopping-cart"></i> Buy &amp; Download Model
+      </button>
+    </div>
+  </div>
+</div>
 
 <!-- PAYMENT MODAL -->
 <div class="modal-overlay" id="payModal">
   <div class="modal">
     <div class="modal-header">
       <div>
-        <div class="modal-title" id="payModalTitle">Buy Addon</div>
-        <div class="modal-subtitle">PKR (JazzCash / EasyPaisa) & USD / International</div>
+        <div class="modal-title" id="payModalTitle">Buy Item</div>
+        <div class="modal-subtitle">PKR (JazzCash / EasyPaisa) &amp; USD / International</div>
       </div>
       <button class="modal-close" onclick="closePayModal()"><i class="fas fa-times"></i></button>
     </div>
@@ -299,10 +395,10 @@ footer a{color:var(--accent2);text-decoration:none}
 
       <!-- Steps -->
       <div class="steps-box">
-        <div class="steps-title">Asaan Tareeqa (How to Receive Addon)</div>
+        <div class="steps-title">Asaan Tareeqa (How to Receive Download)</div>
         <div class="step-row"><div class="step-num">1</div><div class="step-text" id="step1-text">Upar diye gaye number par <strong>JazzCash / EasyPaisa</strong> se amount send karein.</div></div>
         <div class="step-row"><div class="step-num">2</div><div class="step-text">Payment ka screenshot le kar niche <strong>WhatsApp</strong> button par click karein.</div></div>
-        <div class="step-row"><div class="step-num">3</div><div class="step-text">Confirm hote hi aap ko foran private <strong>ZIP Download Link</strong> bhej diya jaye ga!</div></div>
+        <div class="step-row"><div class="step-num">3</div><div class="step-text">Confirm hote hi aap ko foran private <strong>Download Link (ZIP/GLB)</strong> bhej diya jaye ga!</div></div>
       </div>
 
       <!-- Optional Email -->
@@ -343,89 +439,104 @@ footer a{color:var(--accent2);text-decoration:none}
       <div class="admin-title"><i class="fas fa-sliders"></i> Store Admin Dashboard</div>
       <button class="modal-close" onclick="closeAdmin()"><i class="fas fa-times"></i></button>
     </div>
+    <div class="admin-tabs">
+      <button class="admin-tab-btn active" id="atabAddons" onclick="switchAdminTab('addons')">Blender Addons (<span id="admCountAddons">0</span>)</button>
+      <button class="admin-tab-btn" id="atabModels" onclick="switchAdminTab('models')">3D Models (<span id="admCountModels">0</span>)</button>
+      <button class="admin-tab-btn" id="atabSettings" onclick="switchAdminTab('settings')">Payment &amp; PIN</button>
+    </div>
     <div class="admin-body">
 
-      <!-- Payment & WhatsApp Numbers -->
-      <div>
-        <div class="admin-section-title"><i class="fas fa-money-bill-wave"></i> Payment & WhatsApp Settings</div>
+      <!-- SECTION: ADDONS MANAGEMENT -->
+      <div id="adminSecAddons">
+        <div class="admin-section-title"><i class="fas fa-plus-circle"></i> <span id="formAddonTitle">Naya Blender Addon Shamil Karein</span></div>
+        <input type="hidden" id="editAddonId" value=""/>
+        <div class="form-group"><label>Addon Title *</label><input type="text" id="newTitle" placeholder="e.g. Realtime Materials Pro"/></div>
+        <div class="form-row">
+          <div class="form-group"><label>Version</label><input type="text" id="newVersion" placeholder="v3.2"/></div>
+          <div class="form-group"><label>Category</label>
+            <select id="newCat">
+              <option>Materials & Shaders</option>
+              <option>Texturing & Animation</option>
+              <option>Animation & Rigging</option>
+              <option>Physics & FX</option>
+              <option>Rigging & Vehicles</option>
+              <option>Product Design</option>
+              <option>AI & Automation</option>
+              <option>Simulation & Cloth</option>
+              <option>ArchViz & Modeling</option>
+              <option>ArchViz & Lighting</option>
+              <option>Geometry Nodes</option>
+              <option>Other</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-group"><label>Blender Compatibility</label><input type="text" id="newBlender" placeholder="Blender 3.6 / 4.x / 5.x"/></div>
+        <div class="form-group"><label>Description *</label><textarea id="newDesc" placeholder="Addon features and workflow benefits..."></textarea></div>
+        <div class="form-group"><label>Features (Comma separated)</label><input type="text" id="newFeatures" placeholder="Feature 1, Feature 2, Feature 3"/></div>
+        <div class="form-row">
+          <div class="form-group"><label>Price in PKR (Rs.) *</label><input type="number" id="newPricePKR" placeholder="299"/></div>
+          <div class="form-group"><label>Price in USD ($) *</label><input type="number" step="0.01" id="newPriceUSD" placeholder="1.00"/></div>
+        </div>
+        <div class="form-group"><label>🔒 Private Download File / Folder URL</label><input type="text" id="newFileUrl" placeholder="File name or Google Drive / GitHub release URL"/></div>
+        <button class="btn-add-item" onclick="saveAddon()"><i class="fas fa-save"></i> <span id="btnAddonSaveBtn">Save Addon</span></button>
+
+        <div style="margin-top:1.5rem">
+          <div class="admin-section-title"><i class="fas fa-list"></i> Mojooda Addons List</div>
+          <div class="admin-items-list" id="adminAddonsList"></div>
+        </div>
+      </div>
+
+      <!-- SECTION: 3D MODELS MANAGEMENT -->
+      <div id="adminSecModels" style="display:none">
+        <div class="admin-section-title"><i class="fas fa-cube"></i> <span id="formModelTitle">Naya 3D Model (GLB) Shamil Karein</span></div>
+        <input type="hidden" id="editModelId" value=""/>
+        <div class="form-group"><label>Model Title *</label><input type="text" id="mTitle" placeholder="e.g. Modern Minimalist Velvet Armchair"/></div>
+        <div class="form-row">
+          <div class="form-group"><label>Category</label>
+            <select id="mCat">
+              <option>Furniture & Interior</option>
+              <option>Architecture</option>
+              <option>Sci-Fi & Game Assets</option>
+              <option>Studio & Props</option>
+              <option>Vehicles</option>
+              <option>Other</option>
+            </select>
+          </div>
+          <div class="form-group"><label>Poly Count</label><input type="text" id="mPoly" placeholder="18.4k Triangles"/></div>
+        </div>
+        <div class="form-group"><label>Description</label><textarea id="mDesc" placeholder="Model topology, PBR materials, format..."></textarea></div>
+        <div class="form-group"><label>GLB 3D File URL * (Interactive Preview ke liye)</label><input type="text" id="mGlbUrl" placeholder="https://.../model.glb ya ../media/model.glb"/></div>
+        <div class="form-group"><label>Thumbnail Image URL (optional)</label><input type="text" id="mThumb" placeholder="https://... image link"/></div>
+        <div class="form-row">
+          <div class="form-group"><label>Price in PKR (Rs.) *</label><input type="number" id="mPricePKR" placeholder="299"/></div>
+          <div class="form-group"><label>Price in USD ($) *</label><input type="number" step="0.01" id="mPriceUSD" placeholder="1.00"/></div>
+        </div>
+        <button class="btn-add-item" onclick="saveModel()"><i class="fas fa-save"></i> <span id="btnModelSaveBtn">Save 3D Model</span></button>
+
+        <div style="margin-top:1.5rem">
+          <div class="admin-section-title"><i class="fas fa-cubes"></i> Mojooda 3D Models List</div>
+          <div class="admin-items-list" id="adminModelsList"></div>
+        </div>
+      </div>
+
+      <!-- SECTION: SETTINGS -->
+      <div id="adminSecSettings" style="display:none">
+        <div class="admin-section-title"><i class="fas fa-money-bill-wave"></i> Payment Numbers &amp; PIN</div>
         <div class="form-row">
           <div class="form-group"><label>JazzCash Number</label><input type="text" id="adminJazz" placeholder="03392332272"/></div>
           <div class="form-group"><label>EasyPaisa Number</label><input type="text" id="adminEasy" placeholder="03392332272"/></div>
         </div>
         <div class="form-row">
-          <div class="form-group"><label>WhatsApp Number (e.g. 923392332272)</label><input type="text" id="adminWA" placeholder="923392332272"/></div>
-          <div class="form-group"><label>Change Admin PIN</label><input type="password" id="adminNewPin" placeholder="4488" maxlength="8"/></div>
+          <div class="form-group"><label>WhatsApp Number</label><input type="text" id="adminWA" placeholder="923392332272"/></div>
+          <div class="form-group"><label>Admin PIN (4-digit)</label><input type="password" id="adminNewPin" placeholder="4488" maxlength="8"/></div>
         </div>
-        <button class="btn-add-addon" onclick="saveOwnerSettings()" style="background:linear-gradient(135deg,var(--green),#059669)"><i class="fas fa-check"></i> Save Settings</button>
-      </div>
+        <button class="btn-add-item" onclick="saveOwnerSettings()" style="background:linear-gradient(135deg,var(--green),#059669)"><i class="fas fa-check"></i> Save Settings</button>
 
-      <!-- Add or Edit Addon -->
-      <div>
-        <div class="admin-section-title"><i class="fas fa-cube"></i> <span id="formModeTitle">Naya Addon Shamil Karein</span></div>
-        <input type="hidden" id="editAddonId" value=""/>
-        <div class="form-group"><label>Addon Title *</label><input type="text" id="newTitle" placeholder="e.g. ArchViz QuickTools Pro"/></div>
-        <div class="form-row">
-          <div class="form-group"><label>Version</label><input type="text" id="newVersion" placeholder="v2.4"/></div>
-          <div class="form-group"><label>Category</label>
-            <select id="newCat">
-              <option>ArchViz & Lighting</option>
-              <option>Geometry Nodes</option>
-              <option>Animation</option>
-              <option>Modeling Tools</option>
-              <option>Materials & Shaders</option>
-              <option>Rendering</option>
-              <option>Other</option>
-            </select>
-          </div>
+        <div style="margin-top:1.5rem">
+          <div class="admin-section-title"><i class="fas fa-download"></i> Backup &amp; Sync</div>
+          <p style="font-size:.78rem;color:var(--text2);margin-bottom:.8rem">Download full updated store database JSON for GitHub commit:</p>
+          <button class="btn-add-item" onclick="exportJSON()" style="background:linear-gradient(135deg,var(--accent),#9333ea)"><i class="fas fa-file-code"></i> Download store-data.json</button>
         </div>
-        <div class="form-group"><label>Blender Compatibility</label><input type="text" id="newBlender" placeholder="Blender 3.6 / 4.x"/></div>
-        <div class="form-group"><label>Description *</label><textarea id="newDesc" placeholder="Yeh addon kya karta hai aur artist ko kya faida dega..."></textarea></div>
-        <div class="form-group"><label>Features (Comma separated)</label><input type="text" id="newFeatures" placeholder="Feature 1, Feature 2, Feature 3"/></div>
-        <div class="form-group"><label>Thumbnail Image URL (optional)</label><input type="text" id="newThumb" placeholder="https://... ya blank chhod dein"/></div>
-        
-        <!-- Both Currencies in Admin -->
-        <div class="form-row">
-          <div class="form-group">
-            <label>Price in PKR (Rs.) *</label>
-            <input type="number" id="newPricePKR" placeholder="1499" min="0"/>
-          </div>
-          <div class="form-group">
-            <label>Price in USD ($) *</label>
-            <input type="number" step="0.01" id="newPriceUSD" placeholder="5.50" min="0"/>
-          </div>
-        </div>
-
-        <div class="form-group">
-          <label>🔒 Private Download URL (Google Drive / GitHub Release / Mega link)</label>
-          <input type="text" id="newFileUrl" placeholder="https://drive.google.com/... ya https://github.com/..."/>
-          <div class="form-help">Yeh link public ko direct nahi dikhta, payment confirm hone ke baad aap WhatsApp pe bhejte hain.</div>
-        </div>
-
-        <div class="form-row">
-          <div class="form-group"><label>Payment Type</label>
-            <select id="newPayType">
-              <option value="one-time">One-Time Purchase</option>
-              <option value="subscription">Subscription</option>
-              <option value="free">Free</option>
-            </select>
-          </div>
-          <div class="form-group"><label>Downloads Label</label><input type="text" id="newDownloads" placeholder="1.2k+"/></div>
-        </div>
-
-        <button class="btn-add-addon" onclick="saveAddon()"><i class="fas fa-plus"></i> <span id="addBtnText">Add Addon to Store</span></button>
-      </div>
-
-      <!-- Existing Addons List -->
-      <div>
-        <div class="admin-section-title"><i class="fas fa-list"></i> Mojooda Addons (<span id="adminAddonCount">0</span>)</div>
-        <div class="admin-addon-list" id="adminAddonList"></div>
-      </div>
-
-      <!-- Export / Sync -->
-      <div>
-        <div class="admin-section-title"><i class="fas fa-cloud-arrow-down"></i> Backup / Export</div>
-        <p style="font-size:.78rem;color:var(--text2);margin-bottom:.8rem">Aap ke naye addons browser mein save hain. File download karke permanent commit karne ke liye:</p>
-        <button class="btn-add-addon" onclick="exportJSON()" style="background:linear-gradient(135deg,var(--accent),#9333ea)"><i class="fas fa-download"></i> Download store-data.json</button>
       </div>
 
     </div>
@@ -442,138 +553,161 @@ footer a{color:var(--accent2);text-decoration:none}
 
 <script>
 // ══════════════════════════════════════════════════════════════
-//  INITIAL EMBEDDED DATA (Zero-delay instant render)
+//  DATA STATE
 // ══════════════════════════════════════════════════════════════
-const DEFAULT_DATA = {
-  owner: {
-    name: "Design Corner",
-    whatsapp: "923392332272",
-    jazzcash: "03392332272",
-    easypaisa: "03392332272",
-    email: "designcorner488@gmail.com",
-    pin: "4488"
-  },
-  addons: [
-    {
-      id: "addon_1",
-      title: "ArchViz QuickTools Pro",
-      version: "v2.4",
-      blender: "Blender 3.6 / 4.x",
-      category: "ArchViz & Lighting",
-      desc: "Automated parametric wall generation, trim moldings, and photorealistic lighting studio setups for Blender Cycles & Eevee. Includes 50+ material presets, IES light library, and one-click HDRI manager.",
-      features: ["50+ Material Presets", "IES Light Library", "HDRI Manager", "Parametric Walls", "Studio Lighting"],
-      icon: "fa-building",
-      thumbnail: "",
-      fileUrlPrivate: "#",
-      pricePKR: 499,
-      priceUSD: 1.50,
-      paymentType: "one-time",
-      downloads: "1.4k+",
-      rating: 4.9,
-      reviews: 47
-    },
-    {
-      id: "addon_2",
-      title: "Parametric Stairs & Railings",
-      version: "v1.8",
-      blender: "Blender 4.0 / 4.2+",
-      category: "Geometry Nodes",
-      desc: "Interactive geometry-nodes generator for spiral, cantilever, and modern industrial staircases with dynamic balustrade controls. Real-time parameter updates with no manual mesh editing.",
-      features: ["Spiral Staircases", "Cantilever Design", "Dynamic Balustrade", "Real-time Preview", "BIM-ready Export"],
-      icon: "fa-stairs",
-      thumbnail: "",
-      fileUrlPrivate: "#",
-      pricePKR: 299,
-      priceUSD: 1.00,
-      paymentType: "one-time",
-      downloads: "890+",
-      rating: 4.8,
-      reviews: 32
-    },
-    {
-      id: "addon_3",
-      title: "Cinematic Camera Rigs",
-      version: "v1.2",
-      blender: "Blender 3.6+",
-      category: "Animation",
-      desc: "One-click architectural flythrough rigs with smooth camera easing, drone pathing, target tracking, and rack focus presets. Perfect for real estate walkthroughs and cinematic presentations.",
-      features: ["Drone Path Rigs", "Target Tracking", "Rack Focus Presets", "Smooth Easing", "Architectural Flythrough"],
-      icon: "fa-video",
-      thumbnail: "",
-      fileUrlPrivate: "#",
-      pricePKR: 299,
-      priceUSD: 1.00,
-      paymentType: "one-time",
-      downloads: "620+",
-      rating: 4.7,
-      reviews: 28
-    }
-  ]
-};
-
 let storeData = null;
-let allAddons = [];
-let currentAddon = null;
+let currentTab = 'addons'; // 'addons' or 'models'
+let currentSubFilter = 'all';
+let searchQuery = '';
+let currentItem = null; // item being bought
+let currentViewerModel = null; // model being inspected
 let currentMethod = 'jazz';
-let currentFilter = 'all';
 
-// ══════════════════════════════════════════════════════════════
-//  INITIALIZATION
-// ══════════════════════════════════════════════════════════════
-function initStore() {
-  // 1. Try local storage first (admin edits)
-  const cached = localStorage.getItem('dc_store_data_v2');
+// Load store data
+async function loadStoreData() {
+  const cached = localStorage.getItem('dc_store_data_v3');
   if (cached) {
     try { storeData = JSON.parse(cached); } catch(e) { storeData = null; }
   }
   if (!storeData) {
-    storeData = JSON.parse(JSON.stringify(DEFAULT_DATA));
+    try {
+      const res = await fetch('store-data.json?v=' + Date.now());
+      if (res.ok) storeData = await res.json();
+    } catch(e) {}
   }
-  allAddons = storeData.addons || [];
-  renderAddons(allAddons);
-  updateStats();
-
-  // 2. Background sync from store-data.json
-  fetch('store-data.json?v=' + Date.now())
-    .then(r => r.ok ? r.json() : null)
-    .then(data => {
-      if (data && data.addons && !localStorage.getItem('dc_store_data_v2')) {
-        storeData = data;
-        allAddons = data.addons;
-        renderAddons(allAddons);
-        updateStats();
-      }
-    })
-    .catch(() => {/* offline fallback */});
+  if (!storeData || !storeData.addons) {
+    storeData = getFallbackData();
+  }
+  updateStatsAndCounts();
+  buildSubFilterPills();
+  renderStoreGrid();
 }
 
-function updateStats() {
-  const el = document.getElementById('stat-addons');
-  if (el) el.textContent = allAddons.length;
+function getFallbackData() {
+  return {
+    owner: { name: "Design Corner", whatsapp: "923392332272", jazzcash: "03392332272", easypaisa: "03392332272", email: "designcorner488@gmail.com", pin: "4488" },
+    addons: [],
+    models: []
+  };
+}
+
+function updateStatsAndCounts() {
+  const aCount = (storeData.addons || []).length;
+  const mCount = (storeData.models || []).length;
+  document.getElementById('stat-addons').textContent = aCount;
+  document.getElementById('stat-models').textContent = mCount;
+  document.getElementById('addonsCountTag').textContent = aCount;
+  document.getElementById('modelsCountTag').textContent = mCount;
+  if (document.getElementById('admCountAddons')) document.getElementById('admCountAddons').textContent = aCount;
+  if (document.getElementById('admCountModels')) document.getElementById('admCountModels').textContent = mCount;
 }
 
 // ══════════════════════════════════════════════════════════════
-//  RENDER ADDONS (Dual Currency Display)
+//  TAB SWITCHING & SUB-FILTERS
 // ══════════════════════════════════════════════════════════════
-function renderAddons(list) {
+function switchMainTab(tab) {
+  currentTab = tab;
+  currentSubFilter = 'all';
+  searchQuery = '';
+  document.getElementById('storeSearchInput').value = '';
+
+  document.getElementById('tabAddonsBtn').classList.toggle('active', tab === 'addons');
+  document.getElementById('tabModelsBtn').classList.toggle('active', tab === 'models');
+
+  buildSubFilterPills();
+  renderStoreGrid();
+}
+
+function buildSubFilterPills() {
+  const container = document.getElementById('subFilterPills');
+  if (!container) return;
+
+  let categories = [];
+  if (currentTab === 'addons') {
+    const set = new Set();
+    (storeData.addons || []).forEach(a => { if (a.category) set.add(a.category); });
+    categories = ['All Addons', ...Array.from(set)];
+  } else {
+    const set = new Set();
+    (storeData.models || []).forEach(m => { if (m.category) set.add(m.category); });
+    categories = ['All 3D Models', ...Array.from(set)];
+  }
+
+  container.innerHTML = categories.map((cat, idx) => {
+    const isAll = idx === 0;
+    const catVal = isAll ? 'all' : cat;
+    const active = currentSubFilter === catVal ? 'active' : '';
+    return `<button class="filter-btn ${active}" onclick="setSubFilter('${catVal}', this)">${cat}</button>`;
+  }).join('');
+}
+
+function setSubFilter(catVal, btn) {
+  currentSubFilter = catVal;
+  document.querySelectorAll('#subFilterPills .filter-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  renderStoreGrid();
+}
+
+function handleSearch(q) {
+  searchQuery = q.trim().toLowerCase();
+  renderStoreGrid();
+}
+
+// ══════════════════════════════════════════════════════════════
+//  RENDER STORE GRID (Addons OR 3D Models)
+// ══════════════════════════════════════════════════════════════
+function renderStoreGrid() {
   const grid = document.getElementById('storeGrid');
   if (!grid) return;
-  if (!list || !list.length) {
-    grid.innerHTML = '<div style="grid-column:1/-1;text-align:center;padding:4rem 1rem;color:var(--text3)"><i class="fas fa-box-open" style="font-size:2.5rem;margin-bottom:1rem;display:block"></i>Koi addon nahi mila.</div>';
-    return;
+
+  if (currentTab === 'addons') {
+    let list = storeData.addons || [];
+    if (currentSubFilter !== 'all') {
+      list = list.filter(a => a.category === currentSubFilter);
+    }
+    if (searchQuery) {
+      list = list.filter(a =>
+        a.title.toLowerCase().includes(searchQuery) ||
+        (a.desc && a.desc.toLowerCase().includes(searchQuery)) ||
+        (a.category && a.category.toLowerCase().includes(searchQuery)) ||
+        (a.features && a.features.some(f => f.toLowerCase().includes(searchQuery)))
+      );
+    }
+    if (!list.length) {
+      grid.innerHTML = '<div style="grid-column:1/-1;text-align:center;padding:4rem 1rem;color:var(--text3)"><i class="fas fa-box-open" style="font-size:2.5rem;margin-bottom:1rem;display:block"></i>Koi addon nahi mila.</div>';
+      return;
+    }
+    grid.innerHTML = list.map((a, i) => addonCardHTML(a, i)).join('');
+  } else {
+    // 3D MODELS
+    let list = storeData.models || [];
+    if (currentSubFilter !== 'all') {
+      list = list.filter(m => m.category === currentSubFilter);
+    }
+    if (searchQuery) {
+      list = list.filter(m =>
+        m.title.toLowerCase().includes(searchQuery) ||
+        (m.desc && m.desc.toLowerCase().includes(searchQuery)) ||
+        (m.category && m.category.toLowerCase().includes(searchQuery)) ||
+        (m.format && m.format.toLowerCase().includes(searchQuery))
+      );
+    }
+    if (!list.length) {
+      grid.innerHTML = '<div style="grid-column:1/-1;text-align:center;padding:4rem 1rem;color:var(--text3)"><i class="fas fa-cube" style="font-size:2.5rem;margin-bottom:1rem;display:block"></i>Koi 3D model nahi mila.</div>';
+      return;
+    }
+    grid.innerHTML = list.map((m, i) => modelCardHTML(m, i)).join('');
   }
-  grid.innerHTML = list.map((a, i) => cardHTML(a, i)).join('');
 }
 
-function cardHTML(a, idx) {
-  const pkr = a.pricePKR || a.price || 0;
-  const usd = a.priceUSD || (pkr > 0 ? (pkr / 278).toFixed(2) : 0);
-  const isFree = (a.paymentType === 'free' || (pkr === 0 && usd === 0));
-
+// Addon Card HTML
+function addonCardHTML(a, idx) {
+  const pkr = a.pricePKR || 299;
+  const usd = a.priceUSD || (pkr / 278).toFixed(2);
   const stars = '★'.repeat(Math.min(5, Math.floor(a.rating || 5)));
   const features = (a.features || []).slice(0, 4).map(f => `<span class="feature-tag">${f}</span>`).join('');
   const thumbStyle = a.thumbnail ? `<img src="${a.thumbnail}" alt="${a.title}" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"/>` : '';
-  const iconStyle = `<div class="thumb-icon" style="${a.thumbnail ? 'display:none' : ''}"><i class="fas ${a.icon || 'fa-cube'}"></i></div>`;
+  const iconStyle = `<div class="thumb-icon" style="${a.thumbnail ? 'display:none' : ''}"><i class="fas ${a.icon || 'fa-puzzle-piece'}"></i></div>`;
 
   return `
   <div class="addon-card${idx === 0 ? ' featured-card' : ''}" id="card-${a.id}">
@@ -592,69 +726,148 @@ function cardHTML(a, idx) {
       <div class="card-features">${features}</div>
       <div class="card-rating">
         <div class="stars">${stars}</div>
-        <span class="rating-num">${a.rating || 5} (${a.reviews || 0} reviews)</span>
+        <span class="rating-num">${a.rating || 4.9} (${a.reviews || 25} reviews)</span>
       </div>
       <div class="card-price-row">
         <div class="price-block">
-          <div class="price-label">Price / Qeemat</div>
+          <div class="price-label">Special Offer Price</div>
           <div class="price-dual">
-            ${isFree ? '<span style="color:var(--green);font-size:1.4rem;font-weight:700">FREE</span>' : `
-              <div class="price-usd">$${usd} <span>USD</span></div>
-              <div class="price-pkr">/ Rs. ${Number(pkr).toLocaleString()} PKR</div>
-            `}
+            <div class="price-usd">$${usd} <span>USD</span></div>
+            <div class="price-pkr">/ Rs. ${Number(pkr).toLocaleString()} PKR</div>
           </div>
-          ${a.paymentType === 'subscription' ? '<div class="price-sub">Monthly & Yearly Subscription available</div>' : ''}
         </div>
-        <div class="downloads-badge"><i class="fas fa-download"></i> ${a.downloads || '0'}</div>
+        <div class="downloads-badge"><i class="fas fa-download"></i> ${a.downloads || '1k+'}</div>
       </div>
       <div class="card-actions">
-        ${isFree
-          ? `<button class="btn-buy" style="background:linear-gradient(135deg,var(--green),#059669)" onclick="freeDownload('${a.id}')"><i class="fas fa-download"></i> Free Download</button>`
-          : `<button class="btn-buy" onclick="openPayModal('${a.id}')"><i class="fas fa-shopping-cart"></i> Buy Now &nbsp;($${usd} / Rs.${Number(pkr).toLocaleString()})</button>`
-        }
-        <button class="btn-detail" onclick="viewDetails('${a.id}')" title="Details"><i class="fas fa-info-circle"></i></button>
+        <button class="btn-buy" onclick="openPaymentModal('${a.id}', 'addon')">
+          <i class="fas fa-shopping-cart"></i> Buy Now ($${usd} / Rs.${Number(pkr).toLocaleString()})
+        </button>
+        <button class="btn-detail" onclick="quickInfo('${a.id}', 'addon')" title="Info"><i class="fas fa-info-circle"></i></button>
       </div>
     </div>
   </div>`;
 }
 
-function filterAddons(cat, btn) {
-  currentFilter = cat;
-  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
-  btn.classList.add('active');
-  if (cat === 'all') renderAddons(allAddons);
-  else renderAddons(allAddons.filter(a => a.category === cat));
+// 3D Model Card HTML
+function modelCardHTML(m, idx) {
+  const pkr = m.pricePKR || 299;
+  const usd = m.priceUSD || (pkr / 278).toFixed(2);
+  const stars = '★'.repeat(Math.min(5, Math.floor(m.rating || 5)));
+  const thumb = m.thumbnail || 'https://images.unsplash.com/photo-1586023492125-27b2c045efd7?w=600';
+
+  return `
+  <div class="addon-card${idx === 0 ? ' featured-card' : ''}" id="card-${m.id}" style="border-color:rgba(0,240,255,0.3)">
+    <div class="card-thumb" style="height:210px">
+      <img src="${thumb}" alt="${m.title}"/>
+      <div class="card-badge-row">
+        <span class="badge-cat" style="background:rgba(0,240,255,0.85);color:#000;font-weight:700">${m.category || '3D Asset'}</span>
+        <span class="badge-ver" style="color:#00f0ff">GLB / 4K PBR</span>
+      </div>
+      <button class="btn-inspect-3d" style="position:absolute;bottom:0.7rem;right:0.7rem;box-shadow:0 4px 15px rgba(0,0,0,0.6)" onclick="openViewer('${m.id}')">
+        <i class="fas fa-cube"></i> Inspect 3D
+      </button>
+    </div>
+    <div class="card-body">
+      <div class="card-title">${m.title}</div>
+      <div class="card-desc">${m.desc || ''}</div>
+      <div class="model-spec-row">
+        <div class="spec-item"><i class="fas fa-draw-polygon"></i> <strong>${m.polycount || '18k Tris'}</strong></div>
+        <div class="spec-item"><i class="fas fa-file-export"></i> <strong>${m.format || 'GLB + Blend'}</strong></div>
+      </div>
+      <div class="card-rating">
+        <div class="stars">${stars}</div>
+        <span class="rating-num">${m.rating || 4.9} (${m.reviews || 20} reviews)</span>
+      </div>
+      <div class="card-price-row">
+        <div class="price-block">
+          <div class="price-label">Model Price</div>
+          <div class="price-dual">
+            <div class="price-usd" style="color:#00f0ff">$${usd} <span>USD</span></div>
+            <div class="price-pkr">/ Rs. ${Number(pkr).toLocaleString()} PKR</div>
+          </div>
+        </div>
+        <div class="downloads-badge"><i class="fas fa-download"></i> ${m.downloads || '300+'}</div>
+      </div>
+      <div class="card-actions">
+        <button class="btn-buy" style="background:linear-gradient(135deg,#0284c7,#00f0ff);color:#000" onclick="openPaymentModal('${m.id}', 'model')">
+          <i class="fas fa-shopping-cart"></i> Buy Model ($${usd} / Rs.${Number(pkr).toLocaleString()})
+        </button>
+        <button class="btn-detail" onclick="openViewer('${m.id}')" title="Inspect 3D"><i class="fas fa-vr-cardboard"></i></button>
+      </div>
+    </div>
+  </div>`;
 }
 
-function viewDetails(id) {
-  const a = allAddons.find(x => x.id === id);
-  if (!a) return;
-  showToast(`📦 ${a.title} (${a.version}) – ${a.desc}`);
+function quickInfo(id, type) {
+  const list = type === 'addon' ? storeData.addons : storeData.models;
+  const item = (list || []).find(x => x.id === id);
+  if (item) showToast(`ℹ️ ${item.title} — ${item.desc}`);
 }
 
-function freeDownload(id) {
-  const a = allAddons.find(x => x.id === id);
-  if (a && a.fileUrlPrivate && a.fileUrlPrivate !== '#') {
-    window.open(a.fileUrlPrivate, '_blank');
-  } else {
-    showToast('Download link jald update hoga!');
+// ══════════════════════════════════════════════════════════════
+//  INTERACTIVE 3D VIEWER MODAL
+// ══════════════════════════════════════════════════════════════
+function openViewer(modelId) {
+  const m = (storeData.models || []).find(x => x.id === modelId);
+  if (!m) return;
+  currentViewerModel = m;
+
+  document.getElementById('viewerModelTitle').textContent = `${m.title} · ${m.polycount || '3D Asset'}`;
+  const viewer = document.getElementById('mainModelViewer');
+  viewer.src = m.glbUrl || '../media/Meshy_AI_Ornate_Wooden_Dining__1031072807_texture.glb';
+
+  const pkr = m.pricePKR || 299;
+  const usd = m.priceUSD || (pkr / 278).toFixed(2);
+  document.getElementById('viewerPriceVal').textContent = `$${usd} USD / Rs. ${Number(pkr).toLocaleString()} PKR`;
+
+  document.getElementById('viewerModal').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeViewer() {
+  document.getElementById('viewerModal').classList.remove('open');
+  const viewer = document.getElementById('mainModelViewer');
+  if (viewer) viewer.src = '';
+  document.body.style.overflow = '';
+}
+
+function toggleAutoRotate() {
+  const viewer = document.getElementById('mainModelViewer');
+  if (!viewer) return;
+  viewer.autoRotate = !viewer.autoRotate;
+  showToast(viewer.autoRotate ? '🔄 Auto-Rotate On' : '⏸️ Auto-Rotate Off');
+}
+
+function resetViewerCamera() {
+  const viewer = document.getElementById('mainModelViewer');
+  if (viewer) {
+    viewer.cameraOrbit = '0deg 75deg 105%';
+    viewer.jumpCameraToGoal();
+  }
+}
+
+function buyCurrentModelFromViewer() {
+  if (currentViewerModel) {
+    closeViewer();
+    openPaymentModal(currentViewerModel.id, 'model');
   }
 }
 
 // ══════════════════════════════════════════════════════════════
 //  PAYMENT MODAL
 // ══════════════════════════════════════════════════════════════
-function openPayModal(id) {
-  const a = allAddons.find(x => x.id === id);
-  if (!a) return;
-  currentAddon = a;
+function openPaymentModal(id, type) {
+  const list = type === 'addon' ? storeData.addons : storeData.models;
+  const item = (list || []).find(x => x.id === id);
+  if (!item) return;
+  currentItem = { ...item, _type: type };
   currentMethod = 'jazz';
 
-  const pkr = a.pricePKR || a.price || 0;
-  const usd = a.priceUSD || (pkr > 0 ? (pkr / 278).toFixed(2) : 0);
+  const pkr = item.pricePKR || 299;
+  const usd = item.priceUSD || (pkr / 278).toFixed(2);
 
-  document.getElementById('payModalTitle').textContent = a.title;
-  document.getElementById('payAddonName').textContent = `${a.title} · ${a.blender}`;
+  document.getElementById('payModalTitle').textContent = `Buy ${type === 'model' ? '3D Model' : 'Blender Addon'}`;
+  document.getElementById('payAddonName').textContent = `${item.title} (${item.category || ''})`;
   document.getElementById('payAmountPKR').textContent = `Rs. ${Number(pkr).toLocaleString()} PKR`;
   document.getElementById('payAmountUSD').textContent = `($${usd} USD)`;
 
@@ -683,12 +896,12 @@ function selectPayMethod(method) {
   if (method === 'jazz') {
     labelEl.textContent = 'JazzCash Account Number';
     numEl.textContent = storeData.owner.jazzcash || '03392332272';
-    subEl.textContent = `Account Name: ${storeData.owner.name} · Currency: PKR`;
+    subEl.textContent = `Account Name: ${storeData.owner.name} · PKR`;
     step1.innerHTML = 'Upar diye gaye number par <strong>JazzCash</strong> se PKR amount send karein.';
   } else if (method === 'easy') {
     labelEl.textContent = 'EasyPaisa Account Number';
     numEl.textContent = storeData.owner.easypaisa || '03392332272';
-    subEl.textContent = `Account Name: ${storeData.owner.name} · Currency: PKR`;
+    subEl.textContent = `Account Name: ${storeData.owner.name} · PKR`;
     step1.innerHTML = 'Upar diye gaye number par <strong>EasyPaisa</strong> se PKR amount send karein.';
   } else {
     labelEl.textContent = 'International / USD Payment';
@@ -717,19 +930,20 @@ function copyNumber() {
 }
 
 function sendWhatsApp() {
-  if (!currentAddon) return;
+  if (!currentItem) return;
   const wa = storeData.owner.whatsapp || '923392332272';
-  const title = currentAddon.title;
-  const pkr = currentAddon.pricePKR || currentAddon.price || 0;
-  const usd = currentAddon.priceUSD || (pkr > 0 ? (pkr / 278).toFixed(2) : 0);
+  const title = currentItem.title;
+  const pkr = currentItem.pricePKR || 299;
+  const usd = currentItem.priceUSD || (pkr / 278).toFixed(2);
   const email = document.getElementById('buyerEmail').value.trim();
+  const typeLabel = currentItem._type === 'model' ? '3D Model (GLB)' : 'Blender Addon';
 
-  let msg = `Assalam o Alaikum Design Corner!\n\nMein yeh Blender Addon khareedna chahta/chahti hoon:\n📦 *${title}*\n💰 Amount: *Rs. ${Number(pkr).toLocaleString()} PKR* / *$${usd} USD*\n💳 Method: *${currentMethod.toUpperCase()}*`;
-  
+  let msg = `Assalam o Alaikum Design Corner!\n\nMein yeh ${typeLabel} khareedna chahta/chahti hoon:\n📦 *${title}*\n💰 Amount: *Rs. ${Number(pkr).toLocaleString()} PKR* / *$${usd} USD*\n💳 Method: *${currentMethod.toUpperCase()}*`;
+
   if (currentMethod === 'usd') {
     msg += `\n\nMain International buyer hoon. Kripya USD payment options (Binance/Card/Remitly) bhej dein.`;
   } else {
-    msg += `\n\n✅ Maine payment send kar di hai aur screenshot attach kar raha/rahi hoon. Kripya addon ka ZIP download link bhej dein!`;
+    msg += `\n\n✅ Maine payment send kar di hai aur screenshot attach kar raha/rahi hoon. Kripya file ka download link bhej dein!`;
   }
   if (email) msg += `\n📧 My Email: ${email}`;
 
@@ -738,20 +952,20 @@ function sendWhatsApp() {
 }
 
 function sendEmailInquiry() {
-  if (!currentAddon) return;
+  if (!currentItem) return;
   const ownerEmail = storeData.owner.email || 'designcorner488@gmail.com';
-  const title = currentAddon.title;
-  const pkr = currentAddon.pricePKR || currentAddon.price || 0;
-  const usd = currentAddon.priceUSD || (pkr > 0 ? (pkr / 278).toFixed(2) : 0);
-  const buyerEmail = document.getElementById('buyerEmail').value.trim();
+  const title = currentItem.title;
+  const pkr = currentItem.pricePKR || 299;
+  const usd = currentItem.priceUSD || (pkr / 278).toFixed(2);
+  const email = document.getElementById('buyerEmail').value.trim();
 
-  const sub = encodeURIComponent(`[Addon Order] ${title} – Rs.${pkr} / $${usd}`);
-  const body = encodeURIComponent(`Hello Design Corner,\n\nI want to purchase the addon:\n- Title: ${title}\n- Price: Rs. ${pkr} PKR ($${usd} USD)\n- Payment Method: ${currentMethod.toUpperCase()}\n- My Email: ${buyerEmail || 'N/A'}\n\n[Please attach screenshot if paid]`);
+  const sub = encodeURIComponent(`[Order] ${title} – Rs.${pkr} / $${usd}`);
+  const body = encodeURIComponent(`Hello Design Corner,\n\nI want to purchase:\n- Item: ${title}\n- Price: Rs. ${pkr} PKR ($${usd} USD)\n- Payment Method: ${currentMethod.toUpperCase()}\n- My Email: ${email || 'N/A'}\n\n[Please attach screenshot if paid]`);
   window.open(`mailto:${ownerEmail}?subject=${sub}&body=${body}`, '_blank');
 }
 
 // ══════════════════════════════════════════════════════════════
-//  ADMIN PANEL (PIN: 4488)
+//  ADMIN PANEL
 // ══════════════════════════════════════════════════════════════
 function openAdmin() {
   document.getElementById('adminOverlay').classList.add('open');
@@ -768,25 +982,214 @@ function closeAdmin() {
 }
 
 function checkPin() {
-  const pinInput = document.getElementById('adminPin').value.trim();
-  const correctPin = (storeData.owner && storeData.owner.pin) ? storeData.owner.pin : '4488';
-
-  if (pinInput === correctPin || pinInput === '4488') {
+  const pin = document.getElementById('adminPin').value.trim();
+  const correct = (storeData.owner && storeData.owner.pin) ? storeData.owner.pin : '4488';
+  if (pin === correct || pin === '4488') {
     document.getElementById('loginBox').style.display = 'none';
     document.getElementById('adminPanel').style.display = 'block';
-    loadAdminData();
+    loadAdminDashboard();
   } else {
     document.getElementById('loginErr').style.display = 'block';
     document.getElementById('adminPin').value = '';
   }
 }
 
-function loadAdminData() {
+function switchAdminTab(sec) {
+  document.getElementById('atabAddons').classList.toggle('active', sec === 'addons');
+  document.getElementById('atabModels').classList.toggle('active', sec === 'models');
+  document.getElementById('atabSettings').classList.toggle('active', sec === 'settings');
+
+  document.getElementById('adminSecAddons').style.display = sec === 'addons' ? 'block' : 'none';
+  document.getElementById('adminSecModels').style.display = sec === 'models' ? 'block' : 'none';
+  document.getElementById('adminSecSettings').style.display = sec === 'settings' ? 'block' : 'none';
+}
+
+function loadAdminDashboard() {
+  updateStatsAndCounts();
+  renderAdminAddonsList();
+  renderAdminModelsList();
   document.getElementById('adminJazz').value = storeData.owner.jazzcash || '';
   document.getElementById('adminEasy').value = storeData.owner.easypaisa || '';
   document.getElementById('adminWA').value = storeData.owner.whatsapp || '';
   document.getElementById('adminNewPin').value = storeData.owner.pin || '4488';
-  renderAdminList();
+}
+
+// Admin: Save Addon
+function saveAddon() {
+  const title = document.getElementById('newTitle').value.trim();
+  if (!title) { showToast('❌ Title likhna zaroori hai!'); return; }
+  const editId = document.getElementById('editAddonId').value;
+  const pkr = parseInt(document.getElementById('newPricePKR').value) || 299;
+  let usd = parseFloat(document.getElementById('newPriceUSD').value);
+  if (isNaN(usd) || usd <= 0) usd = parseFloat((pkr / 278).toFixed(2));
+
+  const addon = {
+    id: editId || ('addon_' + Date.now()),
+    title: title,
+    version: document.getElementById('newVersion').value.trim() || 'v1.0',
+    category: document.getElementById('newCat').value,
+    blender: document.getElementById('newBlender').value.trim() || 'Blender 4.x',
+    desc: document.getElementById('newDesc').value.trim(),
+    features: document.getElementById('newFeatures').value.split(',').map(f => f.trim()).filter(Boolean),
+    fileUrlPrivate: document.getElementById('newFileUrl').value.trim() || '#',
+    pricePKR: pkr,
+    priceUSD: usd,
+    downloads: '100+',
+    rating: 4.9,
+    reviews: 12
+  };
+
+  if (editId) {
+    const idx = (storeData.addons || []).findIndex(a => a.id === editId);
+    if (idx > -1) storeData.addons[idx] = addon;
+    document.getElementById('editAddonId').value = '';
+    document.getElementById('formAddonTitle').textContent = 'Naya Blender Addon Shamil Karein';
+    document.getElementById('btnAddonSaveBtn').textContent = 'Save Addon';
+    showToast('✅ Addon update ho gaya!');
+  } else {
+    storeData.addons.unshift(addon);
+    showToast('✅ Naya addon shamil ho gaya!');
+  }
+
+  saveStorage();
+  renderAdminAddonsList();
+  renderStoreGrid();
+  updateStatsAndCounts();
+}
+
+function renderAdminAddonsList() {
+  const el = document.getElementById('adminAddonsList');
+  if (!el) return;
+  el.innerHTML = (storeData.addons || []).map(a => `
+    <div class="admin-item-card">
+      <div class="admin-item-info">
+        <div class="item-title">${a.title} <span style="color:var(--text3);font-size:.72rem">(${a.version})</span></div>
+        <div class="item-price">$${a.priceUSD} USD / Rs. ${a.pricePKR} · ${a.category}</div>
+      </div>
+      <div class="admin-item-actions">
+        <button class="btn-edit" onclick="editAddon('${a.id}')"><i class="fas fa-edit"></i> Edit</button>
+        <button class="btn-del" onclick="deleteAddon('${a.id}')"><i class="fas fa-trash"></i></button>
+      </div>
+    </div>
+  `).join('');
+}
+
+function editAddon(id) {
+  const a = (storeData.addons || []).find(x => x.id === id);
+  if (!a) return;
+  document.getElementById('editAddonId').value = a.id;
+  document.getElementById('newTitle').value = a.title;
+  document.getElementById('newVersion').value = a.version || '';
+  document.getElementById('newCat').value = a.category || 'Materials & Shaders';
+  document.getElementById('newBlender').value = a.blender || '';
+  document.getElementById('newDesc').value = a.desc || '';
+  document.getElementById('newFeatures').value = (a.features || []).join(', ');
+  document.getElementById('newPricePKR').value = a.pricePKR || 299;
+  document.getElementById('newPriceUSD').value = a.priceUSD || 1.0;
+  document.getElementById('newFileUrl').value = a.fileUrlPrivate || '';
+
+  document.getElementById('formAddonTitle').textContent = `Edit Addon: ${a.title}`;
+  document.getElementById('btnAddonSaveBtn').textContent = 'Update Addon';
+  document.getElementById('newTitle').scrollIntoView({ behavior: 'smooth' });
+}
+
+function deleteAddon(id) {
+  if (!confirm('Yeh addon delete karna chahte hain?')) return;
+  storeData.addons = (storeData.addons || []).filter(a => a.id !== id);
+  saveStorage();
+  renderAdminAddonsList();
+  renderStoreGrid();
+  updateStatsAndCounts();
+  showToast('🗑️ Addon delete ho gaya!');
+}
+
+// Admin: Save 3D Model
+function saveModel() {
+  const title = document.getElementById('mTitle').value.trim();
+  if (!title) { showToast('❌ Model Title zaroori hai!'); return; }
+  const editId = document.getElementById('editModelId').value;
+  const pkr = parseInt(document.getElementById('mPricePKR').value) || 299;
+  let usd = parseFloat(document.getElementById('mPriceUSD').value);
+  if (isNaN(usd) || usd <= 0) usd = parseFloat((pkr / 278).toFixed(2));
+
+  const model = {
+    id: editId || ('model_' + Date.now()),
+    title: title,
+    category: document.getElementById('mCat').value,
+    polycount: document.getElementById('mPoly').value.trim() || '15k Triangles',
+    format: 'GLB / GLTF + Blend',
+    desc: document.getElementById('mDesc').value.trim(),
+    glbUrl: document.getElementById('mGlbUrl').value.trim() || '../media/Meshy_AI_Ornate_Wooden_Dining__1031072807_texture.glb',
+    thumbnail: document.getElementById('mThumb').value.trim() || 'https://images.unsplash.com/photo-1586023492125-27b2c045efd7?w=600',
+    pricePKR: pkr,
+    priceUSD: usd,
+    downloads: '100+',
+    rating: 4.9,
+    reviews: 15
+  };
+
+  if (!storeData.models) storeData.models = [];
+  if (editId) {
+    const idx = storeData.models.findIndex(m => m.id === editId);
+    if (idx > -1) storeData.models[idx] = model;
+    document.getElementById('editModelId').value = '';
+    document.getElementById('formModelTitle').textContent = 'Naya 3D Model (GLB) Shamil Karein';
+    document.getElementById('btnModelSaveBtn').textContent = 'Save 3D Model';
+    showToast('✅ 3D Model update ho gaya!');
+  } else {
+    storeData.models.unshift(model);
+    showToast('✅ Naya 3D Model shamil ho gaya!');
+  }
+
+  saveStorage();
+  renderAdminModelsList();
+  renderStoreGrid();
+  updateStatsAndCounts();
+}
+
+function renderAdminModelsList() {
+  const el = document.getElementById('adminModelsList');
+  if (!el) return;
+  el.innerHTML = (storeData.models || []).map(m => `
+    <div class="admin-item-card">
+      <div class="admin-item-info">
+        <div class="item-title">${m.title}</div>
+        <div class="item-price">$${m.priceUSD} USD / Rs. ${m.pricePKR} · ${m.category}</div>
+      </div>
+      <div class="admin-item-actions">
+        <button class="btn-edit" onclick="editModel('${m.id}')"><i class="fas fa-edit"></i> Edit</button>
+        <button class="btn-del" onclick="deleteModel('${m.id}')"><i class="fas fa-trash"></i></button>
+      </div>
+    </div>
+  `).join('');
+}
+
+function editModel(id) {
+  const m = (storeData.models || []).find(x => x.id === id);
+  if (!m) return;
+  document.getElementById('editModelId').value = m.id;
+  document.getElementById('mTitle').value = m.title;
+  document.getElementById('mCat').value = m.category || 'Furniture & Interior';
+  document.getElementById('mPoly').value = m.polycount || '';
+  document.getElementById('mDesc').value = m.desc || '';
+  document.getElementById('mGlbUrl').value = m.glbUrl || '';
+  document.getElementById('mThumb').value = m.thumbnail || '';
+  document.getElementById('mPricePKR').value = m.pricePKR || 299;
+  document.getElementById('mPriceUSD').value = m.priceUSD || 1.0;
+
+  document.getElementById('formModelTitle').textContent = `Edit Model: ${m.title}`;
+  document.getElementById('btnModelSaveBtn').textContent = 'Update 3D Model';
+  document.getElementById('mTitle').scrollIntoView({ behavior: 'smooth' });
+}
+
+function deleteModel(id) {
+  if (!confirm('Yeh 3D model delete karna chahte hain?')) return;
+  storeData.models = (storeData.models || []).filter(m => m.id !== id);
+  saveStorage();
+  renderAdminModelsList();
+  renderStoreGrid();
+  updateStatsAndCounts();
+  showToast('🗑️ 3D Model delete ho gaya!');
 }
 
 function saveOwnerSettings() {
@@ -796,122 +1199,12 @@ function saveOwnerSettings() {
   const newPin = document.getElementById('adminNewPin').value.trim();
   if (newPin) storeData.owner.pin = newPin;
 
-  saveToStorage();
-  showToast('✅ Payment numbers & settings save ho gayi!');
+  saveStorage();
+  showToast('✅ Settings save ho gayi!');
 }
 
-function renderAdminList() {
-  const listEl = document.getElementById('adminAddonList');
-  const countEl = document.getElementById('adminAddonCount');
-  if (countEl) countEl.textContent = allAddons.length;
-
-  listEl.innerHTML = allAddons.map(a => {
-    const pkr = a.pricePKR || a.price || 0;
-    const usd = a.priceUSD || (pkr > 0 ? (pkr / 278).toFixed(2) : 0);
-    return `
-    <div class="admin-addon-item">
-      <div class="admin-addon-info">
-        <div class="addon-item-title">${a.title} <span style="color:var(--text3);font-size:.75rem">(${a.version || 'v1.0'})</span></div>
-        <div class="addon-item-price">$${usd} USD / Rs. ${Number(pkr).toLocaleString()} PKR · ${a.category}</div>
-      </div>
-      <div class="admin-addon-actions">
-        <button class="btn-edit" onclick="editAddon('${a.id}')"><i class="fas fa-edit"></i> Edit</button>
-        <button class="btn-del" onclick="deleteAddon('${a.id}')"><i class="fas fa-trash"></i></button>
-      </div>
-    </div>`;
-  }).join('');
-}
-
-function editAddon(id) {
-  const a = allAddons.find(x => x.id === id);
-  if (!a) return;
-  document.getElementById('editAddonId').value = a.id;
-  document.getElementById('newTitle').value = a.title || '';
-  document.getElementById('newVersion').value = a.version || '';
-  document.getElementById('newCat').value = a.category || 'ArchViz & Lighting';
-  document.getElementById('newBlender').value = a.blender || '';
-  document.getElementById('newDesc').value = a.desc || '';
-  document.getElementById('newFeatures').value = (a.features || []).join(', ');
-  document.getElementById('newThumb').value = a.thumbnail || '';
-  document.getElementById('newPricePKR').value = a.pricePKR || a.price || 0;
-  document.getElementById('newPriceUSD').value = a.priceUSD || '';
-  document.getElementById('newFileUrl').value = a.fileUrlPrivate || '';
-  document.getElementById('newPayType').value = a.paymentType || 'one-time';
-  document.getElementById('newDownloads').value = a.downloads || '';
-
-  document.getElementById('formModeTitle').textContent = `Addon Edit Karein: ${a.title}`;
-  document.getElementById('addBtnText').textContent = 'Update Addon';
-  document.getElementById('newTitle').scrollIntoView({ behavior: 'smooth' });
-  showToast('✏️ Addon form mein load ho gaya!');
-}
-
-function saveAddon() {
-  const title = document.getElementById('newTitle').value.trim();
-  if (!title) { showToast('❌ Title likhna zaroori hai!'); return; }
-
-  const editId = document.getElementById('editAddonId').value;
-  const pricePKR = parseInt(document.getElementById('newPricePKR').value) || 0;
-  let priceUSD = parseFloat(document.getElementById('newPriceUSD').value);
-  if (isNaN(priceUSD) || priceUSD <= 0) {
-    priceUSD = pricePKR > 0 ? parseFloat((pricePKR / 278).toFixed(2)) : 0;
-  }
-
-  const addonObj = {
-    id: editId || ('addon_' + Date.now()),
-    title: title,
-    version: document.getElementById('newVersion').value.trim() || 'v1.0',
-    category: document.getElementById('newCat').value,
-    blender: document.getElementById('newBlender').value.trim() || 'Blender 4.x',
-    desc: document.getElementById('newDesc').value.trim(),
-    features: document.getElementById('newFeatures').value.split(',').map(f => f.trim()).filter(Boolean),
-    thumbnail: document.getElementById('newThumb').value.trim(),
-    pricePKR: pricePKR,
-    priceUSD: priceUSD,
-    fileUrlPrivate: document.getElementById('newFileUrl').value.trim() || '#',
-    paymentType: document.getElementById('newPayType').value,
-    downloads: document.getElementById('newDownloads').value.trim() || '100+',
-    rating: 4.8,
-    reviews: 12
-  };
-
-  if (editId) {
-    const idx = allAddons.findIndex(x => x.id === editId);
-    if (idx > -1) allAddons[idx] = addonObj;
-    document.getElementById('editAddonId').value = '';
-    document.getElementById('formModeTitle').textContent = 'Naya Addon Shamil Karein';
-    document.getElementById('addBtnText').textContent = 'Add Addon to Store';
-    showToast('✅ Addon update ho gaya!');
-  } else {
-    allAddons.push(addonObj);
-    showToast('✅ Naya addon store par add ho gaya!');
-  }
-
-  storeData.addons = allAddons;
-  saveToStorage();
-  renderAdminList();
-  renderAddons(allAddons);
-  updateStats();
-
-  // Reset form
-  ['newTitle', 'newVersion', 'newBlender', 'newDesc', 'newFeatures', 'newThumb', 'newPricePKR', 'newPriceUSD', 'newFileUrl', 'newDownloads'].forEach(id => {
-    const el = document.getElementById(id);
-    if (el) el.value = '';
-  });
-}
-
-function deleteAddon(id) {
-  if (!confirm('Kya aap waqai is addon ko delete karna chahte hain?')) return;
-  allAddons = allAddons.filter(x => x.id !== id);
-  storeData.addons = allAddons;
-  saveToStorage();
-  renderAdminList();
-  renderAddons(allAddons);
-  updateStats();
-  showToast('🗑️ Addon delete ho gaya!');
-}
-
-function saveToStorage() {
-  localStorage.setItem('dc_store_data_v2', JSON.stringify(storeData));
+function saveStorage() {
+  localStorage.setItem('dc_store_data_v3', JSON.stringify(storeData));
 }
 
 function exportJSON() {
@@ -924,7 +1217,7 @@ function exportJSON() {
 }
 
 // ══════════════════════════════════════════════════════════════
-//  TOAST & EVENT LISTENERS
+//  HELPERS & TOAST
 // ══════════════════════════════════════════════════════════════
 let toastTimer;
 function showToast(msg) {
@@ -939,6 +1232,7 @@ function showToast(msg) {
 document.addEventListener('keydown', e => {
   if (e.key === 'Escape') {
     closePayModal();
+    closeViewer();
     closeAdmin();
   }
 });
@@ -946,12 +1240,15 @@ document.addEventListener('keydown', e => {
 document.getElementById('payModal').addEventListener('click', e => {
   if (e.target === document.getElementById('payModal')) closePayModal();
 });
+document.getElementById('viewerModal').addEventListener('click', e => {
+  if (e.target === document.getElementById('viewerModal')) closeViewer();
+});
 document.getElementById('adminOverlay').addEventListener('click', e => {
   if (e.target === document.getElementById('adminOverlay')) closeAdmin();
 });
 
-// Run immediately
-initStore();
+// START
+loadStoreData();
 </script>
 </body>
 </html>
