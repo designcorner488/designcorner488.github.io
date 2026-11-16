@@ -2362,6 +2362,9 @@ function renderAddons() {
             <a ${downloadAction} class="btn-addon-download">
               <i class="fas fa-cloud-arrow-down"></i> Download
             </a>
+            <a href="addons-store/#${addon.id}" target="_blank" class="btn-addon-download" style="background:linear-gradient(135deg,#f59e0b,#d97706);color:#000;font-weight:700;border-color:#f59e0b">
+              <i class="fas fa-shopping-cart"></i> Buy
+            </a>
           </div>
         </div>
       </div>

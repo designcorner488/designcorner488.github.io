@@ -1,0 +1,71 @@
+{
+  "owner": {
+    "name": "Design Corner",
+    "whatsapp": "923392332272",
+    "jazzcash": "03392332272",
+    "easypaisa": "03392332272",
+    "email": "designcorner488@gmail.com"
+  },
+  "addons": [
+    {
+      "id": "addon_1",
+      "title": "ArchViz QuickTools Pro",
+      "version": "v2.4",
+      "blender": "Blender 3.6 / 4.x",
+      "category": "ArchViz & Lighting",
+      "desc": "Automated parametric wall generation, trim moldings, and photorealistic lighting studio setups for Blender Cycles & Eevee. Includes 50+ material presets, IES light library, and one-click HDRI manager.",
+      "features": ["50+ Material Presets", "IES Light Library", "HDRI Manager", "Parametric Walls", "One-click Lighting Setup"],
+      "icon": "fa-building",
+      "thumbnail": "",
+      "fileUrlPrivate": "#upload-your-link-here",
+      "price": 1499,
+      "currency": "PKR",
+      "paymentType": "one-time",
+      "subscription_monthly": 499,
+      "subscription_yearly": 3999,
+      "downloads": "1.4k+",
+      "rating": 4.9,
+      "reviews": 47
+    },
+    {
+      "id": "addon_2",
+      "title": "Parametric Stairs & Railings",
+      "version": "v1.8",
+      "blender": "Blender 4.0 / 4.2+",
+      "category": "Geometry Nodes",
+      "desc": "Interactive geometry-nodes generator for spiral, cantilever, and modern industrial staircases with dynamic balustrade controls. Real-time parameter updates with no manual mesh editing.",
+      "features": ["Spiral Staircases", "Cantilever Design", "Dynamic Balustrade", "Real-time Preview", "BIM-ready Export"],
+      "icon": "fa-stairs",
+      "thumbnail": "",
+      "fileUrlPrivate": "#upload-your-link-here",
+      "price": 999,
+      "currency": "PKR",
+      "paymentType": "one-time",
+      "subscription_monthly": 349,
+      "subscription_yearly": 2799,
+      "downloads": "890+",
+      "rating": 4.8,
+      "reviews": 32
+    },
+    {
+      "id": "addon_3",
+      "title": "Cinematic Camera Rigs",
+      "version": "v1.2",
+      "blender": "Blender 3.6+",
+      "category": "Animation",
+      "desc": "One-click architectural flythrough rigs with smooth camera easing, drone pathing, target tracking, and rack focus presets. Perfect for real estate walkthroughs and cinematic presentations.",
+      "features": ["Drone Path Rigs", "Target Tracking", "Rack Focus Presets", "Smooth Easing", "Architectural Flythrough"],
+      "icon": "fa-video",
+      "thumbnail": "",
+      "fileUrlPrivate": "#upload-your-link-here",
+      "price": 799,
+      "currency": "PKR",
+      "paymentType": "one-time",
+      "subscription_monthly": 299,
+      "subscription_yearly": 2399,
+      "downloads": "620+",
+      "rating": 4.7,
+      "reviews": 28
+    }
+  ]
+}

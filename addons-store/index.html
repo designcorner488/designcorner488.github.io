@@ -1,0 +1,804 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Blender Addons Store – Design Corner</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Poppins:wght@300;400;500;600;700&display=swap"/>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+<style>
+:root{
+  --bg:#0a0b14;--bg2:#0f1120;--bg3:#141629;--card:#151728;--card2:#1a1d35;
+  --accent:#7c3aed;--accent2:#00f0ff;--gold:#f59e0b;--green:#10b981;--red:#ef4444;
+  --text:#e2e8f0;--text2:#94a3b8;--text3:#64748b;
+  --border:rgba(124,58,237,0.2);--border2:rgba(0,240,255,0.15);
+  --glow:0 0 20px rgba(124,58,237,0.3);--glow2:0 0 20px rgba(0,240,255,0.2);
+}
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:var(--bg);color:var(--text);font-family:'Poppins',sans-serif;min-height:100vh;overflow-x:hidden}
+
+/* ── NAVBAR ── */
+.navbar{position:sticky;top:0;z-index:100;background:rgba(10,11,20,0.92);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);padding:0 2rem;display:flex;align-items:center;justify-content:space-between;height:64px}
+.nav-logo{display:flex;align-items:center;gap:.7rem;text-decoration:none}
+.nav-logo-icon{width:36px;height:36px;background:linear-gradient(135deg,var(--accent),var(--accent2));border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:1rem;color:#fff}
+.nav-logo-text{font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:1.1rem;color:var(--text)}
+.nav-links{display:flex;align-items:center;gap:1rem}
+.nav-link{color:var(--text2);text-decoration:none;font-size:.85rem;transition:color .2s}
+.nav-link:hover{color:var(--accent2)}
+.nav-back{background:linear-gradient(135deg,var(--accent),var(--accent2));color:#fff;padding:.4rem 1rem;border-radius:6px;font-size:.82rem;text-decoration:none;font-weight:600;transition:opacity .2s}
+.nav-back:hover{opacity:.85}
+.admin-btn{background:transparent;border:1px solid var(--gold);color:var(--gold);padding:.35rem .9rem;border-radius:6px;font-size:.8rem;cursor:pointer;transition:all .2s;font-family:inherit}
+.admin-btn:hover{background:var(--gold);color:#000}
+
+/* ── HERO ── */
+.hero{padding:5rem 2rem 3rem;text-align:center;position:relative;overflow:hidden}
+.hero::before{content:'';position:absolute;top:-50%;left:50%;transform:translateX(-50%);width:600px;height:600px;background:radial-gradient(circle,rgba(124,58,237,0.12) 0%,transparent 70%);pointer-events:none}
+.hero-badge{display:inline-flex;align-items:center;gap:.5rem;background:rgba(124,58,237,0.15);border:1px solid var(--border);border-radius:50px;padding:.4rem 1.2rem;font-size:.78rem;color:var(--accent2);letter-spacing:.08em;text-transform:uppercase;margin-bottom:1.5rem}
+.hero h1{font-family:'Space Grotesk',sans-serif;font-size:clamp(2rem,5vw,3.5rem);font-weight:800;line-height:1.1;margin-bottom:1rem}
+.hero h1 span{background:linear-gradient(135deg,var(--accent),var(--accent2));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.hero p{color:var(--text2);font-size:1rem;max-width:550px;margin:0 auto 2.5rem;line-height:1.7}
+.hero-stats{display:flex;justify-content:center;gap:3rem;flex-wrap:wrap}
+.stat{text-align:center}
+.stat-num{font-size:1.6rem;font-weight:700;font-family:'Space Grotesk',sans-serif;background:linear-gradient(135deg,var(--accent),var(--accent2));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.stat-label{font-size:.75rem;color:var(--text3);text-transform:uppercase;letter-spacing:.06em}
+
+/* ── FILTER BAR ── */
+.filter-bar{padding:1.5rem 2rem;display:flex;align-items:center;justify-content:center;gap:.7rem;flex-wrap:wrap;border-bottom:1px solid var(--border)}
+.filter-btn{background:transparent;border:1px solid var(--border);color:var(--text2);padding:.4rem 1.1rem;border-radius:50px;font-size:.82rem;cursor:pointer;transition:all .2s;font-family:inherit}
+.filter-btn:hover,.filter-btn.active{background:var(--accent);border-color:var(--accent);color:#fff}
+
+/* ── GRID ── */
+.store-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:1.8rem;padding:2.5rem 2rem 4rem;max-width:1200px;margin:0 auto}
+
+/* ── ADDON CARD ── */
+.addon-card{background:var(--card);border:1px solid var(--border);border-radius:16px;overflow:hidden;transition:transform .3s,box-shadow .3s,border-color .3s;position:relative;display:flex;flex-direction:column}
+.addon-card:hover{transform:translateY(-6px);box-shadow:var(--glow);border-color:rgba(124,58,237,0.5)}
+.addon-card.featured-card{border-color:var(--gold);box-shadow:0 0 25px rgba(245,158,11,0.15)}
+
+/* card thumbnail */
+.card-thumb{position:relative;height:180px;background:linear-gradient(135deg,var(--bg3),var(--card2));display:flex;align-items:center;justify-content:center;overflow:hidden}
+.card-thumb img{width:100%;height:100%;object-fit:cover}
+.card-thumb .thumb-icon{font-size:3.5rem;opacity:.25;color:var(--accent)}
+.card-badge-row{position:absolute;top:.7rem;left:.7rem;right:.7rem;display:flex;justify-content:space-between;align-items:flex-start}
+.badge-cat{background:rgba(124,58,237,0.85);backdrop-filter:blur(6px);color:#fff;font-size:.68rem;padding:.25rem .65rem;border-radius:50px;font-weight:600;letter-spacing:.04em}
+.badge-ver{background:rgba(0,0,0,0.6);backdrop-filter:blur(6px);color:var(--accent2);font-size:.68rem;padding:.25rem .65rem;border-radius:50px;font-weight:600}
+.badge-hot{position:absolute;top:.7rem;right:.7rem;background:var(--gold);color:#000;font-size:.62rem;padding:.2rem .6rem;border-radius:50px;font-weight:700;letter-spacing:.04em}
+
+/* card body */
+.card-body{padding:1.3rem;flex:1;display:flex;flex-direction:column}
+.card-title{font-family:'Space Grotesk',sans-serif;font-size:1.05rem;font-weight:700;margin-bottom:.4rem;color:var(--text)}
+.card-blender{display:inline-flex;align-items:center;gap:.35rem;background:rgba(0,240,255,0.08);border:1px solid var(--border2);color:var(--accent2);font-size:.7rem;padding:.2rem .6rem;border-radius:50px;margin-bottom:.8rem;font-weight:600}
+.card-desc{color:var(--text2);font-size:.82rem;line-height:1.6;margin-bottom:1rem;flex:1}
+.card-features{display:flex;flex-wrap:wrap;gap:.35rem;margin-bottom:1rem}
+.feature-tag{background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.08);color:var(--text3);font-size:.68rem;padding:.18rem .55rem;border-radius:4px}
+
+/* rating */
+.card-rating{display:flex;align-items:center;gap:.5rem;margin-bottom:1rem}
+.stars{color:var(--gold);font-size:.8rem;letter-spacing:.05em}
+.rating-num{font-size:.8rem;color:var(--text2)}
+
+/* price section */
+.card-price-row{display:flex;align-items:flex-end;justify-content:space-between;gap:.5rem;margin-bottom:1rem}
+.price-block{}
+.price-label{font-size:.68rem;color:var(--text3);text-transform:uppercase;letter-spacing:.05em;margin-bottom:.2rem}
+.price-main{font-family:'Space Grotesk',sans-serif;font-size:1.6rem;font-weight:800;color:#fff}
+.price-main span{font-size:.75rem;color:var(--text2);font-weight:400}
+.price-sub{font-size:.72rem;color:var(--text3);margin-top:.15rem}
+.downloads-badge{display:flex;align-items:center;gap:.3rem;color:var(--green);font-size:.75rem;font-weight:600}
+
+/* buttons */
+.card-actions{display:flex;gap:.6rem}
+.btn-buy{flex:1;background:linear-gradient(135deg,var(--accent),#9333ea);color:#fff;border:none;padding:.7rem 1rem;border-radius:8px;font-size:.85rem;font-weight:600;cursor:pointer;transition:all .2s;font-family:inherit;display:flex;align-items:center;justify-content:center;gap:.4rem}
+.btn-buy:hover{opacity:.88;transform:scale(1.02)}
+.btn-detail{background:transparent;border:1px solid var(--border);color:var(--text2);padding:.7rem .8rem;border-radius:8px;font-size:.85rem;cursor:pointer;transition:all .2s;font-family:inherit}
+.btn-detail:hover{border-color:var(--accent2);color:var(--accent2)}
+
+/* ── PAYMENT MODAL ── */
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.85);backdrop-filter:blur(8px);z-index:1000;display:none;align-items:center;justify-content:center;padding:1rem}
+.modal-overlay.open{display:flex}
+.modal{background:var(--card2);border:1px solid var(--border);border-radius:20px;width:100%;max-width:480px;overflow:hidden;animation:modalIn .3s ease}
+@keyframes modalIn{from{opacity:0;transform:scale(.9) translateY(20px)}to{opacity:1;transform:scale(1) translateY(0)}}
+.modal-header{background:linear-gradient(135deg,rgba(124,58,237,0.3),rgba(0,240,255,0.1));padding:1.5rem;border-bottom:1px solid var(--border);display:flex;align-items:flex-start;justify-content:space-between}
+.modal-title{font-family:'Space Grotesk',sans-serif;font-size:1.1rem;font-weight:700;margin-bottom:.3rem}
+.modal-subtitle{font-size:.8rem;color:var(--text2)}
+.modal-close{background:transparent;border:none;color:var(--text2);font-size:1.3rem;cursor:pointer;padding:.2rem;line-height:1;transition:color .2s}
+.modal-close:hover{color:var(--text)}
+.modal-body{padding:1.5rem;display:flex;flex-direction:column;gap:1.2rem}
+
+/* amount display */
+.amount-box{background:rgba(124,58,237,0.1);border:1px solid var(--border);border-radius:12px;padding:1rem 1.2rem;text-align:center}
+.amount-label{font-size:.75rem;color:var(--text3);text-transform:uppercase;letter-spacing:.06em;margin-bottom:.3rem}
+.amount-value{font-family:'Space Grotesk',sans-serif;font-size:2rem;font-weight:800;color:var(--accent2)}
+.amount-addon-name{font-size:.8rem;color:var(--text2);margin-top:.2rem}
+
+/* payment options */
+.pay-options{display:flex;gap:.8rem}
+.pay-opt{flex:1;background:var(--bg3);border:2px solid transparent;border-radius:10px;padding:.8rem;cursor:pointer;text-align:center;transition:all .2s}
+.pay-opt:hover,.pay-opt.selected{border-color:var(--accent);background:rgba(124,58,237,0.1)}
+.pay-opt-icon{font-size:1.4rem;margin-bottom:.3rem}
+.pay-opt-name{font-size:.78rem;font-weight:600;color:var(--text)}
+.pay-opt-num{font-size:.72rem;color:var(--text3);margin-top:.15rem}
+
+/* number display */
+.number-box{background:var(--bg3);border:1px solid var(--border);border-radius:10px;padding:1rem 1.2rem;display:flex;align-items:center;justify-content:space-between}
+.number-label{font-size:.72rem;color:var(--text3);text-transform:uppercase;letter-spacing:.05em;margin-bottom:.25rem}
+.number-value{font-family:'Space Grotesk',sans-serif;font-size:1.3rem;font-weight:700;color:var(--accent2);letter-spacing:.06em}
+.copy-btn{background:rgba(124,58,237,0.15);border:1px solid var(--border);color:var(--accent);padding:.5rem .8rem;border-radius:7px;cursor:pointer;font-size:.82rem;transition:all .2s;white-space:nowrap;font-family:inherit}
+.copy-btn:hover{background:var(--accent);color:#fff}
+.copy-btn.copied{background:var(--green);border-color:var(--green);color:#fff}
+
+/* steps */
+.steps-box{}
+.steps-title{font-size:.78rem;color:var(--text2);font-weight:600;margin-bottom:.7rem;text-transform:uppercase;letter-spacing:.05em}
+.step-row{display:flex;align-items:flex-start;gap:.7rem;margin-bottom:.6rem}
+.step-num{width:22px;height:22px;background:linear-gradient(135deg,var(--accent),var(--accent2));border-radius:50%;font-size:.68rem;font-weight:700;color:#fff;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:.05rem}
+.step-text{font-size:.8rem;color:var(--text2);line-height:1.5}
+
+/* email input */
+.email-row{display:flex;flex-direction:column;gap:.4rem}
+.email-row label{font-size:.78rem;color:var(--text2);font-weight:600}
+.email-row input{background:var(--bg3);border:1px solid var(--border);color:var(--text);padding:.65rem 1rem;border-radius:8px;font-family:inherit;font-size:.85rem;outline:none;transition:border-color .2s}
+.email-row input:focus{border-color:var(--accent)}
+
+/* action buttons */
+.modal-actions{display:flex;flex-direction:column;gap:.7rem}
+.btn-whatsapp{background:linear-gradient(135deg,#25d366,#128c7e);color:#fff;border:none;padding:.85rem;border-radius:10px;font-size:.9rem;font-weight:700;cursor:pointer;transition:all .2s;font-family:inherit;display:flex;align-items:center;justify-content:center;gap:.5rem;width:100%}
+.btn-whatsapp:hover{opacity:.88;transform:scale(1.01)}
+.btn-email-pay{background:transparent;border:1px solid var(--border);color:var(--text2);padding:.7rem;border-radius:10px;font-size:.82rem;cursor:pointer;transition:all .2s;font-family:inherit;display:flex;align-items:center;justify-content:center;gap:.5rem;width:100%}
+.btn-email-pay:hover{border-color:var(--accent2);color:var(--accent2)}
+
+/* ── ADMIN PANEL ── */
+.admin-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.9);backdrop-filter:blur(10px);z-index:2000;display:none;align-items:center;justify-content:center;padding:1rem}
+.admin-overlay.open{display:flex}
+.admin-panel{background:var(--card);border:1px solid var(--border);border-radius:20px;width:100%;max-width:600px;max-height:90vh;overflow-y:auto;animation:modalIn .3s ease}
+.admin-header{background:linear-gradient(135deg,rgba(245,158,11,0.2),rgba(124,58,237,0.1));padding:1.5rem;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;background:var(--card);z-index:1}
+.admin-title{font-family:'Space Grotesk',sans-serif;font-size:1.1rem;font-weight:700;color:var(--gold);display:flex;align-items:center;gap:.5rem}
+.admin-body{padding:1.5rem;display:flex;flex-direction:column;gap:1.5rem}
+.admin-section-title{font-size:.8rem;color:var(--text3);text-transform:uppercase;letter-spacing:.07em;font-weight:600;margin-bottom:.8rem;border-bottom:1px solid var(--border);padding-bottom:.5rem}
+.form-group{display:flex;flex-direction:column;gap:.35rem;margin-bottom:.8rem}
+.form-group label{font-size:.78rem;color:var(--text2);font-weight:600}
+.form-group input,.form-group textarea,.form-group select{background:var(--bg3);border:1px solid var(--border);color:var(--text);padding:.65rem 1rem;border-radius:8px;font-family:inherit;font-size:.85rem;outline:none;transition:border-color .2s;width:100%}
+.form-group input:focus,.form-group textarea:focus,.form-group select:focus{border-color:var(--accent)}
+.form-group textarea{resize:vertical;min-height:80px}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:.8rem}
+.btn-add-addon{background:linear-gradient(135deg,var(--gold),#d97706);color:#000;border:none;padding:.8rem;border-radius:10px;font-size:.85rem;font-weight:700;cursor:pointer;width:100%;font-family:inherit;display:flex;align-items:center;justify-content:center;gap:.4rem;transition:opacity .2s}
+.btn-add-addon:hover{opacity:.88}
+.admin-addon-list{display:flex;flex-direction:column;gap:.6rem}
+.admin-addon-item{background:var(--bg3);border:1px solid var(--border);border-radius:10px;padding:.9rem 1rem;display:flex;align-items:center;justify-content:space-between;gap.7rem}
+.admin-addon-info .addon-item-title{font-weight:600;font-size:.88rem;margin-bottom:.15rem}
+.admin-addon-info .addon-item-price{color:var(--gold);font-size:.8rem;font-weight:600}
+.admin-addon-actions{display:flex;gap:.4rem;flex-shrink:0}
+.btn-edit,.btn-del{background:transparent;border:1px solid;padding:.35rem .7rem;border-radius:6px;font-size:.75rem;cursor:pointer;transition:all .2s;font-family:inherit}
+.btn-edit{border-color:var(--accent2);color:var(--accent2)}
+.btn-edit:hover{background:var(--accent2);color:#000}
+.btn-del{border-color:var(--red);color:var(--red)}
+.btn-del:hover{background:var(--red);color:#fff}
+
+/* ── LOGIN ── */
+.login-box{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:2rem;width:100%;max-width:360px;text-align:center;animation:modalIn .3s ease}
+.login-box h2{font-family:'Space Grotesk',sans-serif;font-size:1.2rem;font-weight:700;color:var(--gold);margin-bottom:.5rem}
+.login-box p{font-size:.82rem;color:var(--text2);margin-bottom:1.5rem}
+.login-box input{background:var(--bg3);border:1px solid var(--border);color:var(--text);padding:.7rem 1rem;border-radius:8px;font-family:inherit;font-size:.9rem;outline:none;width:100%;margin-bottom:1rem;transition:border-color .2s;text-align:center;letter-spacing:.15em}
+.login-box input:focus{border-color:var(--gold)}
+.btn-login{background:linear-gradient(135deg,var(--gold),#d97706);color:#000;border:none;padding:.8rem;border-radius:10px;font-size:.88rem;font-weight:700;cursor:pointer;width:100%;font-family:inherit;transition:opacity .2s}
+.btn-login:hover{opacity:.88}
+.login-err{color:var(--red);font-size:.8rem;margin-top:.5rem;display:none}
+
+/* ── TOAST ── */
+.toast{position:fixed;bottom:2rem;left:50%;transform:translateX(-50%) translateY(100px);background:var(--card2);border:1px solid var(--accent);color:var(--text);padding:.7rem 1.5rem;border-radius:50px;font-size:.85rem;font-weight:600;z-index:9999;transition:transform .3s;pointer-events:none;white-space:nowrap}
+.toast.show{transform:translateX(-50%) translateY(0)}
+
+/* ── EMPTY STATE ── */
+.empty-state{text-align:center;padding:5rem 2rem;color:var(--text3)}
+.empty-state i{font-size:3rem;margin-bottom:1rem;opacity:.4}
+.empty-state p{font-size:.9rem}
+
+/* ── FOOTER ── */
+footer{background:var(--bg2);border-top:1px solid var(--border);padding:2rem;text-align:center}
+footer p{font-size:.8rem;color:var(--text3)}
+footer a{color:var(--accent2);text-decoration:none}
+
+/* ── RESPONSIVE ── */
+@media(max-width:600px){
+  .hero{padding:3rem 1rem 2rem}
+  .store-grid{grid-template-columns:1fr;padding:1.5rem 1rem 3rem}
+  .pay-options{flex-direction:column}
+  .form-row{grid-template-columns:1fr}
+  .hero-stats{gap:1.5rem}
+  .navbar{padding:0 1rem}
+  .nav-links{gap:.5rem}
+}
+</style>
+</head>
+<body>
+
+<!-- NAVBAR -->
+<nav class="navbar">
+  <a href="../" class="nav-logo">
+    <div class="nav-logo-icon"><i class="fas fa-cube"></i></div>
+    <span class="nav-logo-text">Design Corner</span>
+  </a>
+  <div class="nav-links">
+    <a href="../" class="nav-link">← Portfolio</a>
+    <button class="admin-btn" onclick="openAdmin()"><i class="fas fa-cog"></i> Admin</button>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-badge"><i class="fas fa-bolt"></i> Pakistan's Blender Addons Store</div>
+  <h1>Blender <span>Addons</span> Store</h1>
+  <p>Professional Python addons & Geometry Node tools for architects and 3D artists. Pay via JazzCash or EasyPaisa.</p>
+  <div class="hero-stats">
+    <div class="stat"><div class="stat-num" id="stat-addons">3</div><div class="stat-label">Addons</div></div>
+    <div class="stat"><div class="stat-num">2.9k+</div><div class="stat-label">Downloads</div></div>
+    <div class="stat"><div class="stat-num">4.8★</div><div class="stat-label">Avg Rating</div></div>
+  </div>
+</section>
+
+<!-- FILTER BAR -->
+<div class="filter-bar">
+  <button class="filter-btn active" onclick="filterAddons('all',this)">All Addons</button>
+  <button class="filter-btn" onclick="filterAddons('ArchViz & Lighting',this)">ArchViz & Lighting</button>
+  <button class="filter-btn" onclick="filterAddons('Geometry Nodes',this)">Geometry Nodes</button>
+  <button class="filter-btn" onclick="filterAddons('Animation',this)">Animation</button>
+</div>
+
+<!-- STORE GRID -->
+<div class="store-grid" id="storeGrid">
+  <div class="empty-state"><i class="fas fa-box-open"></i><p>Loading addons...</p></div>
+</div>
+
+<!-- PAYMENT MODAL -->
+<div class="modal-overlay" id="payModal">
+  <div class="modal">
+    <div class="modal-header">
+      <div>
+        <div class="modal-title" id="payModalTitle">Buy Addon</div>
+        <div class="modal-subtitle">JazzCash / EasyPaisa Payment</div>
+      </div>
+      <button class="modal-close" onclick="closePayModal()"><i class="fas fa-times"></i></button>
+    </div>
+    <div class="modal-body">
+      <!-- Amount -->
+      <div class="amount-box">
+        <div class="amount-label">Total Amount</div>
+        <div class="amount-value" id="payAmount">Rs. 0</div>
+        <div class="amount-addon-name" id="payAddonName">-</div>
+      </div>
+
+      <!-- Choose Payment Method -->
+      <div>
+        <div class="steps-title">Choose Payment Method</div>
+        <div class="pay-options">
+          <div class="pay-opt selected" id="opt-jazz" onclick="selectPayMethod('jazz')">
+            <div class="pay-opt-icon">📱</div>
+            <div class="pay-opt-name">JazzCash</div>
+            <div class="pay-opt-num" id="jazz-num-preview">03392332272</div>
+          </div>
+          <div class="pay-opt" id="opt-easy" onclick="selectPayMethod('easy')">
+            <div class="pay-opt-icon">💳</div>
+            <div class="pay-opt-name">EasyPaisa</div>
+            <div class="pay-opt-num" id="easy-num-preview">03392332272</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Number to Send Payment -->
+      <div class="number-box">
+        <div>
+          <div class="number-label" id="pay-method-label">JazzCash Number</div>
+          <div class="number-value" id="pay-number">03392332272</div>
+        </div>
+        <button class="copy-btn" id="copyBtn" onclick="copyNumber()"><i class="fas fa-copy"></i> Copy</button>
+      </div>
+
+      <!-- Steps -->
+      <div class="steps-box">
+        <div class="steps-title">Payment Steps</div>
+        <div class="step-row"><div class="step-num">1</div><div class="step-text">Upar diya number pe <strong>JazzCash / EasyPaisa</strong> se payment bhejein</div></div>
+        <div class="step-row"><div class="step-num">2</div><div class="step-text">Payment screenshot le kar <strong>WhatsApp</strong> pe bhejein</div></div>
+        <div class="step-row"><div class="step-num">3</div><div class="step-text">Confirm hone ke baad <strong>download link</strong> WhatsApp pe milega</div></div>
+      </div>
+
+      <!-- Email for link -->
+      <div class="email-row">
+        <label><i class="fas fa-envelope"></i> Email (optional) — download link yahan bhi milega</label>
+        <input type="email" id="buyerEmail" placeholder="your@email.com"/>
+      </div>
+
+      <!-- Action Buttons -->
+      <div class="modal-actions">
+        <button class="btn-whatsapp" onclick="sendWhatsApp()">
+          <i class="fab fa-whatsapp"></i> WhatsApp pe Screenshot Bhejein
+        </button>
+        <button class="btn-email-pay" onclick="sendEmailInquiry()">
+          <i class="fas fa-envelope"></i> Email se Confirm Karen
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ADMIN LOGIN -->
+<div class="admin-overlay" id="adminOverlay">
+  <div class="login-box" id="loginBox">
+    <h2><i class="fas fa-shield-halved"></i> Admin Access</h2>
+    <p>Store manage karne ke liye PIN enter karein</p>
+    <input type="password" id="adminPin" placeholder="••••" maxlength="8" onkeydown="if(event.key==='Enter')checkPin()"/>
+    <button class="btn-login" onclick="checkPin()">Login</button>
+    <div class="login-err" id="loginErr">❌ Galat PIN! Dobara koshish karein.</div>
+    <button class="btn-email-pay" style="margin-top:.5rem" onclick="closeAdmin()">Cancel</button>
+  </div>
+  <!-- Admin Panel (shown after login) -->
+  <div class="admin-panel" id="adminPanel" style="display:none">
+    <div class="admin-header">
+      <div class="admin-title"><i class="fas fa-cog"></i> Store Admin Panel</div>
+      <button class="modal-close" onclick="closeAdmin()"><i class="fas fa-times"></i></button>
+    </div>
+    <div class="admin-body">
+
+      <!-- Owner Settings -->
+      <div>
+        <div class="admin-section-title">📱 Payment Numbers</div>
+        <div class="form-row">
+          <div class="form-group"><label>JazzCash Number</label><input type="text" id="adminJazz" placeholder="03xxxxxxxxx"/></div>
+          <div class="form-group"><label>EasyPaisa Number</label><input type="text" id="adminEasy" placeholder="03xxxxxxxxx"/></div>
+        </div>
+        <div class="form-group"><label>WhatsApp Number (with country code)</label><input type="text" id="adminWA" placeholder="923xxxxxxxxx"/></div>
+        <button class="btn-add-addon" onclick="saveOwnerSettings()" style="background:linear-gradient(135deg,var(--green),#059669);margin-bottom:0"><i class="fas fa-save"></i> Save Settings</button>
+      </div>
+
+      <!-- Add New Addon -->
+      <div>
+        <div class="admin-section-title">➕ Naya Addon Add Karein</div>
+        <input type="hidden" id="editAddonId" value=""/>
+        <div class="form-group"><label>Addon Title *</label><input type="text" id="newTitle" placeholder="e.g. ArchViz QuickTools Pro"/></div>
+        <div class="form-row">
+          <div class="form-group"><label>Version</label><input type="text" id="newVersion" placeholder="v1.0"/></div>
+          <div class="form-group"><label>Category</label>
+            <select id="newCat">
+              <option>ArchViz & Lighting</option>
+              <option>Geometry Nodes</option>
+              <option>Animation</option>
+              <option>Modeling Tools</option>
+              <option>Materials & Shaders</option>
+              <option>Rendering</option>
+              <option>Import / Export</option>
+              <option>Other</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-group"><label>Blender Compatibility</label><input type="text" id="newBlender" placeholder="Blender 3.6 / 4.x"/></div>
+        <div class="form-group"><label>Description *</label><textarea id="newDesc" placeholder="Addon ki description..."></textarea></div>
+        <div class="form-group"><label>Features (comma separated)</label><input type="text" id="newFeatures" placeholder="Feature 1, Feature 2, Feature 3"/></div>
+        <div class="form-group"><label>Thumbnail Image URL</label><input type="text" id="newThumb" placeholder="https://... ya khaali chhod dein"/></div>
+        <div class="form-group"><label>🔒 Private Download URL (sirf aap ko pata hoga)</label><input type="text" id="newFileUrl" placeholder="https://github.com/releases/download/..."/></div>
+        <div class="form-row">
+          <div class="form-group"><label>Price (PKR) *</label><input type="number" id="newPrice" placeholder="999" min="0"/></div>
+          <div class="form-group"><label>Payment Type</label>
+            <select id="newPayType">
+              <option value="one-time">One-Time Purchase</option>
+              <option value="subscription">Subscription</option>
+              <option value="free">Free</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group"><label>Monthly Price (PKR)</label><input type="number" id="newMonthly" placeholder="299" min="0"/></div>
+          <div class="form-group"><label>Yearly Price (PKR)</label><input type="number" id="newYearly" placeholder="2399" min="0"/></div>
+        </div>
+        <button class="btn-add-addon" onclick="saveAddon()"><i class="fas fa-plus"></i> <span id="addBtnText">Add Addon</span></button>
+      </div>
+
+      <!-- Existing Addons List -->
+      <div>
+        <div class="admin-section-title">📦 Existing Addons</div>
+        <div class="admin-addon-list" id="adminAddonList"></div>
+      </div>
+
+      <!-- Push to GitHub -->
+      <div>
+        <div class="admin-section-title">🚀 Publish Changes</div>
+        <p style="font-size:.8rem;color:var(--text2);margin-bottom:.8rem">Changes local storage mein save hain. GitHub pe push karne ke liye:<br><code style="color:var(--accent2);font-size:.75rem">git -C "E:\my-portfolio" add addons-store/ && git commit -m "update: store addons" && git push origin master</code></p>
+        <button class="btn-add-addon" onclick="exportJSON()" style="background:linear-gradient(135deg,var(--accent),#9333ea)"><i class="fas fa-download"></i> Export store-data.json</button>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
+
+<!-- FOOTER -->
+<footer>
+  <p>© 2026 Design Corner · <a href="mailto:designcorner488@gmail.com">designcorner488@gmail.com</a> · <a href="https://designcorner488.github.io">Portfolio</a></p>
+</footer>
+
+<script>
+// ═══════════════════════════════════
+//  CONFIG
+// ═══════════════════════════════════
+const ADMIN_PIN = '4488';
+const DATA_URL  = 'store-data.json';
+
+let storeData   = null;
+let currentAddon= null;
+let currentMethod='jazz';
+let allAddons   = [];
+let currentFilter='all';
+
+// ═══════════════════════════════════
+//  LOAD DATA
+// ═══════════════════════════════════
+async function loadStore(){
+  // Try localStorage first (admin edits)
+  const cached = localStorage.getItem('dc_store_data');
+  if(cached){
+    try{ storeData = JSON.parse(cached); }catch(e){ storeData=null; }
+  }
+  if(!storeData){
+    try{
+      const r = await fetch(DATA_URL+'?v='+Date.now());
+      storeData = await r.json();
+    }catch(e){
+      storeData = getDefaultData();
+    }
+  }
+  allAddons = storeData.addons || [];
+  renderAddons(allAddons);
+  updateStats();
+}
+
+function getDefaultData(){
+  return {
+    owner:{ name:'Design Corner', whatsapp:'923392332272', jazzcash:'03392332272', easypaisa:'03392332272', email:'designcorner488@gmail.com' },
+    addons:[
+      { id:'addon_1', title:'ArchViz QuickTools Pro', version:'v2.4', blender:'Blender 3.6 / 4.x', category:'ArchViz & Lighting', desc:'Automated parametric wall generation, trim moldings, and photorealistic lighting studio setups for Blender Cycles & Eevee.', features:['50+ Material Presets','IES Light Library','HDRI Manager'], thumbnail:'', fileUrlPrivate:'#', price:1499, currency:'PKR', paymentType:'one-time', subscription_monthly:499, subscription_yearly:3999, downloads:'1.4k+', rating:4.9, reviews:47 },
+      { id:'addon_2', title:'Parametric Stairs & Railings', version:'v1.8', blender:'Blender 4.0 / 4.2+', category:'Geometry Nodes', desc:'Interactive geometry-nodes generator for spiral, cantilever, and modern industrial staircases with dynamic balustrade controls.', features:['Spiral Staircases','Dynamic Balustrade','BIM-ready Export'], thumbnail:'', fileUrlPrivate:'#', price:999, currency:'PKR', paymentType:'one-time', subscription_monthly:349, subscription_yearly:2799, downloads:'890+', rating:4.8, reviews:32 },
+      { id:'addon_3', title:'Cinematic Camera Rigs', version:'v1.2', blender:'Blender 3.6+', category:'Animation', desc:'One-click architectural flythrough rigs with smooth camera easing, drone pathing, target tracking, and rack focus presets.', features:['Drone Path Rigs','Target Tracking','Rack Focus Presets'], thumbnail:'', fileUrlPrivate:'#', price:799, currency:'PKR', paymentType:'one-time', subscription_monthly:299, subscription_yearly:2399, downloads:'620+', rating:4.7, reviews:28 }
+    ]
+  };
+}
+
+function updateStats(){
+  document.getElementById('stat-addons').textContent = allAddons.length;
+}
+
+// ═══════════════════════════════════
+//  RENDER CARDS
+// ═══════════════════════════════════
+function renderAddons(list){
+  const grid = document.getElementById('storeGrid');
+  if(!list || !list.length){
+    grid.innerHTML='<div class="empty-state"><i class="fas fa-box-open"></i><p>Koi addon nahi mila.</p></div>';
+    return;
+  }
+  grid.innerHTML = list.map((a,i) => cardHTML(a,i)).join('');
+}
+
+function cardHTML(a, idx){
+  const price = a.price || 0;
+  const isFree = (a.paymentType==='free' || price===0);
+  const stars = '★'.repeat(Math.floor(a.rating||5)) + (((a.rating||5)%1)>=.5?'½':'');
+  const featureHTML = (a.features||[]).slice(0,4).map(f=>`<span class="feature-tag">${f}</span>`).join('');
+  const thumbStyle = a.thumbnail ? `<img src="${a.thumbnail}" alt="${a.title}" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"/>` : '';
+  const iconStyle = `<div class="thumb-icon" style="${a.thumbnail?'display:none':''}"><i class="fas ${a.icon||'fa-puzzle-piece'}"></i></div>`;
+  return `
+  <div class="addon-card${idx===0?' featured-card':''}" id="card-${a.id}">
+    <div class="card-thumb">
+      ${thumbStyle}${iconStyle}
+      <div class="card-badge-row">
+        <span class="badge-cat">${a.category||'Blender'}</span>
+        <span class="badge-ver">${a.version||'v1.0'}</span>
+      </div>
+      ${idx===0?'<span class="badge-hot">🔥 POPULAR</span>':''}
+    </div>
+    <div class="card-body">
+      <div class="card-title">${a.title}</div>
+      <div class="card-blender"><i class="fas fa-cube" style="font-size:.6rem"></i> ${a.blender||'Blender 4.x'}</div>
+      <div class="card-desc">${a.desc||''}</div>
+      <div class="card-features">${featureHTML}</div>
+      <div class="card-rating">
+        <div class="stars">${stars}</div>
+        <span class="rating-num">${a.rating||5} (${a.reviews||0} reviews)</span>
+      </div>
+      <div class="card-price-row">
+        <div class="price-block">
+          <div class="price-label">${a.paymentType==='subscription'?'Starting from':'One-Time Price'}</div>
+          <div class="price-main">
+            ${isFree ? '<span style="color:var(--green);font-size:1.3rem">FREE</span>' : `Rs. ${price.toLocaleString()}<span> PKR</span>`}
+          </div>
+          ${a.paymentType==='subscription' ? `<div class="price-sub">Monthly: Rs.${a.subscription_monthly||0} &nbsp;·&nbsp; Yearly: Rs.${a.subscription_yearly||0}</div>` : ''}
+        </div>
+        <div class="downloads-badge"><i class="fas fa-download"></i> ${a.downloads||'0'}</div>
+      </div>
+      <div class="card-actions">
+        ${isFree
+          ? `<button class="btn-buy" style="background:linear-gradient(135deg,var(--green),#059669)" onclick="startFreeDownload('${a.id}')"><i class="fas fa-download"></i> Free Download</button>`
+          : `<button class="btn-buy" onclick="openPayModal('${a.id}')"><i class="fas fa-shopping-cart"></i> Buy Now – Rs.${price.toLocaleString()}</button>`}
+        <button class="btn-detail" onclick="toggleDesc('${a.id}')" title="Details"><i class="fas fa-info"></i></button>
+      </div>
+    </div>
+  </div>`;
+}
+
+function toggleDesc(id){
+  const a = allAddons.find(x=>x.id===id);
+  if(!a) return;
+  showToast(`📦 ${a.title} — ${a.desc}`);
+}
+
+function startFreeDownload(id){
+  const a = allAddons.find(x=>x.id===id);
+  if(!a) return;
+  if(a.fileUrlPrivate && a.fileUrlPrivate!=='#'){
+    window.open(a.fileUrlPrivate,'_blank');
+  } else {
+    showToast('⚠️ Download link abhi set nahi hua. Admin se contact karein.');
+  }
+}
+
+// ═══════════════════════════════════
+//  FILTER
+// ═══════════════════════════════════
+function filterAddons(cat, btn){
+  currentFilter = cat;
+  document.querySelectorAll('.filter-btn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  if(cat==='all') renderAddons(allAddons);
+  else renderAddons(allAddons.filter(a=>a.category===cat));
+}
+
+// ═══════════════════════════════════
+//  PAYMENT MODAL
+// ═══════════════════════════════════
+function openPayModal(id){
+  const a = allAddons.find(x=>x.id===id);
+  if(!a) return;
+  currentAddon = a;
+  currentMethod = 'jazz';
+  document.getElementById('payModalTitle').textContent = a.title;
+  document.getElementById('payAddonName').textContent   = a.title + ' — ' + (a.category||'');
+  document.getElementById('payAmount').textContent      = `Rs. ${(a.price||0).toLocaleString()} PKR`;
+  document.getElementById('jazz-num-preview').textContent = storeData.owner.jazzcash;
+  document.getElementById('easy-num-preview').textContent = storeData.owner.easypaisa;
+  updatePayNumber();
+  document.getElementById('buyerEmail').value = '';
+  document.getElementById('payModal').classList.add('open');
+  document.body.style.overflow='hidden';
+}
+function closePayModal(){
+  document.getElementById('payModal').classList.remove('open');
+  document.body.style.overflow='';
+}
+
+function selectPayMethod(m){
+  currentMethod = m;
+  document.getElementById('opt-jazz').classList.toggle('selected', m==='jazz');
+  document.getElementById('opt-easy').classList.toggle('selected', m==='easy');
+  updatePayNumber();
+}
+function updatePayNumber(){
+  const num = currentMethod==='jazz' ? storeData.owner.jazzcash : storeData.owner.easypaisa;
+  document.getElementById('pay-number').textContent = num;
+  document.getElementById('pay-method-label').textContent = currentMethod==='jazz' ? 'JazzCash Number' : 'EasyPaisa Number';
+  const btn = document.getElementById('copyBtn');
+  btn.classList.remove('copied');
+  btn.innerHTML = '<i class="fas fa-copy"></i> Copy';
+}
+function copyNumber(){
+  const num = document.getElementById('pay-number').textContent;
+  navigator.clipboard.writeText(num).then(()=>{
+    const btn = document.getElementById('copyBtn');
+    btn.classList.add('copied');
+    btn.innerHTML = '<i class="fas fa-check"></i> Copied!';
+    setTimeout(()=>{ btn.classList.remove('copied'); btn.innerHTML='<i class="fas fa-copy"></i> Copy'; },2500);
+    showToast('✅ Number copy ho gaya!');
+  });
+}
+
+function sendWhatsApp(){
+  if(!currentAddon) return;
+  const wa   = storeData.owner.whatsapp;
+  const name = currentAddon.title;
+  const price= currentAddon.price;
+  const method = currentMethod==='jazz' ? 'JazzCash' : 'EasyPaisa';
+  const email= document.getElementById('buyerEmail').value;
+  let msg = `Assalam o Alaikum!\n\nMein *${name}* addon khareedna chahta/chahti hun.\n\n💰 Amount: *Rs. ${price} PKR*\n📱 Payment Method: *${method}*\n\n✅ Maine payment kar di hai. Payment screenshot attach kar raha/rahi hun.\n\nKripya download link bhej dein.`;
+  if(email) msg += `\n\n📧 Email: ${email}`;
+  const url = `https://api.whatsapp.com/send?phone=${wa}&text=${encodeURIComponent(msg)}`;
+  window.open(url,'_blank');
+}
+
+function sendEmailInquiry(){
+  if(!currentAddon) return;
+  const email= storeData.owner.email;
+  const name = currentAddon.title;
+  const price= currentAddon.price;
+  const method = currentMethod==='jazz' ? 'JazzCash' : 'EasyPaisa';
+  const buyerEmail = document.getElementById('buyerEmail').value;
+  const sub  = encodeURIComponent(`[Addon Purchase] ${name} – Rs.${price}`);
+  const body = encodeURIComponent(`Addon: ${name}\nPrice: Rs. ${price} PKR\nPayment via: ${method}\nMy Email: ${buyerEmail||'N/A'}\n\n[Please attach your payment screenshot]`);
+  window.open(`mailto:${email}?subject=${sub}&body=${body}`,'_blank');
+}
+
+// ═══════════════════════════════════
+//  ADMIN
+// ═══════════════════════════════════
+function openAdmin(){
+  document.getElementById('adminOverlay').classList.add('open');
+  document.getElementById('loginBox').style.display   = 'block';
+  document.getElementById('adminPanel').style.display = 'none';
+  document.getElementById('adminPin').value = '';
+  document.getElementById('loginErr').style.display = 'none';
+  document.body.style.overflow='hidden';
+}
+function closeAdmin(){
+  document.getElementById('adminOverlay').classList.remove('open');
+  document.body.style.overflow='';
+}
+function checkPin(){
+  const pin = document.getElementById('adminPin').value;
+  if(pin===ADMIN_PIN){
+    document.getElementById('loginBox').style.display   = 'none';
+    document.getElementById('adminPanel').style.display = 'block';
+    loadAdminPanel();
+  } else {
+    document.getElementById('loginErr').style.display = 'block';
+    document.getElementById('adminPin').value='';
+  }
+}
+function loadAdminPanel(){
+  document.getElementById('adminJazz').value = storeData.owner.jazzcash   || '';
+  document.getElementById('adminEasy').value = storeData.owner.easypaisa  || '';
+  document.getElementById('adminWA').value   = storeData.owner.whatsapp   || '';
+  renderAdminList();
+}
+function saveOwnerSettings(){
+  storeData.owner.jazzcash  = document.getElementById('adminJazz').value.trim();
+  storeData.owner.easypaisa = document.getElementById('adminEasy').value.trim();
+  storeData.owner.whatsapp  = document.getElementById('adminWA').value.trim();
+  saveToLocal();
+  showToast('✅ Settings save ho gayi!');
+}
+function renderAdminList(){
+  const list = document.getElementById('adminAddonList');
+  list.innerHTML = allAddons.map(a=>`
+    <div class="admin-addon-item">
+      <div class="admin-addon-info">
+        <div class="addon-item-title">${a.title} <span style="color:var(--text3);font-size:.75rem">${a.version}</span></div>
+        <div class="addon-item-price">${a.paymentType==='free'?'FREE':'Rs. '+a.price+' PKR'} · ${a.category}</div>
+      </div>
+      <div class="admin-addon-actions">
+        <button class="btn-edit" onclick="editAddon('${a.id}')"><i class="fas fa-edit"></i></button>
+        <button class="btn-del"  onclick="deleteAddon('${a.id}')"><i class="fas fa-trash"></i></button>
+      </div>
+    </div>`).join('');
+}
+
+function editAddon(id){
+  const a = allAddons.find(x=>x.id===id);
+  if(!a) return;
+  document.getElementById('editAddonId').value = id;
+  document.getElementById('newTitle').value    = a.title;
+  document.getElementById('newVersion').value  = a.version;
+  document.getElementById('newCat').value      = a.category;
+  document.getElementById('newBlender').value  = a.blender;
+  document.getElementById('newDesc').value     = a.desc;
+  document.getElementById('newFeatures').value = (a.features||[]).join(', ');
+  document.getElementById('newThumb').value    = a.thumbnail||'';
+  document.getElementById('newFileUrl').value  = a.fileUrlPrivate||'';
+  document.getElementById('newPrice').value    = a.price||0;
+  document.getElementById('newPayType').value  = a.paymentType||'one-time';
+  document.getElementById('newMonthly').value  = a.subscription_monthly||0;
+  document.getElementById('newYearly').value   = a.subscription_yearly||0;
+  document.getElementById('addBtnText').textContent = 'Update Addon';
+  document.getElementById('newTitle').scrollIntoView({behavior:'smooth'});
+  showToast('✏️ Addon edit mode mein hai');
+}
+
+function saveAddon(){
+  const title = document.getElementById('newTitle').value.trim();
+  if(!title){ showToast('❌ Title zaroor daalein!'); return; }
+  const editId = document.getElementById('editAddonId').value;
+  const addon = {
+    id:          editId || 'addon_'+Date.now(),
+    title,
+    version:     document.getElementById('newVersion').value.trim()||'v1.0',
+    blender:     document.getElementById('newBlender').value.trim()||'Blender 4.x',
+    category:    document.getElementById('newCat').value,
+    desc:        document.getElementById('newDesc').value.trim(),
+    features:    document.getElementById('newFeatures').value.split(',').map(f=>f.trim()).filter(Boolean),
+    thumbnail:   document.getElementById('newThumb').value.trim(),
+    fileUrlPrivate: document.getElementById('newFileUrl').value.trim()||'#',
+    price:       parseInt(document.getElementById('newPrice').value)||0,
+    currency:    'PKR',
+    paymentType: document.getElementById('newPayType').value,
+    subscription_monthly: parseInt(document.getElementById('newMonthly').value)||0,
+    subscription_yearly:  parseInt(document.getElementById('newYearly').value)||0,
+    downloads:   '0',
+    rating:      4.8,
+    reviews:     0
+  };
+  if(editId){
+    const idx = allAddons.findIndex(x=>x.id===editId);
+    if(idx>-1) allAddons[idx] = addon;
+    document.getElementById('editAddonId').value='';
+    document.getElementById('addBtnText').textContent='Add Addon';
+    showToast('✅ Addon update ho gaya!');
+  } else {
+    allAddons.push(addon);
+    showToast('✅ Naya addon add ho gaya!');
+  }
+  storeData.addons = allAddons;
+  saveToLocal();
+  renderAdminList();
+  renderAddons(allAddons);
+  updateStats();
+  // Clear form
+  ['newTitle','newVersion','newBlender','newDesc','newFeatures','newThumb','newFileUrl','newPrice','newMonthly','newYearly'].forEach(id=>document.getElementById(id).value='');
+  document.getElementById('newPayType').value='one-time';
+  document.getElementById('newCat').value='ArchViz & Lighting';
+}
+
+function deleteAddon(id){
+  if(!confirm('Yeh addon delete karna chahte hain?')) return;
+  allAddons = allAddons.filter(x=>x.id!==id);
+  storeData.addons = allAddons;
+  saveToLocal();
+  renderAdminList();
+  renderAddons(allAddons);
+  updateStats();
+  showToast('🗑️ Addon delete ho gaya!');
+}
+
+function saveToLocal(){
+  localStorage.setItem('dc_store_data', JSON.stringify(storeData));
+}
+function exportJSON(){
+  const blob = new Blob([JSON.stringify(storeData, null, 2)], {type:'application/json'});
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = 'store-data.json';
+  a.click();
+  showToast('📥 store-data.json download ho raha hai');
+}
+
+// ═══════════════════════════════════
+//  TOAST
+// ═══════════════════════════════════
+let toastTimer;
+function showToast(msg){
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(()=>t.classList.remove('show'), 3000);
+}
+
+// ═══════════════════════════════════
+//  KEYBOARD SHORTCUTS
+// ═══════════════════════════════════
+document.addEventListener('keydown', e=>{
+  if(e.key==='Escape'){
+    closePayModal();
+    closeAdmin();
+  }
+});
+
+// ── CLOSE modals on overlay click
+document.getElementById('payModal').addEventListener('click', e=>{
+  if(e.target===document.getElementById('payModal')) closePayModal();
+});
+document.getElementById('adminOverlay').addEventListener('click', e=>{
+  if(e.target===document.getElementById('adminOverlay')) closeAdmin();
+});
+
+// ── INIT
+loadStore();
+</script>
+</body>
+</html>
