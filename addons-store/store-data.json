@@ -4,7 +4,8 @@
     "whatsapp": "923392332272",
     "jazzcash": "03392332272",
     "easypaisa": "03392332272",
-    "email": "designcorner488@gmail.com"
+    "email": "designcorner488@gmail.com",
+    "pin": "4488"
   },
   "addons": [
     {
@@ -24,13 +25,9 @@
       "icon": "fa-building",
       "thumbnail": "",
       "fileUrlPrivate": "#upload-your-link-here",
-      "pricePKR": 1499,
-      "priceUSD": 5.50,
+      "pricePKR": 499,
+      "priceUSD": 1.50,
       "paymentType": "one-time",
-      "subscription_monthly_pkr": 499,
-      "subscription_monthly_usd": 1.99,
-      "subscription_yearly_pkr": 3999,
-      "subscription_yearly_usd": 14.99,
       "downloads": "1.4k+",
       "rating": 4.9,
       "reviews": 47
@@ -52,13 +49,9 @@
       "icon": "fa-stairs",
       "thumbnail": "",
       "fileUrlPrivate": "#upload-your-link-here",
-      "pricePKR": 999,
-      "priceUSD": 3.99,
+      "pricePKR": 299,
+      "priceUSD": 1.00,
       "paymentType": "one-time",
-      "subscription_monthly_pkr": 349,
-      "subscription_monthly_usd": 1.49,
-      "subscription_yearly_pkr": 2799,
-      "subscription_yearly_usd": 9.99,
       "downloads": "890+",
       "rating": 4.8,
       "reviews": 32
@@ -80,13 +73,9 @@
       "icon": "fa-video",
       "thumbnail": "",
       "fileUrlPrivate": "#upload-your-link-here",
-      "pricePKR": 799,
-      "priceUSD": 2.99,
+      "pricePKR": 299,
+      "priceUSD": 1.00,
       "paymentType": "one-time",
-      "subscription_monthly_pkr": 299,
-      "subscription_monthly_usd": 1.20,
-      "subscription_yearly_pkr": 2399,
-      "subscription_yearly_usd": 8.99,
       "downloads": "620+",
       "rating": 4.7,
       "reviews": 28

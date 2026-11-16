@@ -3820,6 +3820,9 @@ function applySiteScale(scale, save = true) {
   if (label) {
     label.textContent = Math.round(currentSiteScale * 100) + '%';
   }
+  document.querySelectorAll('.mobile-scale-box .btn-scale-reset').forEach(el => {
+    el.textContent = Math.round(currentSiteScale * 100) + '%';
+  });
 
   if (save) {
     try {

@@ -16,7 +16,7 @@ window.addEventListener('error', function(e) {
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
-  <link rel="stylesheet" href="style.css?v=22.6"/>
+  <link rel="stylesheet" href="style.css?v=23.1"/>
   <script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/3.4.0/model-viewer.min.js"></script>
 </head>
 <body>
@@ -78,6 +78,17 @@ window.addEventListener('error', function(e) {
 
 
 
+<!-- TOP PROMO BANNER ($1 DOLLAR SHOP) -->
+<div class="top-promo-banner" id="topPromoBanner">
+  <a href="addons-store/" target="_blank" class="promo-link">
+    <span class="promo-flame-icon">🔥</span>
+    <span class="promo-badge-pulse">SPECIAL OFFER</span>
+    <span class="promo-title"><strong>$1 Dollar Shop</strong></span>
+    <span class="promo-desc">· Blender Addons, Scripts &amp; Tools starting from <strong>$1 / Rs.299</strong></span>
+    <span class="promo-cta">Shop Now <i class="fas fa-arrow-right"></i></span>
+  </a>
+</div>
+
 <!-- NAVBAR -->
 <nav class="navbar" id="navbar">
   <div class="nav-logo" id="navLogoWrap">
@@ -93,26 +104,47 @@ window.addEventListener('error', function(e) {
       <i class="fas fa-xmark"></i>
     </button>
   </div>
+
+  <!-- Dedicated Glowing & Blinking $1 Dollar Shop Button (Visible on both Mobile & Desktop) -->
+  <a href="addons-store/" class="nav-shop-pill" target="_blank" title="Blender Addons &amp; Tools from $1 / Rs.299">
+    <span class="shop-pill-flame">🔥</span>
+    <span class="shop-pill-text">$1 Dollar Shop</span>
+    <span class="shop-pill-badge">OFFER</span>
+  </a>
+
   <div class="nav-links" id="navLinks">
     <a href="#home"     class="nav-link active">Home</a>
     <a href="#about"    class="nav-link">About</a>
     <a href="#skills"   class="nav-link">Skills</a>
     <a href="#work"     class="nav-link">Portfolio</a>
     <a href="#contact"  class="nav-link">Contact</a>
-    <a href="addons-store/" class="nav-link nav-store-btn" target="_blank" style="background:linear-gradient(135deg,#f59e0b,#d97706);color:#000;padding:.35rem .9rem;border-radius:6px;font-weight:700;font-size:.82rem;white-space:nowrap">🛒 Buy Addons</a>
+    <a href="addons-store/" class="nav-link nav-store-drawer-link" target="_blank" style="color:var(--gold);font-weight:700">
+      🔥 $1 Dollar Shop (Special Offer)
+    </a>
+
+    <!-- Mobile Drawer Extra Actions -->
+    <div class="mobile-menu-extras">
+      <div class="site-scale-control mobile-scale-box" title="Text Zoom">
+        <span style="font-size:0.75rem;color:var(--text-muted);padding-left:4px;">Zoom:</span>
+        <button type="button" class="btn-scale-step" onclick="changeSiteScale(-0.1)">A-</button>
+        <button type="button" class="btn-scale-reset" onclick="resetSiteScale()">100%</button>
+        <button type="button" class="btn-scale-step" onclick="changeSiteScale(0.1)">A+</button>
+      </div>
+      <a href="#contact" class="btn-hire mobile-hire-btn" onclick="document.getElementById('navLinks').classList.remove('open')">Hire Me</a>
+    </div>
   </div>
+
   <div class="nav-actions">
-    
-    <!-- SITE TEXT & PAGE SCALE CONTROLLER (A- / 100% / A+) -->
-    <div class="site-scale-control" id="siteScaleControl" title="Page & Text Zoom Controller">
+    <!-- Desktop text scale controller -->
+    <div class="site-scale-control desktop-scale-control" id="siteScaleControl" title="Page & Text Zoom Controller">
       <button type="button" class="btn-scale-step" onclick="changeSiteScale(-0.1)" title="Make text smaller (A-)">A-</button>
       <button type="button" class="btn-scale-reset" onclick="resetSiteScale()" id="siteScaleLabel" title="Reset Zoom to 100%">100%</button>
       <button type="button" class="btn-scale-step" onclick="changeSiteScale(0.1)" title="Make text bigger (A+)">A+</button>
     </div>
-<button class="btn-edit-nav" id="navEditBtn" onclick="tryToggleEditMode()" title="Direct Visual Edit"><i class="fas fa-pen-to-square"></i> <span>Edit Website</span></button>
-    <a href="#contact" class="btn-hire">Hire Me</a>
-    <a href="admin/" class="btn-admin-nav" title="Admin Panel"><i class="fas fa-cog"></i></a>
-    <button class="hamburger" id="hamburger"><span></span><span></span><span></span></button>
+    <button class="btn-edit-nav desktop-edit-btn" id="navEditBtn" onclick="tryToggleEditMode()" title="Direct Visual Edit"><i class="fas fa-pen-to-square"></i> <span>Edit Website</span></button>
+    <a href="#contact" class="btn-hire desktop-hire-btn">Hire Me</a>
+    <a href="admin/" class="btn-admin-nav desktop-admin-btn" title="Admin Panel"><i class="fas fa-cog"></i></a>
+    <button class="hamburger" id="hamburger" aria-label="Toggle Navigation"><span></span><span></span><span></span></button>
   </div>
 </nav>
 
@@ -870,7 +902,7 @@ window.addEventListener('error', function(e) {
   </div>
 </div>
 
-<script src="script.js?v=22.6"></script>
+<script src="script.js?v=23.1"></script>
 <!-- REORDER MODELS & ANIMATIONS MODAL -->
 <div class="modal-overlay" id="glbReorderModal">
   <div class="modal-box" style="max-width:520px;">
