@@ -396,14 +396,16 @@ function initSkillBars() {
    ============================================================ */
 function initCounters() {
   const data = getSavedData();
-  if (data?.text?.statProjects || data?.text?.statClients || data?.text?.statYears) {
-    // User edited stats — keep their custom numbers/text
-    return;
-  }
-  const totalProjects = portfolioData?.projects?.length || 7;
-  animateNum('stat-projects', Math.max(totalProjects, 7));
-  animateNum('stat-clients',  15);
-  animateNum('stat-years',    3);
+  const overrides = portfolioData?._textOverrides || {};
+  const settings = portfolioData?.settings || {};
+
+  const pVal = parseInt(data?.text?.statProjects || overrides.statProjects || settings.statProjects || '300') || 300;
+  const cVal = parseInt(data?.text?.statClients  || overrides.statClients  || settings.statClients  || '200') || 200;
+  const yVal = parseInt(data?.text?.statYears    || overrides.statYears    || settings.statYears    || '10')  || 10;
+
+  animateNum('stat-projects', pVal);
+  animateNum('stat-clients',  cVal);
+  animateNum('stat-years',    yVal);
 }
 
 function animateNum(id, target) {
