@@ -430,23 +430,28 @@ async function loadPortfolio() {
     const res = await fetch('portfolio.json?nc=' + Date.now());
     if (!res.ok) throw new Error('Local fetch failed');
     portfolioData = await res.json();
-  } catch {
+  } catch(e1) {
     try {
       const res = await fetch(DATA_URL);
-      portfolioData = await res.json();
-    } catch { showGalleryEmpty(); return; }
+      if (res.ok) portfolioData = await res.json();
+    } catch(e2) {
+      console.warn('Portfolio fetch fallback failed:', e2);
+    }
   }
 
-  applySettings(portfolioData.settings);
-  loadSavedEdits();
-  buildFilterBar(portfolioData.categories);
-  filteredProjects = portfolioData.projects || [];
-  renderGallery();
-  renderAllGallery();
-  initCounters();
-  try { await loadSavedMedia(); } catch(e) { console.warn(e); }
-  try { initSkillShowcase(); } catch(e){ console.warn(e); }
-  try { initProjectShowcaseSlider(); } catch(e){ console.warn(e); }
+  if (portfolioData) {
+    try { applySettings(portfolioData.settings); } catch(e) { console.warn('applySettings error:', e); }
+    try { loadSavedEdits(); } catch(e) { console.warn('loadSavedEdits error:', e); }
+    try { buildFilterBar(portfolioData.categories); } catch(e) { console.warn('buildFilterBar error:', e); }
+    filteredProjects = portfolioData.projects || [];
+    try { renderGallery(); } catch(e) { console.warn('renderGallery error:', e); }
+    try { renderAllGallery(); } catch(e) { console.warn('renderAllGallery error:', e); }
+    try { initCounters(); } catch(e) { console.warn('initCounters error:', e); }
+  }
+
+  try { await loadSavedMedia(); } catch(e) { console.warn('loadSavedMedia error:', e); }
+  try { initSkillShowcase(); } catch(e) { console.warn('initSkillShowcase error:', e); }
+  try { initProjectShowcaseSlider(); } catch(e) { console.warn('initProjectShowcaseSlider error:', e); }
   setTimeout(initCursor, 100);
 }
 
@@ -1903,13 +1908,21 @@ async function loadSavedMedia() {
     const fromDB = await dbGetAllItems();
     if (fromDB && fromDB.length > 0) {
       fromDB.forEach(item => {
-        mediaList.push({
-          id:      item.id,
-          name:    item.name,
-          type:    item.type,
-          url:     URL.createObjectURL(item.blob),
-          rawBlob: item.blob
-        });
+        // Exclude skill_media items which are meant for Tools & Skills section
+        if (item.id && String(item.id).startsWith('skill_media_')) return;
+        if (item.blob && typeof URL.createObjectURL === 'function') {
+          try {
+            mediaList.push({
+              id:      item.id,
+              name:    item.name,
+              type:    item.type,
+              url:     URL.createObjectURL(item.blob),
+              rawBlob: item.blob
+            });
+          } catch(err) {
+            console.warn('createObjectURL skipped invalid item:', err);
+          }
+        }
       });
     }
   } catch(e) { console.warn('IDB load error:', e); }
@@ -2938,7 +2951,7 @@ window.nextSkillSubImage = nextSkillSubImage;
 
 function getSkillToolData(idx) {
   const saved = getSavedData()?.skillMedia?.[idx] || portfolioData?.settings?.skillMedia?.[idx];
-  if (saved && saved.url) {
+  if (saved && saved.url && !String(saved.url).startsWith('blob:')) {
     return { ...DEFAULT_SKILL_TOOLS[idx], ...saved };
   }
   return DEFAULT_SKILL_TOOLS[idx] || DEFAULT_SKILL_TOOLS[0];
@@ -3214,8 +3227,8 @@ let pendingSlideMedia          = null;
 function getProjects() {
   const saved = getSavedData();
   if (saved && saved.projects && Array.isArray(saved.projects) && saved.projects.length > 0) {
-    // If local cache contains old youtube demo entries or has less than 10 items, purge it to show fresh 25 client examples
-    if (saved.projects.some(p => p.type === 'youtube' || p.id === 'demo-3') || saved.projects.length < 15) {
+    // If local cache contains old demo entries, missing src, expired blobs, or less than 15 items, purge it to show clean portfolioData
+    if (saved.projects.some(p => p.type === 'youtube' || p.id === 'demo-3' || !p.src || String(p.src).startsWith('blob:')) || saved.projects.length < 15) {
       delete saved.projects;
       saveData(saved);
     } else {

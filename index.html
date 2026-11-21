@@ -301,16 +301,16 @@ window.addEventListener('error', function(e) {
         <div class="about-img-container">
           <!-- 3D GLB MODEL VIEWER -->
           <div class="glb-viewer-wrap" id="glbViewerWrap">
-            <div class="glb-placeholder" id="glbPlaceholder">
+            <div class="glb-placeholder" id="glbPlaceholder" style="display:none;">
               <i class="fas fa-cube"></i>
               <span>3D Models & Animations Upload Karein</span>
-              <p class="glb-hint">GLB / GLTF 3D Models aur MP4 / WebM Animations<br>Auto-rotate, 360Â° orbit aur auto-play hoga!</p>
+              <p class="glb-hint">GLB / GLTF 3D Models aur MP4 / WebM Animations<br>Auto-rotate, 360° orbit aur auto-play hoga!</p>
               <label class="glb-upload-btn" id="glbUploadLabel">
                 <i class="fas fa-upload"></i> Upload 3D Models / Animations
                 <input type="file" id="glbFileInput" accept=".glb,.gltf,.mp4,.webm,.jpg,.jpeg,.png,.webp" multiple style="display:none"/>
               </label>
             </div>
-            <div class="glb-viewer-container" id="glbViewerContainer" style="display:none">
+            <div class="glb-viewer-container" id="glbViewerContainer" style="display:block;">
               <model-viewer
                 id="mainModelViewer"
                 auto-rotate
@@ -323,16 +323,17 @@ window.addEventListener('error', function(e) {
                 exposure="1"
                 autoplay
                 loading="eager"
-                style="width:100%;height:100%;display:block;background:transparent"
+                style="width:100%;height:100%;display:none;background:transparent;"
               ></model-viewer>
               <video
                 id="mainVideoViewer"
+                src="media/4.mp4"
                 autoplay
                 loop
                 muted
                 playsinline
                 controls
-                style="display:none;width:100%;height:100%;object-fit:contain;background:#05050a;"
+                style="display:block;width:100%;height:100%;object-fit:contain;background:#05050a;"
               ></video>
               <img
                 id="mainImageViewer"
@@ -427,7 +428,7 @@ window.addEventListener('error', function(e) {
 
           <!-- Video / 3D Canvas / Image Stage -->
           <div class="viewport-stage" id="viewportStage">
-            <video id="vpVideo" autoplay muted loop playsinline></video>
+            <video id="vpVideo" src="media/hvac_samply_.mp4" autoplay muted loop playsinline style="width:100%;height:100%;object-fit:cover;display:block;"></video>
             <model-viewer id="vpModel" auto-rotate camera-controls shadow-intensity="1.5" exposure="1.1" style="display:none; width:100%; height:100%;"></model-viewer>
             <img id="vpImage" style="display:none; width:100%; height:100%; object-fit:contain; background:#04060e;" alt="Render Preview" />
             <div class="vp-loading" id="vpLoading" style="display:none;"><i class="fas fa-spinner fa-spin"></i></div>
@@ -597,7 +598,7 @@ window.addEventListener('error', function(e) {
             <i class="fas fa-image"></i> <span>RENDER</span>
           </div>
 
-          <img id="sliderImg" src="" alt="Project Render" style="display:none;" />
+          <img id="sliderImg" src="https://raw.githubusercontent.com/designcorner488/designcorner488.github.io/master/images/1793906345433-44.jpeg" alt="Project Render" style="display:block;width:100%;height:100%;object-fit:cover;" />
           <video id="sliderVideo" autoplay muted loop playsinline style="display:none;"></video>
           <model-viewer id="sliderGlb" auto-rotate camera-controls shadow-intensity="1.5" exposure="1.1" style="display:none; width:100%; height:100%;"></model-viewer>
           <iframe id="sliderIframe" style="display:none; width:100%; height:100%; border:none;" allowfullscreen></iframe>
@@ -622,17 +623,20 @@ window.addEventListener('error', function(e) {
           <div>
             <div class="slider-details-header">
               <span class="slider-cat-pill" id="sliderCatPill">ARCHITECTURE</span>
-              <span class="slider-counter" id="sliderCounter">01 / 07</span>
+              <span class="slider-counter" id="sliderCounter">01 / 17</span>
             </div>
 
-            <h3 class="slider-title" id="sliderTitle">Modern Architecture Villa</h3>
+            <h3 class="slider-title" id="sliderTitle">Modern Hillside Villa &amp; Cantilever Deck</h3>
 
             <div class="slider-meta-tags" id="sliderMetaTags">
-              <!-- populated by JS -->
+              <span class="slider-tag">Blender 4.2</span>
+              <span class="slider-tag">Revit BIM</span>
+              <span class="slider-tag">D5 Render</span>
+              <span class="slider-tag">Exterior 4K</span>
             </div>
 
             <div class="slider-desc" id="sliderDesc">
-              Photorealistic architectural visualization with modern aesthetics.
+              Contemporary two-story luxury residence designed with spatial ergonomics and seamless indoor-outdoor living. Features expansive floor-to-ceiling curtain glass, evening perimeter lighting, swimming pool deck, and timber acoustic cladding.
             </div>
           </div>
 
@@ -914,7 +918,6 @@ window.addEventListener('error', function(e) {
   </div>
 </div>
 
-<script src="script.js?v=23.1"></script>
 <!-- REORDER MODELS & ANIMATIONS MODAL -->
 <div class="modal-overlay" id="glbReorderModal">
   <div class="modal-box" style="max-width:520px;">
@@ -1133,6 +1136,8 @@ window.addEventListener('error', function(e) {
     </div>
   </div>
 </div>
+
+<script src="script.js?v=24.0"></script>
 </body>
 </html>
 
