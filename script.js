@@ -1691,7 +1691,7 @@ async function dbDeleteItem(id) {
    ============================================================ */
 let mediaList = [];
 let mediaIndex = 0;
-const MEDIA_MAX = 30;
+const MEDIA_MAX = 100;
 
 // Default 3D model fallback so it never renders blank
 const DEFAULT_SAMPLE_MODEL = {
@@ -1874,11 +1874,12 @@ async function handleUploadFiles(files) {
     const file = files[i];
     const isModel = file.name.match(/\.(glb|gltf)$/i);
     const isVideo = file.name.match(/\.(mp4|webm)$/i);
-    if (!isModel && !isVideo) continue;
+    const isImage = file.name.match(/\.(jpg|jpeg|png|webp|gif)$/i);
+    if (!isModel && !isVideo && !isImage) continue;
 
     const item = {
       name: file.name.replace(/\.[^.]+$/, ''),
-      type: isModel ? 'glb' : 'video',
+      type: isModel ? 'glb' : (isVideo ? 'video' : 'image'),
       blob: file,
       rawBlob: file
     };
@@ -1963,6 +1964,7 @@ function setMediaIndex(idx) {
 
   const mv  = document.getElementById('mainModelViewer');
   const vid = document.getElementById('mainVideoViewer');
+  const img = document.getElementById('mainImageViewer');
   const counter = document.getElementById('glbCounter');
   const name    = document.getElementById('glbModelName');
   const prevBtn = document.getElementById('glbPrevBtn');
@@ -1972,11 +1974,19 @@ function setMediaIndex(idx) {
   if (name)    name.textContent    = current.name || '3D Asset';
 
   if (current.type === 'video') {
-    if (mv) mv.style.display = 'none';
+    if (mv)  mv.style.display  = 'none';
+    if (img) img.style.display = 'none';
     if (vid) {
       vid.style.display = 'block';
       vid.src = current.url;
       vid.play().catch(() => {});
+    }
+  } else if (current.type === 'image') {
+    if (vid) { vid.pause(); vid.style.display = 'none'; }
+    if (mv)  mv.style.display = 'none';
+    if (img) {
+      img.style.display = 'block';
+      img.src = current.url;
     }
   } else {
     // 3D Model GLB
@@ -1984,6 +1994,7 @@ function setMediaIndex(idx) {
       vid.pause();
       vid.style.display = 'none';
     }
+    if (img) img.style.display = 'none';
     if (mv) {
       mv.style.display = 'block';
       mv.setAttribute('src', current.url);

@@ -307,7 +307,7 @@ window.addEventListener('error', function(e) {
               <p class="glb-hint">GLB / GLTF 3D Models aur MP4 / WebM Animations<br>Auto-rotate, 360Â° orbit aur auto-play hoga!</p>
               <label class="glb-upload-btn" id="glbUploadLabel">
                 <i class="fas fa-upload"></i> Upload 3D Models / Animations
-                <input type="file" id="glbFileInput" accept=".glb,.gltf,.mp4,.webm" multiple style="display:none"/>
+                <input type="file" id="glbFileInput" accept=".glb,.gltf,.mp4,.webm,.jpg,.jpeg,.png,.webp" multiple style="display:none"/>
               </label>
             </div>
             <div class="glb-viewer-container" id="glbViewerContainer" style="display:none">
@@ -334,6 +334,11 @@ window.addEventListener('error', function(e) {
                 controls
                 style="display:none;width:100%;height:100%;object-fit:contain;background:#05050a;"
               ></video>
+              <img
+                id="mainImageViewer"
+                style="display:none;width:100%;height:100%;object-fit:contain;background:#05050a;border-radius:12px;"
+                alt="3D Visual Render"
+              />
               <div class="glb-nav-overlay">
                 <button class="glb-nav-btn glb-prev" id="glbPrevBtn" title="Previous"><i class="fas fa-chevron-left"></i></button>
                 <div class="glb-info">
