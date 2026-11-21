@@ -108,70 +108,82 @@
   },
   "_media": [
     {
-      "name": "hvac_samply_.mp4",
-      "displayName": "hvac samply ",
-      "type": "video",
-      "url": "https://designcorner488.github.io/media/hvac_samply_.mp4"
-    },
-    {
-      "name": "Meshy_AI_Ornate_Wooden_Dining__1031072807_texture.glb",
-      "displayName": "Meshy_AI_Ornate_Wooden_Dining__1031072807_texture",
-      "type": "glb",
-      "url": "https://designcorner488.github.io/media/Meshy_AI_Ornate_Wooden_Dining__1031072807_texture.glb"
-    },
-    {
-      "name": "2_7.mp4",
-      "displayName": "2_7",
-      "type": "video",
-      "url": "https://designcorner488.github.io/media/2_7.mp4"
-    },
-    {
-      "name": "2_2.mp4",
-      "displayName": "2_2",
-      "type": "video",
-      "url": "https://github.com/designcorner488/designcorner488.github.io/releases/download/v1.0/2_2.mp4"
-    },
-    {
-      "name": "13.mp4",
-      "displayName": "13",
-      "type": "video",
-      "url": "https://github.com/designcorner488/designcorner488.github.io/releases/download/v1.0/13.mp4"
-    },
-    {
-      "name": "fan_1.mp4",
-      "displayName": "fan 1",
-      "type": "video",
-      "url": "https://designcorner488.github.io/media/fan_1.mp4"
-    },
-    {
-      "name": "2_3.mp4",
-      "displayName": "2_3",
-      "type": "video",
-      "url": "https://designcorner488.github.io/media/2_3.mp4"
-    },
-    {
-      "name": "2_4.mp4",
-      "displayName": "2_4",
-      "type": "video",
-      "url": "https://designcorner488.github.io/media/2_4.mp4"
-    },
-    {
       "name": "4.mp4",
       "displayName": "4",
       "type": "video",
       "url": "https://designcorner488.github.io/media/4.mp4"
     },
     {
-      "name": "all_in_one_try.mp4",
-      "displayName": "all in one try",
-      "type": "video",
-      "url": "https://github.com/designcorner488/designcorner488.github.io/releases/download/v1.0/all_in_one_try.mp4"
+      "name": "snaks_bar.glb",
+      "displayName": "snaks bar",
+      "type": "glb",
+      "url": "https://github.com/designcorner488/designcorner488.github.io/releases/download/v1.0/snaks_bar.glb"
     },
     {
-      "name": "bim_animation_1.mp4",
-      "displayName": "bim animation 1",
+      "name": "Modern_Chair_1.glb",
+      "displayName": "Modern Chair 1",
+      "type": "glb",
+      "url": "https://designcorner488.github.io/media/Modern_Chair_1.glb"
+    },
+    {
+      "name": "sofa.glb",
+      "displayName": "sofa",
+      "type": "glb",
+      "url": "https://designcorner488.github.io/media/sofa.glb"
+    },
+    {
+      "name": "object_0.glb",
+      "displayName": "object_0",
+      "type": "glb",
+      "url": "https://designcorner488.github.io/media/object_0.glb"
+    },
+    {
+      "name": "lamp.glb",
+      "displayName": "lamp",
+      "type": "glb",
+      "url": "https://designcorner488.github.io/media/lamp.glb"
+    },
+    {
+      "name": "object_0__3_.glb",
+      "displayName": "object_0 (3)",
+      "type": "glb",
+      "url": "https://designcorner488.github.io/media/object_0__3_.glb"
+    },
+    {
+      "name": "lamp_2.glb",
+      "displayName": "lamp 2",
+      "type": "glb",
+      "url": "https://designcorner488.github.io/media/lamp_2.glb"
+    },
+    {
+      "name": "1.mp4",
+      "displayName": "1",
       "type": "video",
-      "url": "https://designcorner488.github.io/media/bim_animation_1.mp4"
+      "url": "https://designcorner488.github.io/media/1.mp4"
+    },
+    {
+      "name": "2.mp4",
+      "displayName": "2",
+      "type": "video",
+      "url": "https://designcorner488.github.io/media/2.mp4"
+    },
+    {
+      "name": "3.mp4",
+      "displayName": "3",
+      "type": "video",
+      "url": "https://designcorner488.github.io/media/3.mp4"
+    },
+    {
+      "name": "portfolio_1_.mp4",
+      "displayName": "portfolio 1 ",
+      "type": "video",
+      "url": "https://designcorner488.github.io/media/portfolio_1_.mp4"
+    },
+    {
+      "name": "portfolio_2_.mp4",
+      "displayName": "portfolio 2 ",
+      "type": "video",
+      "url": "https://designcorner488.github.io/media/portfolio_2_.mp4"
     }
   ],
   "categories": [
