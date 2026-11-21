@@ -92,7 +92,19 @@
     "cEmail": "designcorner488@gmail.com",
     "cPhone": "+923392332272",
     "cLocation": "Pakistan",
-    "cAvail": "Monâ€“Sat, 9am â€“ 7pm PKT"
+    "cAvail": "Monâ€“Sat, 9am â€“ 7pm PKT",
+    "tool1Title": "Blender 3D",
+    "tool1Desc": "Modeling, VFX &amp; Cycles",
+    "tool2Title": "Autodesk Revit",
+    "tool2Desc": "BIM &amp; Arch Documentation",
+    "tool3Title": "D5 Render",
+    "tool3Desc": "Real-time Photorealism",
+    "tool4Title": "3D Animation",
+    "tool4Desc": "Motion Design &amp; VFX",
+    "tool5Title": "Architecture",
+    "tool5Desc": "Urban &amp; Interior Viz",
+    "tool6Title": "Product Design",
+    "tool6Desc": "3D Prototyping &amp; Models"
   },
   "_media": [
     {
@@ -258,23 +270,6 @@
       "date": "2026-08-10"
     },
     {
-      "id": "arch_5_urban_center",
-      "title": "Metropolitan Mixed-Use Civic Center",
-      "category": "architecture",
-      "type": "image",
-      "src": "https://images.unsplash.com/photo-1486325212027-8081e485255e?w=1600",
-      "thumbnail": "https://images.unsplash.com/photo-1486325212027-8081e485255e?w=600",
-      "description": "Large-scale urban commercial high-rise master plan featuring high-performance architectural glazing, plaza landscaping, pedestrian connectivity, and atmospheric evening lighting.",
-      "tags": [
-        "Urban Planning",
-        "Commercial Viz",
-        "3ds Max / Blender",
-        "D5 Render"
-      ],
-      "featured": true,
-      "date": "2026-07-01"
-    },
-    {
       "id": "int_1_luxury_lounge",
       "title": "High-End Minimalist Penthouse Living Suite",
       "category": "interior",
@@ -343,23 +338,6 @@
       "date": "2026-07-14"
     },
     {
-      "id": "int_5_japandi_bedroom",
-      "title": "Japandi Sanctuary Master Bedroom",
-      "category": "interior",
-      "type": "image",
-      "src": "https://images.unsplash.com/photo-1616486338812-3dadae4b4ace?w=1600",
-      "thumbnail": "https://images.unsplash.com/photo-1616486338812-3dadae4b4ace?w=600",
-      "description": "A tranquil fusion of Japanese wabi-sabi and Scandinavian warmth. Incorporates natural white oak slats, low-profile tatami platform bed, woven tatami textures, and serene indirect lighting.",
-      "tags": [
-        "Japandi Style",
-        "Bedroom Visualization",
-        "Blender 4.x",
-        "Material Ergonomics"
-      ],
-      "featured": true,
-      "date": "2026-06-22"
-    },
-    {
       "id": "prod_1_damaged_helmet_3d",
       "title": "Industrial High-Tech Headgear 3D Model",
       "category": "product",
@@ -394,23 +372,6 @@
       "date": "2026-09-18"
     },
     {
-      "id": "prod_3_velvet_armchair",
-      "title": "Emerald Velvet Accent Chair Studio Viz",
-      "category": "product",
-      "type": "image",
-      "src": "https://images.unsplash.com/photo-1555041469-a586c61ea9bc?w=1600",
-      "thumbnail": "https://images.unsplash.com/photo-1555041469-a586c61ea9bc?w=600",
-      "description": "Commercial product studio rendering showcasing tailored deep emerald velvet upholstery, solid oak legs with brass caps, and photorealistic fabric displacement.",
-      "tags": [
-        "Furniture Design",
-        "Studio Lighting",
-        "Product Viz",
-        "Blender Cycles"
-      ],
-      "featured": true,
-      "date": "2026-08-30"
-    },
-    {
       "id": "prod_4_water_bottle_3d",
       "title": "Ergonomic Vacuum Thermal Flask 3D",
       "category": "product",
@@ -428,57 +389,6 @@
       "date": "2026-07-25"
     },
     {
-      "id": "prod_5_luxury_watch",
-      "title": "Titanium Chronograph Wristwatch Macro",
-      "category": "product",
-      "type": "image",
-      "src": "https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=1600",
-      "thumbnail": "https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=600",
-      "description": "Hyper-realistic macro product visualization of a luxury timepiece with brushed Grade-5 titanium case, anti-reflective domed sapphire glass, and intricate mechanical sub-dials.",
-      "tags": [
-        "Horology Viz",
-        "Precision Macro",
-        "Hard Surface Modeling",
-        "Cycles 4K"
-      ],
-      "featured": true,
-      "date": "2026-06-19"
-    },
-    {
-      "id": "graph_1_brand_identity",
-      "title": "Architectural Studio Brand Identity System",
-      "category": "graphics",
-      "type": "image",
-      "src": "https://images.unsplash.com/photo-1626785774573-4b799315345d?w=1600",
-      "thumbnail": "https://images.unsplash.com/photo-1626785774573-4b799315345d?w=600",
-      "description": "Complete corporate identity system for an architecture and spatial design practice. Features dynamic parametric logomarks, embossed stationery, color systems, and digital guidelines.",
-      "tags": [
-        "Brand Identity",
-        "Graphic Design",
-        "Typography",
-        "Studio Branding"
-      ],
-      "featured": true,
-      "date": "2026-10-08"
-    },
-    {
-      "id": "graph_2_creative_suite",
-      "title": "Digital Creative Suite Visual Packaging",
-      "category": "graphics",
-      "type": "image",
-      "src": "https://images.unsplash.com/photo-1507238691740-187a5b1d37b8?w=1600",
-      "thumbnail": "https://images.unsplash.com/photo-1507238691740-187a5b1d37b8?w=600",
-      "description": "Graphic presentation mockup showcasing specialized Adobe Creative Cloud, Illustrator, and After Effects workflows customized for architectural animation post-production.",
-      "tags": [
-        "Visual Communication",
-        "App Iconography",
-        "Art Direction",
-        "Photoshop/Illustrator"
-      ],
-      "featured": true,
-      "date": "2026-09-04"
-    },
-    {
       "id": "graph_3_parametric_poster",
       "title": "Generative Geometry Exhibition Poster Series",
       "category": "graphics",
@@ -494,40 +404,6 @@
       ],
       "featured": true,
       "date": "2026-08-15"
-    },
-    {
-      "id": "graph_4_spatial_wayfinding",
-      "title": "Environmental Signage & BIM Wayfinding",
-      "category": "graphics",
-      "type": "image",
-      "src": "https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=1600",
-      "thumbnail": "https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=600",
-      "description": "Modern environmental signage layout designed for corporate headquarters. Integrates high-contrast directional typography, pictograms, and tactile ADA architectural signage.",
-      "tags": [
-        "Wayfinding",
-        "Environmental Graphics",
-        "Infographics",
-        "Architectural Signage"
-      ],
-      "featured": true,
-      "date": "2026-07-29"
-    },
-    {
-      "id": "graph_5_architecture_book",
-      "title": "Architectural Monograph Editorial Layout",
-      "category": "graphics",
-      "type": "image",
-      "src": "https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?w=1600",
-      "thumbnail": "https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?w=600",
-      "description": "Hardcover editorial layout celebrating modern residential projects. Crafted with strict Swiss grid systems, generous white space, and rich architectural photography printing specifications.",
-      "tags": [
-        "Editorial Design",
-        "Book Design",
-        "Print Production",
-        "Layout Design"
-      ],
-      "featured": true,
-      "date": "2026-06-11"
     },
     {
       "id": "anim_1_hvac_walkthrough",
