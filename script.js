@@ -2854,48 +2854,74 @@ const DEFAULT_SKILL_TOOLS = [
     name: 'Blender 3D',
     tag: 'CYCLES & EEVEE RENDER',
     type: 'video',
-    url: 'https://designcorner488.github.io/media/hvac_samply_.mp4'
+    url: 'media/hvac_samply_.mp4',
+    gallery: ['media/hvac_samply_.mp4', 'media/bim_animation_1.mp4']
   },
   {
     idx: 1,
     name: 'Autodesk Revit',
     tag: 'BIM ARCHITECTURE',
-    type: 'video',
-    url: 'https://designcorner488.github.io/media/bim_animation_1.mp4'
+    type: 'image',
+    url: 'images/part 1.png',
+    gallery: ['images/part 1.png', 'images/image.png']
   },
   {
     idx: 2,
     name: 'D5 Render',
     tag: 'REAL-TIME PHOTOREAL',
-    type: 'video',
-    url: 'https://designcorner488.github.io/media/2_7.mp4'
+    type: 'image',
+    url: 'images/r1.jpg',
+    gallery: ['images/r1.jpg', 'images/r2.jpg', 'images/r3.jpg']
   },
   {
     idx: 3,
     name: '3D Animation',
     tag: 'CINEMATIC MOTION',
     type: 'video',
-    url: 'https://github.com/designcorner488/designcorner488.github.io/releases/download/v1.0/all_in_one_try.mp4'
+    url: 'media/4.mp4',
+    gallery: ['media/4.mp4', 'media/fan_1.mp4']
   },
   {
     idx: 4,
     name: 'Architecture',
-    tag: 'FLYTHROUGH & 3D VIZ',
-    type: 'video',
-    url: 'https://designcorner488.github.io/media/2_3.mp4'
+    tag: 'URBAN & INTERIOR VIZ',
+    type: 'image',
+    url: 'images/r4.jpg',
+    gallery: ['images/r4.jpg', 'images/r5.jpg', 'images/r6.jpg']
   },
   {
     idx: 5,
     name: 'Product Design',
     tag: 'INTERACTIVE 3D MODEL',
     type: 'glb',
-    url: 'https://designcorner488.github.io/media/Meshy_AI_Ornate_Wooden_Dining__1031072807_texture.glb'
+    url: 'media/snaks_bar.glb',
+    gallery: ['media/snaks_bar.glb']
   }
 ];
 
 let currentSkillToolIdx = 0;
+let currentSkillSubIdx = 0;
 let skillAutoTimer = null;
 let currentUploadingToolIdx = 0;
+
+function prevSkillSubImage() {
+  const tool = getSkillToolData(currentSkillToolIdx);
+  if (!tool.gallery || tool.gallery.length <= 1) return;
+  currentSkillSubIdx = (currentSkillSubIdx - 1 + tool.gallery.length) % tool.gallery.length;
+  renderSkillMedia(tool, currentSkillSubIdx);
+  if (!document.body.classList.contains('edit-mode')) startSkillAutoTimer();
+}
+
+function nextSkillSubImage() {
+  const tool = getSkillToolData(currentSkillToolIdx);
+  if (!tool.gallery || tool.gallery.length <= 1) return;
+  currentSkillSubIdx = (currentSkillSubIdx + 1) % tool.gallery.length;
+  renderSkillMedia(tool, currentSkillSubIdx);
+  if (!document.body.classList.contains('edit-mode')) startSkillAutoTimer();
+}
+
+window.prevSkillSubImage = prevSkillSubImage;
+window.nextSkillSubImage = nextSkillSubImage;
 
 function getSkillToolData(idx) {
   const saved = getSavedData()?.skillMedia?.[idx] || portfolioData?.settings?.skillMedia?.[idx];
@@ -2908,6 +2934,7 @@ function getSkillToolData(idx) {
 function selectSkillTool(idx, manual = true) {
   if (idx < 0 || idx >= DEFAULT_SKILL_TOOLS.length) idx = 0;
   currentSkillToolIdx = idx;
+  currentSkillSubIdx = 0;
 
   const tool = getSkillToolData(idx);
 
@@ -2920,7 +2947,6 @@ function selectSkillTool(idx, manual = true) {
   // Update Viewport HUD Info
   const nameEl = document.getElementById('vpToolName');
   const tagEl  = document.getElementById('vpToolTag');
-  const typeEl = document.getElementById('vpTypeBadge');
   const btnToolEl = document.getElementById('vpUploadBtnToolName');
 
   if (nameEl) nameEl.textContent = tool.name;
@@ -2933,42 +2959,75 @@ function selectSkillTool(idx, manual = true) {
     dot.classList.toggle('active', i === idx);
   });
 
-  // Switch Media (Video vs 3D Model)
+  renderSkillMedia(tool, 0);
+
+  if (manual && !document.body.classList.contains('edit-mode')) {
+    startSkillAutoTimer();
+  }
+}
+
+function renderSkillMedia(tool, subIdx) {
+  const mediaUrl = (tool.gallery && tool.gallery[subIdx]) ? tool.gallery[subIdx] : tool.url;
+  const isGlb = tool.type === 'glb' || (mediaUrl && mediaUrl.toLowerCase().includes('.glb'));
+  const isVideo = tool.type === 'video' || (mediaUrl && (mediaUrl.toLowerCase().includes('.mp4') || mediaUrl.toLowerCase().includes('.webm')));
+
+  const typeEl = document.getElementById('vpTypeBadge');
   const video = document.getElementById('vpVideo');
   const model = document.getElementById('vpModel');
+  const img   = document.getElementById('vpImage');
   const hint3d = document.getElementById('vp3dHint');
   const loader = document.getElementById('vpLoading');
+  const subNav = document.getElementById('vpSubNav');
+  const subCounter = document.getElementById('vpSubCounter');
 
-  const isGlb = tool.type === 'glb' || (tool.url && tool.url.toLowerCase().includes('.glb'));
+  // Sub nav indicator
+  if (subNav && subCounter) {
+    if (tool.gallery && tool.gallery.length > 1) {
+      subNav.style.display = 'flex';
+      subCounter.textContent = `${subIdx + 1} / ${tool.gallery.length}`;
+    } else {
+      subNav.style.display = 'none';
+    }
+  }
 
   if (typeEl) {
-    typeEl.innerHTML = isGlb 
-      ? '<i class="fas fa-cube"></i> 3D GLB MODEL' 
-      : '<i class="fas fa-video"></i> MP4 VIDEO';
-    typeEl.style.color = isGlb ? '#00f0ff' : '#a855f7';
-    typeEl.style.borderColor = isGlb ? 'rgba(0,240,255,0.4)' : 'rgba(168,85,247,0.4)';
+    if (isGlb) {
+      typeEl.innerHTML = '<i class="fas fa-cube"></i> 3D GLB MODEL';
+      typeEl.style.color = '#00f0ff';
+      typeEl.style.borderColor = 'rgba(0,240,255,0.4)';
+    } else if (isVideo) {
+      typeEl.innerHTML = '<i class="fas fa-video"></i> MP4 VIDEO';
+      typeEl.style.color = '#a855f7';
+      typeEl.style.borderColor = 'rgba(168,85,247,0.4)';
+    } else {
+      typeEl.innerHTML = '<i class="fas fa-image"></i> 4K RENDER';
+      typeEl.style.color = '#38bdf8';
+      typeEl.style.borderColor = 'rgba(56,189,248,0.4)';
+    }
   }
 
   if (isGlb) {
     if (video) { video.pause(); video.style.display = 'none'; }
+    if (img)   { img.style.display = 'none'; }
     if (model) {
       model.style.display = 'block';
-      if (model.src !== tool.url) {
+      if (model.src !== mediaUrl) {
         if (loader) loader.style.display = 'flex';
-        model.src = tool.url;
+        model.src = mediaUrl;
         model.onload = () => { if (loader) loader.style.display = 'none'; };
         setTimeout(() => { if (loader) loader.style.display = 'none'; }, 1800);
       }
     }
     if (hint3d) hint3d.style.display = 'flex';
-  } else {
+  } else if (isVideo) {
     if (model) { model.style.display = 'none'; }
     if (hint3d) hint3d.style.display = 'none';
+    if (img)   { img.style.display = 'none'; }
     if (video) {
       video.style.display = 'block';
-      if (video.src !== tool.url) {
+      if (video.src !== mediaUrl && !video.src.endsWith(mediaUrl)) {
         if (loader) loader.style.display = 'flex';
-        video.src = tool.url;
+        video.src = mediaUrl;
         video.onloadeddata = () => { if (loader) loader.style.display = 'none'; };
         video.play().catch(() => {});
         setTimeout(() => { if (loader) loader.style.display = 'none'; }, 1000);
@@ -2976,7 +3035,17 @@ function selectSkillTool(idx, manual = true) {
         video.play().catch(() => {});
       }
     }
+  } else {
+    // Image render
+    if (model) { model.style.display = 'none'; }
+    if (hint3d) hint3d.style.display = 'none';
+    if (video) { video.pause(); video.style.display = 'none'; }
+    if (img) {
+      img.style.display = 'block';
+      img.src = mediaUrl;
+    }
   }
+}
 
   if (manual && !document.body.classList.contains('edit-mode')) {
     startSkillAutoTimer();
