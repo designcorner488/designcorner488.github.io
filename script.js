@@ -19,6 +19,137 @@ let currentSocialPlatform = '';
 let currentSoftwareTags = ['Blender', 'Revit', 'D5 Render', 'Animation'];
 let authSuccessCallback = null;
 
+/* ============================================================
+   SLIDE TIMER SETTINGS — user can adjust per section in Edit Mode
+   ============================================================ */
+const TIMER_KEY = 'dc_slide_timers';
+function getSlideTimers() {
+  try {
+    const local = JSON.parse(localStorage.getItem(TIMER_KEY) || '{}');
+    if (local && Object.keys(local).length > 0) return local;
+  } catch(e) {}
+  if (portfolioData?.settings?.slideTimers) {
+    return portfolioData.settings.slideTimers;
+  }
+  return { about: 5, skills: 5, projects: 5, addons: 6, hero: 5 };
+}
+function saveSlideTimers(obj) {
+  localStorage.setItem(TIMER_KEY, JSON.stringify(obj));
+  if (portfolioData) {
+    portfolioData.settings = portfolioData.settings || {};
+    portfolioData.settings.slideTimers = obj;
+  }
+}
+function getTimerMs(section, defaultMs) {
+  const t = getSlideTimers();
+  return t[section] ? (parseFloat(t[section]) * 1000) : defaultMs;
+}
+
+function applySlideTimersLive() {
+  PROJECT_SLIDE_DURATION = getTimerMs('projects', 5000);
+  ADDON_AUTO_INTERVAL = getTimerMs('addons', 6000);
+
+  const skillSec = Math.round(getTimerMs('skills', 5000) / 1000);
+  const projSec = Math.round(getTimerMs('projects', 5000) / 1000);
+  const vpAuto = document.querySelector('.vp-auto-text');
+  if (vpAuto) vpAuto.innerHTML = `<i class="fas fa-rotate"></i> ${skillSec}s AUTO-CYCLE`;
+  const autoTxt = document.getElementById('sliderAutoText');
+  if (autoTxt) autoTxt.textContent = `${projSec}s AUTO`;
+
+  if (typeof startSkillAutoTimer === 'function' && !document.body.classList.contains('edit-mode')) {
+    startSkillAutoTimer();
+  }
+  if (typeof startProjectSliderAutoplay === 'function') {
+    startProjectSliderAutoplay();
+  }
+  if (typeof startScifiTimer === 'function' && !document.body.classList.contains('edit-mode')) {
+    startScifiTimer();
+  }
+  if (typeof startAddonAutoSlide === 'function') {
+    startAddonAutoSlide();
+  }
+}
+
+function openSlideTimerModal() {
+  const t = getSlideTimers();
+  const defaults = { about: 5, skills: 5, projects: 5, addons: 6, hero: 5 };
+  Object.keys(defaults).forEach(k => {
+    const el = document.getElementById('timer' + k.charAt(0).toUpperCase() + k.slice(1));
+    if (el) el.value = t[k] || defaults[k];
+  });
+  const modal = document.getElementById('slideTimerModal');
+  if (modal) modal.style.display = 'flex';
+}
+function closeSlideTimerModal() {
+  const modal = document.getElementById('slideTimerModal');
+  if (modal) modal.style.display = 'none';
+}
+function stepTimer(section, delta) {
+  const id = 'timer' + section.charAt(0).toUpperCase() + section.slice(1);
+  const el = document.getElementById(id);
+  if (!el) return;
+  let val = parseFloat(el.value) + delta;
+  val = Math.min(30, Math.max(1, val));
+  el.value = val;
+}
+function previewTimer(section, val) { /* live preview */ }
+function saveAllTimers() {
+  const sections = ['about', 'skills', 'projects', 'addons', 'hero'];
+  const t = {};
+  sections.forEach(k => {
+    const id = 'timer' + k.charAt(0).toUpperCase() + k.slice(1);
+    const el = document.getElementById(id);
+    if (el) t[k] = Math.min(30, Math.max(1, parseFloat(el.value) || 5));
+  });
+  saveSlideTimers(t);
+  applySlideTimersLive();
+  closeSlideTimerModal();
+  showToast('⏱️ Timers saved! Live publish ho raha hai...');
+  autoPublishAfterUpload('Slide Timers');
+}
+function resetAllTimers() {
+  localStorage.removeItem(TIMER_KEY);
+  const def = { about: 5, skills: 5, projects: 5, addons: 6, hero: 5 };
+  saveSlideTimers(def);
+  applySlideTimersLive();
+  ['About','Skills','Projects','Addons','Hero'].forEach((k) => {
+    const el = document.getElementById('timer' + k);
+    if (el) el.value = k === 'Addons' ? 6 : 5;
+  });
+  showToast('⏱️ Timers default par reset ho gaye!');
+  autoPublishAfterUpload('Default Slide Timers');
+}
+window.openSlideTimerModal = openSlideTimerModal;
+window.closeSlideTimerModal = closeSlideTimerModal;
+window.stepTimer = stepTimer;
+window.previewTimer = previewTimer;
+window.saveAllTimers = saveAllTimers;
+window.resetAllTimers = resetAllTimers;
+window.applySlideTimersLive = applySlideTimersLive;
+
+/* ============================================================
+   AUTO-PUBLISH HELPER — uploads + publishes after a section change
+   ============================================================ */
+let _autoPublishDebounce = null;
+async function autoPublishAfterUpload(label) {
+  clearTimeout(_autoPublishDebounce);
+  showToast(`⚡ ${label} update ho gaya! Publishing live...`, 'info');
+  _autoPublishDebounce = setTimeout(async () => {
+    try {
+      await publishToGitHub();
+    } catch(e) {
+      console.warn('Auto publish note:', e);
+    }
+  }, 1200);
+}
+async function autoPublishAfterUpload(label) {
+  clearTimeout(_autoPublishDebounce);
+  showToast(`⬆️ ${label} upload ho gaya, publish ho raha hai...`, 'success');
+  _autoPublishDebounce = setTimeout(async () => {
+    await publishToGitHub();
+  }, 1800);
+}
+
 
 /* ============================================================
    PUBLISH TO GITHUB — via local Publish Server (no token needed)
@@ -57,6 +188,7 @@ function buildPublishPayload() {
   if (saved.scifiAvatar) updatedJson.settings.scifiAvatar = saved.scifiAvatar;
   const savedSkillMedia = saved.skillMedia || portfolioData?.settings?.skillMedia;
   if (savedSkillMedia) updatedJson.settings.skillMedia = savedSkillMedia;
+  updatedJson.settings.slideTimers = getSlideTimers();
   if (typeof getAddons === 'function') updatedJson.addons = getAddons();
   if (typeof getProjects === 'function') updatedJson.projects = getProjects();
   return updatedJson;
@@ -154,23 +286,49 @@ async function publishToGitHub() {
     const sizeMB = item.blob.size / (1024 * 1024);
     if (sizeMB > 95) { skipped++; continue; }
 
+    const isSkillItem = item.id && String(item.id).startsWith('skill_media_');
+
     let ext = '.mp4';
     if (item.type === 'glb') ext = '.glb';
     else if (item.type === 'image') {
-      // Try to detect original extension from blob type
       const mime = item.blob && item.blob.type ? item.blob.type : '';
       if (mime.includes('png')) ext = '.png';
       else if (mime.includes('webp')) ext = '.webp';
       else if (mime.includes('gif')) ext = '.gif';
       else ext = '.jpg';
     }
+
+    if (isSkillItem) {
+      const toolIdx = parseInt(String(item.id).replace('skill_media_', '')) || 0;
+      const baseClean = (item.name || `tool_${toolIdx}`).replace(/[^a-zA-Z0-9._-]/g, '_');
+      const safe = `skill_${toolIdx}_${baseClean}`.replace(/\.[^.]+$/, '') + ext;
+      try {
+        const b64 = await blobToBase64(item.blob);
+        mediaPayload.push({
+          name: safe,
+          displayName: item.name || `Skill ${toolIdx}`,
+          type: item.type,
+          dataBase64: b64,
+          size: item.blob.size
+        });
+      } catch(e) { console.warn('skill blob convert error:', e); }
+
+      portfolio.settings = portfolio.settings || {};
+      portfolio.settings.skillMedia = portfolio.settings.skillMedia || {};
+      portfolio.settings.skillMedia[toolIdx] = {
+        idx: toolIdx,
+        name: DEFAULT_SKILL_TOOLS[toolIdx]?.name || item.name,
+        type: item.type,
+        url: `media/${safe}`
+      };
+      continue;
+    }
+
     const safe = (item.name || 'media').replace(/[^a-zA-Z0-9._-]/g, '_') + ext;
 
     if (publishedMap.has(safe)) {
-      // Reuse existing published link — ZERO wait, ZERO re-upload!
       activeMediaList.push(publishedMap.get(safe));
     } else {
-      // Brand new file — upload it
       try {
         const b64 = await blobToBase64(item.blob);
         mediaPayload.push({
@@ -452,6 +610,7 @@ async function loadPortfolio() {
 
   if (portfolioData) {
     try { applySettings(portfolioData.settings); } catch(e) { console.warn('applySettings error:', e); }
+    try { applySlideTimersLive(); } catch(e) { console.warn('applySlideTimersLive error:', e); }
     try { loadSavedEdits(); } catch(e) { console.warn('loadSavedEdits error:', e); }
     try { buildFilterBar(portfolioData.categories); } catch(e) { console.warn('buildFilterBar error:', e); }
     filteredProjects = portfolioData.projects || [];
@@ -1991,6 +2150,7 @@ async function moveMediaPosition(fromIdx, toIdx) {
   renderReorderList();
   renderMediaDots();
   setMediaIndex(toIdx);
+  autoPublishAfterUpload('Media Order');
 }
 
 async function moveMediaToTop(fromIdx) {
@@ -2001,6 +2161,7 @@ async function moveMediaToTop(fromIdx) {
   renderReorderList();
   renderMediaDots();
   setMediaIndex(0);
+  autoPublishAfterUpload('Main #1 Display');
 }
 
 window.moveMediaPosition = moveMediaPosition;
@@ -2027,6 +2188,7 @@ async function deleteMediaItem(idx) {
   renderMediaDots();
   setMediaIndex(Math.max(0, idx - 1));
   showToast(`🗑️ "${item.name || 'Item'}" delete ho gaya!`);
+  autoPublishAfterUpload('Media Deleted');
 }
 window.deleteMediaItem = deleteMediaItem;
 
@@ -2058,6 +2220,7 @@ async function replaceMediaItem(idx, inputEl) {
   showToast(`♻️ "${newItem.name}" replace ho gaya!`);
   await loadSavedMedia();
   renderReorderList();
+  autoPublishAfterUpload('Media Replaced');
 }
 window.replaceMediaItem = replaceMediaItem;
 
@@ -2141,6 +2304,7 @@ async function handleUploadFiles(files) {
     showToast(`🎉 ${successCount} item(s) successfully save ho gaye!`);
     await loadSavedMedia();
     setMediaIndex(mediaList.length - 1);
+    autoPublishAfterUpload('About 3D/Media');
   }
 }
 
@@ -2355,7 +2519,7 @@ function startScifiTimer() {
       return;
     }
     flipPortal();
-  }, 5000);
+  }, getTimerMs('hero', 5000));
 }
 
 
@@ -2525,7 +2689,7 @@ let currentAddonSlideIndex   = 0;
 let lastFilteredAddons       = [];
 let addonAutoSlideTimer      = null;
 let isAddonAutoSlidePaused   = false;
-const ADDON_AUTO_INTERVAL    = 6000;
+let ADDON_AUTO_INTERVAL     = getTimerMs('addons', 6000);
 let addonListenersBound      = false;
 
 function getCardsPerPage() {
@@ -2912,7 +3076,8 @@ function saveAddonFromModal() {
   saveAddons(addons);
   renderAddons();
   closeAddonModal();
-  showToast('✅ Blender Addon save ho gaya! (Publish Live kar ke online bhejein)');
+  showToast('✅ Blender Addon save ho gaya!');
+  autoPublishAfterUpload('Blender Addons');
 }
 
 function deleteAddon(addonId) {
@@ -2921,6 +3086,7 @@ function deleteAddon(addonId) {
   saveAddons(addons);
   renderAddons();
   showToast('🗑️ Addon delete ho gaya!');
+  autoPublishAfterUpload('Addon Deleted');
 }
 
 function handleAddonFileUpload(input) {
@@ -3195,7 +3361,7 @@ window.nextSkillSubImage = nextSkillSubImage;
 
 function getSkillToolData(idx) {
   const saved = getSavedData()?.skillMedia?.[idx] || portfolioData?.settings?.skillMedia?.[idx];
-  if (saved && saved.url && !String(saved.url).startsWith('blob:')) {
+  if (saved && saved.url) {
     return { ...DEFAULT_SKILL_TOOLS[idx], ...saved };
   }
   return DEFAULT_SKILL_TOOLS[idx] || DEFAULT_SKILL_TOOLS[0];
@@ -3338,7 +3504,7 @@ function startSkillAutoTimer() {
       return;
     }
     selectSkillTool((currentSkillToolIdx + 1) % DEFAULT_SKILL_TOOLS.length, false);
-  }, 5000);
+  }, getTimerMs('skills', 5000));
 }
 
 function triggerToolMediaUpload(idx) {
@@ -3373,9 +3539,12 @@ function initSkillShowcase() {
 
       const toolIdx = currentUploadingToolIdx;
       const toolName = DEFAULT_SKILL_TOOLS[toolIdx]?.name || 'Tool';
-      const isGlb = file.name.toLowerCase().endsWith('.glb');
-      const ext = isGlb ? '.glb' : '.mp4';
-      const safeName = `skill_${toolIdx}_` + file.name.replace(/[^a-zA-Z0-9._-]/g, '_');
+      const isGlb = file.name.match(/\.(glb|gltf)$/i);
+      const isVideo = file.name.match(/\.(mp4|webm)$/i);
+      const isImage = file.name.match(/\.(jpg|jpeg|png|webp|gif)$/i);
+      const mediaType = isGlb ? 'glb' : (isVideo ? 'video' : 'image');
+      const ext = isGlb ? '.glb' : (isVideo ? '.mp4' : (file.name.match(/\.[^.]+$/)?.[0] || '.jpg'));
+      const safeName = `skill_${toolIdx}_` + file.name.replace(/\.[^.]+$/, '').replace(/[^a-zA-Z0-9._-]/g, '_') + ext;
 
       showToast(`⏳ ${toolName} ka media process ho raha hai...`, 'info');
 
@@ -3394,7 +3563,7 @@ function initSkillShowcase() {
           await dbSaveItem({
             id: 'skill_media_' + toolIdx,
             name: safeName,
-            type: isGlb ? 'glb' : 'video',
+            type: mediaType,
             blob: blob,
             size: file.size,
             date: new Date().toISOString()
@@ -3407,7 +3576,7 @@ function initSkillShowcase() {
         d.skillMedia[toolIdx] = {
           idx: toolIdx,
           name: toolName,
-          type: isGlb ? 'glb' : 'video',
+          type: mediaType,
           url: dataUrl
         };
         saveData(d);
@@ -3419,14 +3588,15 @@ function initSkillShowcase() {
           portfolioData.settings.skillMedia[toolIdx] = {
             idx: toolIdx,
             name: toolName,
-            type: isGlb ? 'glb' : 'video',
+            type: mediaType,
             url: dataUrl
           };
         }
 
         // Immediately update display screen
         selectSkillTool(toolIdx, true);
-        showToast(`✅ ${toolName} ke liye ${isGlb ? '3D GLB' : 'MP4 Video'} update ho gaya! "Publish Live" karein.`);
+        showToast(`✅ ${toolName} ke liye ${mediaType.toUpperCase()} update ho gaya!`);
+        autoPublishAfterUpload(`${toolName} Showcase`);
       } catch(err) {
         console.error('Skill media upload error:', err);
         showToast('❌ Upload error: ' + err.message, 'error');
@@ -3459,7 +3629,7 @@ let projectSliderTimer         = null;
 let projectSliderProgressTimer = null;
 let projectSliderStartTime     = 0;
 let isProjectSliderPaused      = false;
-const PROJECT_SLIDE_DURATION   = 5000;
+let PROJECT_SLIDE_DURATION    = getTimerMs('projects', 5000);
 let currentProjectsViewMode    = 'slider';
 let pendingSlideMedia          = null;
 
@@ -4107,6 +4277,7 @@ async function handleSaveProjectSlide(e) {
   // Switch category and display the slide
   switchProjectCategory(category);
   selectProjectSlide(0);
+  autoPublishAfterUpload('Project Slide');
 }
 
 function deleteCurrentProjectSlide() {
@@ -4121,6 +4292,7 @@ function deleteCurrentProjectSlide() {
   showToast('🗑️ Slide delete ho gayi!');
 
   switchProjectCategory(activeSlideCategory);
+  autoPublishAfterUpload('Project Slide Deleted');
 }
 
 

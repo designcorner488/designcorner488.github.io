@@ -3390,3 +3390,66 @@ html {
   font-size: 0.82rem;
 }
 
+
+/* ===== SLIDE TIMER MODAL ===== */
+.timer-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.8rem;
+  padding: 0.65rem 0.8rem;
+  margin-bottom: 0.4rem;
+  background: rgba(255,255,255,0.03);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  flex-wrap: wrap;
+}
+.timer-row label {
+  font-size: 0.84rem;
+  color: var(--text);
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex: 1;
+}
+.timer-input-wrap {
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+}
+.timer-input-wrap button {
+  width: 28px;
+  height: 28px;
+  border-radius: 7px;
+  border: 1px solid var(--border);
+  background: var(--surface);
+  color: var(--text);
+  font-size: 1rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: var(--transition);
+  font-weight: 700;
+}
+.timer-input-wrap button:hover { background: var(--accent); border-color: var(--accent); }
+.timer-input-wrap input[type="number"] {
+  width: 52px;
+  text-align: center;
+  background: var(--bg);
+  border: 1px solid var(--accent);
+  border-radius: 7px;
+  color: var(--text);
+  font-size: 1rem;
+  font-weight: 700;
+  padding: 0.3rem 0;
+  outline: none;
+}
+.timer-input-wrap input[type="number"]::-webkit-outer-spin-button,
+.timer-input-wrap input[type="number"]::-webkit-inner-spin-button { -webkit-appearance: none; }
+.timer-unit {
+  font-size: 0.78rem;
+  color: var(--text-muted);
+  font-weight: 600;
+}

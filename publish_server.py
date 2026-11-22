@@ -142,7 +142,9 @@ class PublishHandler(BaseHTTPRequestHandler):
                 final_media.append(m)
 
         for m in new_map.values():
-            final_media.append(m)
+            # Don't add skill showcase files to About section _media
+            if not m.get('name', '').startswith('skill_'):
+                final_media.append(m)
 
         if final_media:
             merged['_media'] = final_media
