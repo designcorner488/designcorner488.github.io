@@ -108,16 +108,46 @@
   },
   "_media": [
     {
-      "name": "hvac_samply_.mp4",
-      "displayName": "HVAC & Industrial 3D Animation",
+      "name": "video_MiniMax_H3_00001_.mp4",
+      "displayName": "video_MiniMax_H3_00001_",
       "type": "video",
-      "url": "media/hvac_samply_.mp4"
+      "url": "https://designcorner488.github.io/media/video_MiniMax_H3_00001_.mp4"
+    },
+    {
+      "name": "aniii.mp4",
+      "displayName": "aniii",
+      "type": "video",
+      "url": "https://designcorner488.github.io/media/aniii.mp4"
+    },
+    {
+      "name": "interior_wooden_design_.mp4",
+      "displayName": "interior wooden design ",
+      "type": "video",
+      "url": "https://github.com/designcorner488/designcorner488.github.io/releases/download/v1.0/interior_wooden_design_.mp4"
     },
     {
       "name": "4.mp4",
       "displayName": "4",
       "type": "video",
       "url": "media/4.mp4"
+    },
+    {
+      "name": "ai_.mp4",
+      "displayName": "ai ",
+      "type": "video",
+      "url": "https://designcorner488.github.io/media/ai_.mp4"
+    },
+    {
+      "name": "final_1.mp4",
+      "displayName": "final 1",
+      "type": "video",
+      "url": "https://github.com/designcorner488/designcorner488.github.io/releases/download/v1.0/final_1.mp4"
+    },
+    {
+      "name": "0001-0280.mp4",
+      "displayName": "0001-0280",
+      "type": "video",
+      "url": "https://designcorner488.github.io/media/0001-0280.mp4"
     },
     {
       "name": "snaks_bar.glb",
@@ -138,16 +168,16 @@
       "url": "media/sofa.glb"
     },
     {
-      "name": "object_0.glb",
-      "displayName": "object_0",
-      "type": "glb",
-      "url": "media/object_0.glb"
-    },
-    {
       "name": "lamp.glb",
       "displayName": "lamp",
       "type": "glb",
       "url": "media/lamp.glb"
+    },
+    {
+      "name": "object_0.glb",
+      "displayName": "object_0",
+      "type": "glb",
+      "url": "media/object_0.glb"
     },
     {
       "name": "object_0__3_.glb",
@@ -190,42 +220,6 @@
       "displayName": "portfolio 2 ",
       "type": "video",
       "url": "media/portfolio_2_.mp4"
-    },
-    {
-      "name": "aniii.mp4",
-      "displayName": "aniii",
-      "type": "video",
-      "url": "https://designcorner488.github.io/media/aniii.mp4"
-    },
-    {
-      "name": "0001-0280.mp4",
-      "displayName": "0001-0280",
-      "type": "video",
-      "url": "https://designcorner488.github.io/media/0001-0280.mp4"
-    },
-    {
-      "name": "final_1.mp4",
-      "displayName": "final 1",
-      "type": "video",
-      "url": "https://github.com/designcorner488/designcorner488.github.io/releases/download/v1.0/final_1.mp4"
-    },
-    {
-      "name": "interior_wooden_design_.mp4",
-      "displayName": "interior wooden design ",
-      "type": "video",
-      "url": "https://github.com/designcorner488/designcorner488.github.io/releases/download/v1.0/interior_wooden_design_.mp4"
-    },
-    {
-      "name": "ai_.mp4",
-      "displayName": "ai ",
-      "type": "video",
-      "url": "https://designcorner488.github.io/media/ai_.mp4"
-    },
-    {
-      "name": "video_MiniMax_H3_00001_.mp4",
-      "displayName": "video_MiniMax_H3_00001_",
-      "type": "video",
-      "url": "https://designcorner488.github.io/media/video_MiniMax_H3_00001_.mp4"
     }
   ],
   "categories": [
