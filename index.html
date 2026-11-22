@@ -16,7 +16,7 @@ window.addEventListener('error', function(e) {
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
-  <link rel="stylesheet" href="style.css?v=27.0"/>
+  <link rel="stylesheet" href="style.css?v=28.0"/>
   <script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/3.4.0/model-viewer.min.js"></script>
 </head>
 <body>
@@ -648,14 +648,17 @@ window.addEventListener('error', function(e) {
 
         <!-- 3D Model Viewer -->
         <model-viewer id="i3dModelViewer" 
-          src="media/snaks_bar.glb" 
+          src="media/lamp.glb" 
           alt="Interactive 3D Model"
           auto-rotate 
           camera-controls 
-          rotation-per-second="20deg"
+          environment-image="neutral"
           shadow-intensity="1.5" 
           shadow-softness="0.8"
-          exposure="1.0"
+          exposure="1.2"
+          loading="eager"
+          reveal="auto"
+          rotation-per-second="20deg"
           touch-action="pan-y">
         </model-viewer>
 
@@ -1480,7 +1483,7 @@ window.addEventListener('error', function(e) {
   <button type="button" class="btn-fs-reset" onclick="resetActiveFontSize()" title="Reset size"><i class="fas fa-rotate-left"></i></button>
 </div>
 
-<script src="script.js?v=27.0"></script>
+<script src="script.js?v=28.0"></script>
 </body>
 </html>
 

@@ -3664,14 +3664,21 @@ html {
 }
 
 /* 6. Hotspots (Text Labelling) */
+.i3d-hotspots-container {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 10;
+}
 .i3d-hotspot {
   background: transparent;
   border: none;
   cursor: pointer;
-  position: relative;
+  position: absolute;
   padding: 0;
   outline: none;
   z-index: 10;
+  pointer-events: auto;
   transition: transform 0.2s ease;
 }
 .i3d-hotspot-dot {

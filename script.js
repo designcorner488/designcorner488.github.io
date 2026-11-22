@@ -1,6 +1,6 @@
-/* ============================================================
-   PORTFOLIO SCRIPT — Dynamic JSON + All Visual Effects
-   Loader · Particles · Cursor · AOS · Lightbox · Gallery
+﻿/* ============================================================
+   PORTFOLIO SCRIPT â€” Dynamic JSON + All Visual Effects
+   Loader Â· Particles Â· Cursor Â· AOS Â· Lightbox Â· Gallery
    ============================================================ */
 
 const REPO_OWNER = 'designcorner488';
@@ -20,7 +20,7 @@ let currentSoftwareTags = ['Blender', 'Revit', 'D5 Render', 'Animation'];
 let authSuccessCallback = null;
 
 /* ============================================================
-   SLIDE TIMER SETTINGS — user can adjust per section in Edit Mode
+   SLIDE TIMER SETTINGS â€” user can adjust per section in Edit Mode
    ============================================================ */
 const TIMER_KEY = 'dc_slide_timers';
 function getSlideTimers() {
@@ -108,7 +108,7 @@ function previewTimer(section, val) { /* live preview */ }
 function setQuickSkillTimer(sec) {
   const el = document.getElementById('timerSkills');
   if (el) el.value = sec;
-  showToast(`⚡ Tools & Skills speed ${sec}s par set ho gayi! Save & Apply karein.`);
+  showToast(`âš¡ Tools & Skills speed ${sec}s par set ho gayi! Save & Apply karein.`);
 }
 function saveAllTimers() {
   const sections = ['about', 'skills', 'projects', 'addons', 'hero'];
@@ -121,7 +121,7 @@ function saveAllTimers() {
   saveSlideTimers(t);
   applySlideTimersLive();
   closeSlideTimerModal();
-  showToast('⏱️ Timers saved! Live publish ho raha hai...');
+  showToast('â±ï¸ Timers saved! Live publish ho raha hai...');
   autoPublishAfterUpload('Slide Timers');
 }
 function resetAllTimers() {
@@ -133,7 +133,7 @@ function resetAllTimers() {
     const el = document.getElementById('timer' + k);
     if (el) el.value = k === 'Addons' ? 6 : 5;
   });
-  showToast('⏱️ Timers default par reset ho gaye!');
+  showToast('â±ï¸ Timers default par reset ho gaye!');
   autoPublishAfterUpload('Default Slide Timers');
 }
 window.openSlideTimerModal = openSlideTimerModal;
@@ -146,12 +146,12 @@ window.applySlideTimersLive = applySlideTimersLive;
 window.setQuickSkillTimer = setQuickSkillTimer;
 
 /* ============================================================
-   AUTO-PUBLISH HELPER — uploads + publishes after a section change
+   AUTO-PUBLISH HELPER â€” uploads + publishes after a section change
    ============================================================ */
 let _autoPublishDebounce = null;
 async function autoPublishAfterUpload(label) {
   clearTimeout(_autoPublishDebounce);
-  showToast(`⚡ ${label} update ho gaya! Publishing live...`, 'info');
+  showToast(`âš¡ ${label} update ho gaya! Publishing live...`, 'info');
   _autoPublishDebounce = setTimeout(async () => {
     try {
       await publishToGitHub();
@@ -162,7 +162,7 @@ async function autoPublishAfterUpload(label) {
 }
 async function autoPublishAfterUpload(label) {
   clearTimeout(_autoPublishDebounce);
-  showToast(`⬆️ ${label} upload ho gaya, publish ho raha hai...`, 'success');
+  showToast(`â¬†ï¸ ${label} upload ho gaya, publish ho raha hai...`, 'success');
   _autoPublishDebounce = setTimeout(async () => {
     await publishToGitHub();
   }, 1800);
@@ -170,7 +170,7 @@ async function autoPublishAfterUpload(label) {
 
 
 /* ============================================================
-   PUBLISH TO GITHUB — via local Publish Server (no token needed)
+   PUBLISH TO GITHUB â€” via local Publish Server (no token needed)
    Desktop par "Publish Website.bat" chalayein, phir button dabayein.
    ============================================================ */
 const PUBLISH_SERVER = 'http://localhost:7788';
@@ -240,7 +240,7 @@ async function publishToGitHub() {
     if (token) {
       try {
         if (btn) btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> GitHub API se publish...';
-        showToast('☁️ GitHub API se live update ho raha hai...', 'success');
+        showToast('â˜ï¸ GitHub API se live update ho raha hai...', 'success');
         const portfolio = buildPublishPayload();
         const fileRes = await fetch(`https://api.github.com/repos/${REPO_OWNER}/${REPO_NAME}/contents/portfolio.json`, {
           headers: { 'Authorization': `Bearer ${token}` }
@@ -267,7 +267,7 @@ async function publishToGitHub() {
           })
         });
         if (putRes.ok) {
-          showToast('🚀 Live website publish ho gayi! 1-2 min mein update nazar aayega.');
+          showToast('ðŸš€ Live website publish ho gayi! 1-2 min mein update nazar aayega.');
           if (btn) { btn.disabled = false; btn.innerHTML = '<i class="fas fa-cloud-upload-alt"></i> Publish Live'; }
           return;
         }
@@ -361,15 +361,15 @@ async function publishToGitHub() {
   }
 
   portfolio._media = activeMediaList;
-  if (skipped > 0) showToast(`⚠️ ${skipped} file(s) 95MB+ — skip ho gaye (too large)`, 'error');
+  if (skipped > 0) showToast(`âš ï¸ ${skipped} file(s) 95MB+ â€” skip ho gaye (too large)`, 'error');
 
   // --- Send to publish server ---
   if (mediaPayload.length > 0) {
     if (btn) btn.innerHTML = `<i class="fas fa-spinner fa-spin"></i> ${mediaPayload.length} new file(s) push...`;
-    showToast(`☁️ ${mediaPayload.length} nayi media file(s) upload ho rahi hain...`, 'success');
+    showToast(`â˜ï¸ ${mediaPayload.length} nayi media file(s) upload ho rahi hain...`, 'success');
   } else {
     if (btn) btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Live sync...';
-    showToast('⚡ Instant Sync: Sirf new edits push ho rahe hain...', 'success');
+    showToast('âš¡ Instant Sync: Sirf new edits push ho rahe hain...', 'success');
   }
 
   try {
@@ -381,18 +381,18 @@ async function publishToGitHub() {
     const json = await res.json();
     if (json.ok) {
       if (mediaPayload.length > 0) {
-        showToast(`🚀 Published! ${mediaPayload.length} nayi file(s) live. 1-2 min mein update!`);
+        showToast(`ðŸš€ Published! ${mediaPayload.length} nayi file(s) live. 1-2 min mein update!`);
       } else {
-        showToast('⚡ Published instantly! Tamam edits live ho gaye.');
+        showToast('âš¡ Published instantly! Tamam edits live ho gaye.');
       }
       if (json.media) {
         portfolioData._media = json.media;
       }
     } else {
-      showToast('❌ Publish fail: ' + (json.message || 'unknown'), 'error');
+      showToast('âŒ Publish fail: ' + (json.message || 'unknown'), 'error');
     }
   } catch(e) {
-    showToast('❌ Network error: ' + e.message, 'error');
+    showToast('âŒ Network error: ' + e.message, 'error');
   }
 
   if (btn) { btn.disabled = false; btn.innerHTML = '<i class="fas fa-cloud-upload-alt"></i> Publish Live'; }
@@ -548,7 +548,7 @@ function initNavbar() {
 }
 
 /* ============================================================
-   AOS — Scroll Reveal
+   AOS â€” Scroll Reveal
    ============================================================ */
 function initAOS() {
   const obs = new IntersectionObserver(entries => {
@@ -926,17 +926,17 @@ function initContactForm() {
       const cleanPhone = phoneText.replace(/[^0-9]/g, '');
 
       let waMsg = `*New Portfolio Inquiry*\n`;
-      if (name)    waMsg += `👤 *Name:* ${name}\n`;
-      if (email)   waMsg += `📧 *Email:* ${email}\n`;
-      if (service) waMsg += `🛠️ *Service:* ${service}\n`;
-      if (msg)     waMsg += `💬 *Message:* ${msg}`;
+      if (name)    waMsg += `ðŸ‘¤ *Name:* ${name}\n`;
+      if (email)   waMsg += `ðŸ“§ *Email:* ${email}\n`;
+      if (service) waMsg += `ðŸ› ï¸ *Service:* ${service}\n`;
+      if (msg)     waMsg += `ðŸ’¬ *Message:* ${msg}`;
 
       openDirectWhatsApp(cleanPhone, waMsg);
     });
   }
 
   // ----------------------------------------------------------------
-  // SEND MESSAGE — Web3Forms (direct server-to-server, no client email needed)
+  // SEND MESSAGE â€” Web3Forms (direct server-to-server, no client email needed)
   // ----------------------------------------------------------------
   form.addEventListener('submit', async e => {
     e.preventDefault();
@@ -973,7 +973,7 @@ function initContactForm() {
           headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
           body: JSON.stringify({
             access_key: WEB3FORMS_KEY,
-            subject: `New Portfolio Inquiry: ${service || 'General'} — from ${name}`,
+            subject: `New Portfolio Inquiry: ${service || 'General'} â€” from ${name}`,
             from_name: name,
             email: email,
             name: name,
@@ -1050,7 +1050,7 @@ function initContactForm() {
       const body    = encodeURIComponent(`Name: ${name}\nEmail: ${email}\nService: ${service || 'Not specified'}\n\nMessage:\n${msg}`);
       const gmailUrl = `https://mail.google.com/mail/?view=cm&fs=1&to=${encodeURIComponent(targetEmail)}&su=${subject}&body=${body}`;
       window.open(gmailUrl, '_blank');
-      showToast('\u{1F4E7} Servers down hain — Gmail open ho raha hai. Message pehle se bhara hua hai, bas Send dabayein.');
+      showToast('\u{1F4E7} Servers down hain â€” Gmail open ho raha hai. Message pehle se bhara hua hai, bas Send dabayein.');
     }
 
     if (submitBtn) {
@@ -1084,7 +1084,7 @@ window.triggerAddSoftware = function() {
 window.lockEditMode = function() {
   sessionStorage.removeItem('cms_session_auth');
   if (editMode) toggleEditMode();
-  showToast('🔒 Edit Mode lock ho gaya!', 'error');
+  showToast('ðŸ”’ Edit Mode lock ho gaya!', 'error');
 };
 window.openSoftwareModal = openSoftwareModal;
 window.closeSoftwareModal = closeSoftwareModal;
@@ -1112,7 +1112,7 @@ function initLogoUpload() {
         const d = getSavedData();
         d.logoImg = dataUrl;
         saveData(d);
-        showToast('🎨 Logo update ho gaya!');
+        showToast('ðŸŽ¨ Logo update ho gaya!');
       };
       reader.readAsDataURL(file);
       this.value = '';
@@ -1203,7 +1203,7 @@ function adjustActiveFontSize(delta) {
                        document.querySelector('.editable');
   }
   if (!activeEditableEl) {
-    showToast('⚠️ Pehle kisi text par click karein!', 'error');
+    showToast('âš ï¸ Pehle kisi text par click karein!', 'error');
     return;
   }
 
@@ -1222,7 +1222,7 @@ function adjustActiveFontSize(delta) {
     d.fontSizes[key] = newSize;
     saveData(d);
   }
-  showToast(`🗚 Text Size: ${newSize}`, 'success');
+  showToast(`ðŸ—š Text Size: ${newSize}`, 'success');
 }
 
 function resetActiveFontSize() {
@@ -1253,9 +1253,9 @@ function initEditMode() {
   if (navBtn) navBtn.addEventListener('click', tryToggleEditMode);
   document.getElementById('btnSave')?.addEventListener('click', saveAll);
   document.getElementById('btnReset')?.addEventListener('click', () => {
-    if (confirm('⚠️ Sab local edits reset ho jayengi! Sure hain?')) {
+    if (confirm('âš ï¸ Sab local edits reset ho jayengi! Sure hain?')) {
       localStorage.removeItem('portfolio_edit_data');
-      showToast('🔄 Reset! Reload ho raha hai...', 'error');
+      showToast('ðŸ”„ Reset! Reload ho raha hai...', 'error');
       setTimeout(() => location.reload(), 1200);
     }
   });
@@ -1295,7 +1295,7 @@ function initEditMode() {
   document.getElementById('btnLock')?.addEventListener('click', () => {
     sessionStorage.removeItem('cms_session_auth');
     if (editMode) toggleEditMode();
-    showToast('🔒 Edit Mode lock ho gaya!', 'error');
+    showToast('ðŸ”’ Edit Mode lock ho gaya!', 'error');
   });
 
   // Password verification modal
@@ -1322,7 +1322,7 @@ function initEditMode() {
       const data = getSavedData();
       data.profilePhoto = e.target.result;
       saveData(data);
-      showToast('📸 Profile photo update ho gayi!');
+      showToast('ðŸ“¸ Profile photo update ho gayi!');
     };
     reader.readAsDataURL(file);
     this.value = '';
@@ -1376,7 +1376,7 @@ function initEditMode() {
     saveData(data);
 
     document.getElementById('socialModal')?.classList.remove('open');
-    showToast(`🔗 ${currentSocialPlatform.toUpperCase()} connect ho gaya!`);
+    showToast(`ðŸ”— ${currentSocialPlatform.toUpperCase()} connect ho gaya!`);
   });
 
   // Keyboard shortcuts
@@ -1468,7 +1468,7 @@ function handleEditAuth() {
   } else {
     if (err) {
       err.style.display = 'block';
-      err.textContent = '❌ Incorrect password! Access denied.';
+      err.textContent = 'âŒ Incorrect password! Access denied.';
     }
     passInput?.focus();
   }
@@ -1519,7 +1519,7 @@ function toggleEditMode() {
         });
       }
     });
-    // Social links — click to set URL
+    // Social links â€” click to set URL
     document.querySelectorAll('.social-link').forEach(link => {
       link.onclick = e => {
         if (!editMode) return;
@@ -1527,11 +1527,11 @@ function toggleEditMode() {
         openSocialModal(link.dataset.platform, link);
       };
     });
-    showToast('✏️ Edit Mode ON — text par click kar ke edit ya size change karein!');
+    showToast('âœï¸ Edit Mode ON â€” text par click kar ke edit ya size change karein!');
   } else {
     hideFloatingTextSizeBar();
     document.querySelectorAll('.editable').forEach(el => el.removeAttribute('contenteditable'));
-    showToast('✅ View Mode — changes browser mein save hain!');
+    showToast('âœ… View Mode â€” changes browser mein save hain!');
   }
   renderOrbitTags();
 }
@@ -1570,7 +1570,7 @@ function renderOrbitTags() {
     container.appendChild(span);
   });
 }
-// No inline floating pill — 'Manage Software Tags' button is below the orbit card
+// No inline floating pill â€” 'Manage Software Tags' button is below the orbit card
 
 function openSoftwareModal() {
   renderSoftwareModalList();
@@ -1626,7 +1626,7 @@ function renderSoftwareModalList() {
       const d = getSavedData();
       d.softwareTags = currentSoftwareTags;
       saveData(d);
-      showToast('🗑️ Tag remove ho gaya!');
+      showToast('ðŸ—‘ï¸ Tag remove ho gaya!');
     });
     list.appendChild(chip);
   });
@@ -1637,7 +1637,7 @@ function addNewSoftwareTag() {
   const val = input?.value.trim();
   if (!val) return;
   if (currentSoftwareTags.length >= 12) {
-    showToast('⚠️ Maximum 12 software tags rakh sakte hain', 'error');
+    showToast('âš ï¸ Maximum 12 software tags rakh sakte hain', 'error');
     return;
   }
   currentSoftwareTags.push(val);
@@ -1647,7 +1647,7 @@ function addNewSoftwareTag() {
   const d = getSavedData();
   d.softwareTags = currentSoftwareTags;
   saveData(d);
-  showToast(`✨ "${val}" circle mein add ho gaya!`);
+  showToast(`âœ¨ "${val}" circle mein add ho gaya!`);
 }
 
 function openSocialModal(platform, el) {
@@ -1705,7 +1705,7 @@ async function saveAll() {
   const token = localStorage.getItem('cms_gh_token');
   if (token && portfolioData) {
     try {
-      showToast('☁️ GitHub par publish ho raha hai...', 'success');
+      showToast('â˜ï¸ GitHub par publish ho raha hai...', 'success');
       const fullPayload = buildPublishPayload();
       portfolioData = fullPayload;
 
@@ -1737,16 +1737,16 @@ async function saveAll() {
       });
 
       if (putRes.ok) {
-        showToast('🚀 Live website update ho gayi aur GitHub par save ho gayi!');
+        showToast('ðŸš€ Live website update ho gayi aur GitHub par save ho gayi!');
       } else {
-        showToast('💾 Changes browser mein save ho gaye!');
+        showToast('ðŸ’¾ Changes browser mein save ho gaye!');
       }
     } catch (e) {
       console.warn(e);
-      showToast('💾 Changes browser mein save ho gaye!');
+      showToast('ðŸ’¾ Changes browser mein save ho gaye!');
     }
   } else {
-    showToast('💾 Tamam changes browser mein save ho gaye!');
+    showToast('ðŸ’¾ Tamam changes browser mein save ho gaye!');
   }
 
   if (saveBtn) {
@@ -1764,7 +1764,7 @@ function saveData(data) {
   } catch {
     const slim = { text: data.text, socialLinks: data.socialLinks };
     try { localStorage.setItem('portfolio_edit_data', JSON.stringify(slim)); } catch {}
-    showToast('⚠️ Image size zyada hai — text save ho gaya', 'error');
+    showToast('âš ï¸ Image size zyada hai â€” text save ho gaya', 'error');
   }
 }
 
@@ -1849,14 +1849,14 @@ function showToast(msg, type = 'success') {
   setTimeout(() => toast.classList.remove('show'), 3000);
 }
 
-console.log('%c✏️ Edit Mode Loaded', 'color:#a855f7;font-size:1.1rem;font-weight:bold;');
+console.log('%câœï¸ Edit Mode Loaded', 'color:#a855f7;font-size:1.1rem;font-weight:bold;');
 console.log('%cCtrl+E = Toggle Edit | Ctrl+S = Save', 'color:#06b6d4;');
 
 
 
 
 /* ============================================================
-   DYNAMIC ORBIT SYSTEM — 1 Rotating Planet per Software Tag
+   DYNAMIC ORBIT SYSTEM â€” 1 Rotating Planet per Software Tag
    ============================================================ */
 const SOFTWARE_CONFIGS = {
   'blender':      { icon: 'fas fa-cube', grad: 'linear-gradient(135deg,#f7931e,#f59e0b)' },
@@ -1928,7 +1928,7 @@ function renderDynamicOrbitSystem() {
     planet.style.background = conf.grad;
     planet.style.setProperty('--start-angle', startAngle + 'deg');
     planet.style.animation = `dynamicCounterRotate ${speed}s linear infinite`;
-    planet.title = `${name} — Click to manage`;
+    planet.title = `${name} â€” Click to manage`;
     planet.innerHTML = `<i class="${conf.icon}"></i>`;
     planet.addEventListener('click', (e) => {
       e.stopPropagation();
@@ -1941,7 +1941,7 @@ function renderDynamicOrbitSystem() {
 }
 
 /* ============================================================
-   INDEXEDDB MEDIA STORE — 3D Models (GLB) & Animations (MP4)
+   INDEXEDDB MEDIA STORE â€” 3D Models (GLB) & Animations (MP4)
    ============================================================ */
 const IDB_NAME = 'PortfolioMediaDB_v2';
 const IDB_STORE = 'models_animations';
@@ -2037,7 +2037,7 @@ async function setAsFirstMedia() {
   const item = mediaList.splice(mediaIndex, 1)[0];
   mediaList.unshift(item);
   await dbSaveAllOrdered(mediaList);
-  showToast(`⭐ "${item.name}" No. 1 Display set ho gaya!`);
+  showToast(`â­ "${item.name}" No. 1 Display set ho gaya!`);
   setMediaIndex(0);
 }
 
@@ -2102,7 +2102,7 @@ function renderReorderList() {
     if (item.type === 'video') { iconClass = 'fas fa-video'; typeBadge = 'MP4'; typeBadgeColor = '#06b6d4'; }
     else if (item.type === 'image') { iconClass = 'fas fa-image'; typeBadge = 'IMG'; typeBadgeColor = '#10b981'; }
 
-    const badgeText = idx === 0 ? '★ 1' : `#${idx + 1}`;
+    const badgeText = idx === 0 ? 'â˜… 1' : `#${idx + 1}`;
     const isFirst = idx === 0;
 
     row.innerHTML = `
@@ -2205,7 +2205,7 @@ async function deleteMediaItem(idx) {
   renderReorderList();
   renderMediaDots();
   setMediaIndex(Math.max(0, idx - 1));
-  showToast(`🗑️ "${item.name || 'Item'}" delete ho gaya!`);
+  showToast(`ðŸ—‘ï¸ "${item.name || 'Item'}" delete ho gaya!`);
   autoPublishAfterUpload('Media Deleted');
 }
 window.deleteMediaItem = deleteMediaItem;
@@ -2217,7 +2217,7 @@ async function replaceMediaItem(idx, inputEl) {
   const isModel = file.name.match(/\.(glb|gltf)$/i);
   const isVideo = file.name.match(/\.(mp4|webm)$/i);
   const isImage = file.name.match(/\.(jpg|jpeg|png|webp|gif)$/i);
-  if (!isModel && !isVideo && !isImage) { showToast('❌ Unsupported format!', 'error'); return; }
+  if (!isModel && !isVideo && !isImage) { showToast('âŒ Unsupported format!', 'error'); return; }
   const oldItem = mediaList[idx];
   // Remove old from IDB
   if (oldItem && oldItem.id) {
@@ -2235,7 +2235,7 @@ async function replaceMediaItem(idx, inputEl) {
     rawBlob: file
   };
   await dbSaveItem(newItem);
-  showToast(`♻️ "${newItem.name}" replace ho gaya!`);
+  showToast(`â™»ï¸ "${newItem.name}" replace ho gaya!`);
   await loadSavedMedia();
   renderReorderList();
   autoPublishAfterUpload('Media Replaced');
@@ -2296,7 +2296,7 @@ async function handleUploadFiles(files) {
   const remaining = MEDIA_MAX - mediaList.length;
   const toProcess = Math.min(files.length, remaining);
   if (toProcess < files.length) {
-    showToast(`⚠️ Max ${MEDIA_MAX} models/animations allow hain!`, 'error');
+    showToast(`âš ï¸ Max ${MEDIA_MAX} models/animations allow hain!`, 'error');
   }
 
   let successCount = 0;
@@ -2319,7 +2319,7 @@ async function handleUploadFiles(files) {
   }
 
   if (successCount > 0) {
-    showToast(`🎉 ${successCount} item(s) successfully save ho gaye!`);
+    showToast(`ðŸŽ‰ ${successCount} item(s) successfully save ho gaye!`);
     await loadSavedMedia();
     setMediaIndex(mediaList.length - 1);
     autoPublishAfterUpload('About 3D/Media');
@@ -2457,7 +2457,7 @@ async function deleteCurrentMedia() {
   if (!confirm(`Kya aap "${current.name}" ko delete karna chahte hain?`)) return;
 
   await dbDeleteItem(current.id);
-  showToast(`🗑️ "${current.name}" delete ho gaya!`);
+  showToast(`ðŸ—‘ï¸ "${current.name}" delete ho gaya!`);
   await loadSavedMedia();
 }
 
@@ -2609,7 +2609,7 @@ function initScifiPortal() {
     avatarInput.addEventListener('change', async function() {
       const file = this.files[0];
       if (!file) return;
-      showToast('⏳ Photo process ho rahi hai...', 'info');
+      showToast('â³ Photo process ho rahi hai...', 'info');
       try {
         const compressedDataUrl = await compressImage(file, 600, 0.85);
         const img = document.getElementById('scifiAvatarImg');
@@ -2625,10 +2625,10 @@ function initScifiPortal() {
           portfolioData.settings.scifiAvatar = compressedDataUrl;
         }
         if (typeof flipPortal === 'function') flipPortal(false);
-        showToast('📸 Profile Photo update ho gayi! Save ya Publish karein.');
+        showToast('ðŸ“¸ Profile Photo update ho gayi! Save ya Publish karein.');
       } catch (err) {
         console.error('Avatar upload error:', err);
-        showToast('❌ Photo upload error: ' + err.message, 'error');
+        showToast('âŒ Photo upload error: ' + err.message, 'error');
       }
       this.value = '';
     });
@@ -3094,7 +3094,7 @@ function saveAddonFromModal() {
   saveAddons(addons);
   renderAddons();
   closeAddonModal();
-  showToast('✅ Blender Addon save ho gaya!');
+  showToast('âœ… Blender Addon save ho gaya!');
   autoPublishAfterUpload('Blender Addons');
 }
 
@@ -3103,7 +3103,7 @@ function deleteAddon(addonId) {
   const addons = getAddons().filter(a => a.id !== addonId);
   saveAddons(addons);
   renderAddons();
-  showToast('🗑️ Addon delete ho gaya!');
+  showToast('ðŸ—‘ï¸ Addon delete ho gaya!');
   autoPublishAfterUpload('Addon Deleted');
 }
 
@@ -3115,7 +3115,7 @@ function handleAddonFileUpload(input) {
     const dataUrl = e.target.result;
     const inUrl = document.getElementById('addonInputUrl');
     if (inUrl) inUrl.value = dataUrl;
-    showToast(`📦 "${file.name}" ready for download!`);
+    showToast(`ðŸ“¦ "${file.name}" ready for download!`);
   };
   reader.readAsDataURL(file);
 }
@@ -3165,7 +3165,7 @@ if __name__ == "__main__":
   document.body.appendChild(a);
   a.click();
   document.body.removeChild(a);
-  showToast(`⚡ "${title}.py" download ho gaya!`);
+  showToast(`âš¡ "${title}.py" download ho gaya!`);
 }
 
 function initAddonsSystem() {
@@ -3291,7 +3291,7 @@ function saveScifiModal() {
   }
 
   closeScifiModal();
-  showToast('✅ Sci-Fi Circle Text Update ho gaya! "Publish Live" daba kar live karein.');
+  showToast('âœ… Sci-Fi Circle Text Update ho gaya! "Publish Live" daba kar live karein.');
 }
 
 window.openScifiModal  = openScifiModal;
@@ -3559,7 +3559,7 @@ function initSkillShowcase() {
       const ext = isGlb ? '.glb' : (isVideo ? '.mp4' : (file.name.match(/\.[^.]+$/)?.[0] || '.jpg'));
       const safeName = `skill_${toolIdx}_` + file.name.replace(/\.[^.]+$/, '').replace(/[^a-zA-Z0-9._-]/g, '_') + ext;
 
-      showToast(`⏳ ${toolName} ka media process ho raha hai...`, 'info');
+      showToast(`â³ ${toolName} ka media process ho raha hai...`, 'info');
 
       try {
         // Read as Blob & DataURL
@@ -3608,11 +3608,11 @@ function initSkillShowcase() {
 
         // Immediately update display screen
         selectSkillTool(toolIdx, true);
-        showToast(`✅ ${toolName} ke liye ${mediaType.toUpperCase()} update ho gaya!`);
+        showToast(`âœ… ${toolName} ke liye ${mediaType.toUpperCase()} update ho gaya!`);
         autoPublishAfterUpload(`${toolName} Showcase`);
       } catch(err) {
         console.error('Skill media upload error:', err);
-        showToast('❌ Upload error: ' + err.message, 'error');
+        showToast('âŒ Upload error: ' + err.message, 'error');
       }
 
       this.value = '';
@@ -4165,7 +4165,7 @@ async function handleSlideFileSelect(event) {
   const previewBox = document.getElementById('pSlidePreviewBox');
   const previewCont = document.getElementById('pSlidePreviewContent');
 
-  showToast('⏳ File process ho rahi hai...');
+  showToast('â³ File process ho rahi hai...');
 
   try {
     if (type === 'image') {
@@ -4198,10 +4198,10 @@ async function handleSlideFileSelect(event) {
       };
       reader.readAsDataURL(file);
     }
-    showToast('✅ File preview tayyar hai!');
+    showToast('âœ… File preview tayyar hai!');
   } catch(err) {
     console.error('Slide file select error:', err);
-    showToast('❌ File load karne mein masla hua: ' + err.message, 'error');
+    showToast('âŒ File load karne mein masla hua: ' + err.message, 'error');
   }
 }
 
@@ -4243,7 +4243,7 @@ async function handleSaveProjectSlide(e) {
   }
 
   if (!finalSrc && !idVal) {
-    showToast('⚠️ Barahe karam image/video/GLB file choose karein ya link enter karein!', 'error');
+    showToast('âš ï¸ Barahe karam image/video/GLB file choose karein ya link enter karein!', 'error');
     return;
   }
 
@@ -4264,7 +4264,7 @@ async function handleSaveProjectSlide(e) {
         description: desc,
         tags: tagsArr.length ? tagsArr : allProjects[existingIdx].tags,
       };
-      showToast('✅ Slide update ho gayi!');
+      showToast('âœ… Slide update ho gayi!');
     }
   } else {
     // Creating new project slide
@@ -4281,7 +4281,7 @@ async function handleSaveProjectSlide(e) {
       date: new Date().toISOString().split('T')[0]
     };
     allProjects.unshift(newProj);
-    showToast('🎉 Nayi Slide kamyabi se add ho gayi!');
+    showToast('ðŸŽ‰ Nayi Slide kamyabi se add ho gayi!');
   }
 
   saveProjects(allProjects);
@@ -4302,7 +4302,7 @@ function deleteCurrentProjectSlide() {
 
   const allProjects = getProjects().filter(p => p.id !== cur.id);
   saveProjects(allProjects);
-  showToast('🗑️ Slide delete ho gayi!');
+  showToast('ðŸ—‘ï¸ Slide delete ho gayi!');
 
   switchProjectCategory(activeSlideCategory);
   autoPublishAfterUpload('Project Slide Deleted');
@@ -4346,7 +4346,7 @@ function applySiteScale(scale, save = true) {
   if (save) {
     try {
       localStorage.setItem('site_text_scale', currentSiteScale.toString());
-      showToast(`🔍 Website Scale: ${Math.round(currentSiteScale * 100)}%`);
+      showToast(`ðŸ” Website Scale: ${Math.round(currentSiteScale * 100)}%`);
     } catch (e) {}
   }
 }
@@ -4374,7 +4374,7 @@ function openDirectWhatsApp(phone, text = '') {
   const isMobile = /Android|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) || window.innerWidth <= 768;
 
   if (isMobile) {
-    // Direct mobile app deep link — launches native WhatsApp application instantly!
+    // Direct mobile app deep link â€” launches native WhatsApp application instantly!
     const mobileUrl = encoded
       ? `https://api.whatsapp.com/send?phone=${clean}&text=${encoded}`
       : `https://api.whatsapp.com/send?phone=${clean}`;
@@ -4386,7 +4386,7 @@ function openDirectWhatsApp(phone, text = '') {
       : `https://web.whatsapp.com/send?phone=${clean}`;
     window.open(desktopUrl, '_blank', 'noopener,noreferrer');
   }
-  showToast('📲 WhatsApp khul raha hai...');
+  showToast('ðŸ“² WhatsApp khul raha hai...');
 }
 
 function handleWhatsAppLinkClick(event, phone) {
@@ -4443,12 +4443,12 @@ function openInquiriesModal() {
     listEl.innerHTML = inquiries.map((inq, idx) => `
       <div style="background:rgba(16,20,48,0.7); border:1px solid rgba(0,240,255,0.25); border-radius:12px; padding:1.2rem; margin-bottom:0.8rem;">
         <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.5rem; flex-wrap:wrap; gap:0.4rem;">
-          <strong style="color:#fff; font-size:0.95rem;">👤 ${inq.name}</strong>
+          <strong style="color:#fff; font-size:0.95rem;">ðŸ‘¤ ${inq.name}</strong>
           <span style="font-size:0.72rem; color:#00f0ff; background:rgba(0,240,255,0.1); border:1px solid rgba(0,240,255,0.3); border-radius:50px; padding:2px 8px;">${inq.service || 'General'}</span>
         </div>
         <div style="font-size:0.82rem; color:rgba(255,255,255,0.75); margin-bottom:0.5rem;">
           <a href="mailto:${inq.email}" style="color:#a855f7;"><i class="fas fa-envelope"></i> ${inq.email}</a>
-          <span style="margin:0 6px; color:rgba(255,255,255,0.3);">•</span>
+          <span style="margin:0 6px; color:rgba(255,255,255,0.3);">â€¢</span>
           <span style="color:var(--text-muted);"><i class="fas fa-clock"></i> ${inq.date || 'Recent'}</span>
         </div>
         <div style="font-size:0.85rem; line-height:1.5; color:#fff; background:rgba(0,0,0,0.3); padding:0.8rem; border-radius:8px; border-left:3px solid #00f0ff;">
@@ -4477,7 +4477,7 @@ function clearAllInquiries() {
   localStorage.removeItem('portfolio_client_inquiries');
   updateInquiryBadge();
   openInquiriesModal();
-  showToast('🗑️ Inquiries clear ho gayin!');
+  showToast('ðŸ—‘ï¸ Inquiries clear ho gayin!');
 }
 
 function replyViaWhatsAppDirect(name, clientMsg) {
@@ -4494,38 +4494,14 @@ window.addEventListener('DOMContentLoaded', updateInquiryBadge);
 
 const DEFAULT_I3D_MODELS = [
   {
-    id: 'snaks_bar',
-    name: 'Snack Bar Kiosk',
-    category: 'Architecture BIM',
-    src: 'media/snaks_bar.glb',
-    desc: 'Full architectural kiosk with reinforced glass and LED lighting',
+    id: 'cyber_lamp',
+    name: 'Cyberpunk Floor Lamp',
+    category: 'Product & Lighting',
+    src: 'media/lamp.glb',
+    desc: 'Futuristic floor lamp with adjustable luminescence and neon core',
     locked: true,
     hotspots: [
-      { top: '32%', left: '45%', title: 'Neon Counter', desc: 'Reinforced glass with underglow LED strips', specs: 'Length: 3.2m · Material: Tempered Glass' },
-      { top: '58%', left: '62%', title: 'Cooling Unit', desc: 'Commercial beverage refrigeration display', specs: 'Temp: -2°C to 4°C · 350L Capacity' },
-      { top: '25%', left: '75%', title: 'Digital Menu', desc: 'Overhead high-contrast acrylic signage', specs: '4K Display · Aluminum Frame' }
-    ]
-  },
-  {
-    id: 'terrain_site',
-    name: 'Survey Contour Terrain',
-    category: 'Site & Landscape',
-    src: 'media/survey_contour_terrain.glb',
-    desc: 'Topographical land contour mesh for architectural site planning',
-    locked: true,
-    hotspots: [
-      { top: '40%', left: '50%', title: 'Elevation Crest', desc: 'Peak contour line +32.5m ASL', specs: 'Slope: 18° · Soil: Clay/Limestone' }
-    ]
-  },
-  {
-    id: 'modern_chair',
-    name: 'Modern Ergonomic Chair',
-    category: 'Furniture Design',
-    src: 'media/Modern_Chair_1.glb',
-    desc: 'High-end parametric office chair with mesh backing',
-    locked: true,
-    hotspots: [
-      { top: '40%', left: '50%', title: 'Lumbar Mesh', desc: 'Self-adjusting active lumbar support', specs: 'Breathable Nylon Mesh · 120kg Test' }
+      { top: '30%', left: '50%', title: 'LED Diffuser', desc: '360° addressable RGB COB LED ring', specs: 'Lumens: 2400lm · Color: 6500K' }
     ]
   },
   {
@@ -4540,14 +4516,25 @@ const DEFAULT_I3D_MODELS = [
     ]
   },
   {
-    id: 'cyber_lamp',
-    name: 'Cyberpunk Floor Lamp',
-    category: 'Product & Lighting',
-    src: 'media/lamp.glb',
-    desc: 'Futuristic floor lamp with adjustable luminescence',
+    id: 'modern_chair',
+    name: 'Modern Ergonomic Chair',
+    category: 'Furniture Design',
+    src: 'media/Modern_Chair_1.glb',
+    desc: 'High-end parametric office chair with mesh backing',
     locked: true,
     hotspots: [
-      { top: '30%', left: '50%', title: 'LED Diffuser', desc: '360° addressable RGB COB LED ring', specs: 'Lumens: 2400lm · Color: 6500K' }
+      { top: '40%', left: '50%', title: 'Lumbar Mesh', desc: 'Self-adjusting active lumbar support', specs: 'Breathable Nylon Mesh · 120kg Test' }
+    ]
+  },
+  {
+    id: 'terrain_site',
+    name: 'Survey Contour Terrain',
+    category: 'Site & Landscape',
+    src: 'media/object_0.glb',
+    desc: 'Topographical land contour mesh for architectural site planning',
+    locked: true,
+    hotspots: [
+      { top: '40%', left: '50%', title: 'Elevation Crest', desc: 'Peak contour line +32.5m ASL', specs: 'Slope: 18° · Soil: Clay/Limestone' }
     ]
   },
   {
@@ -4560,11 +4547,24 @@ const DEFAULT_I3D_MODELS = [
     hotspots: [
       { top: '42%', left: '48%', title: 'Carved Oak Top', desc: 'Solid French oak with satin oil finish', specs: 'Dimensions: 220cm x 100cm' }
     ]
+  },
+  {
+    id: 'snaks_bar',
+    name: 'Snack Bar Kiosk',
+    category: 'Architecture BIM',
+    src: 'media/snaks_bar.glb',
+    desc: 'Full architectural kiosk with reinforced glass and LED lighting',
+    locked: true,
+    hotspots: [
+      { top: '32%', left: '45%', title: 'Neon Counter', desc: 'Reinforced glass with underglow LED strips', specs: 'Length: 3.2m · Material: Tempered Glass' },
+      { top: '58%', left: '62%', title: 'Cooling Unit', desc: 'Commercial beverage refrigeration display', specs: 'Temp: -2°C to 4°C · 350L Capacity' },
+      { top: '25%', left: '75%', title: 'Digital Menu', desc: 'Overhead high-contrast acrylic signage', specs: '4K Display · Aluminum Frame' }
+    ]
   }
 ];
 
 let i3dModelsList = [];
-let currentI3dModelId = 'snaks_bar';
+let currentI3dModelId = 'cyber_lamp';
 let i3dCinematicTimer = null;
 let i3dCinematicAngle = 45;
 let i3dCinematicElev = 75;
@@ -4575,10 +4575,10 @@ let i3dOriginalBaseColors = [];
 
 // 1. Initialization and Loading Models
 async function initI3dShowcase() {
-  // Load saved models from localStorage or portfolioData
+  // Clear any outdated localStorage state to ensure fresh model list with valid URLs
   let saved = null;
   try {
-    const raw = localStorage.getItem('portfolio_i3d_models_v2');
+    const raw = localStorage.getItem('portfolio_i3d_models_v4');
     if (raw) saved = JSON.parse(raw);
   } catch(e) {}
 
@@ -4588,11 +4588,9 @@ async function initI3dShowcase() {
 
   if (saved && Array.isArray(saved) && saved.length) {
     // Merge saved with DEFAULT to restore src/locked for built-in models
-    // (in case old save strips src or locked fields)
     i3dModelsList = saved.map(savedModel => {
       const def = DEFAULT_I3D_MODELS.find(d => d.id === savedModel.id);
       if (def) {
-        // Built-in model: always use DEFAULT src and locked, preserve saved hotspots
         return {
           ...def,
           hotspots: savedModel.hotspots && savedModel.hotspots.length > 0
@@ -4600,7 +4598,6 @@ async function initI3dShowcase() {
             : def.hotspots
         };
       }
-      // User-uploaded model: keep as-is
       return savedModel;
     });
   } else {
@@ -4611,7 +4608,7 @@ async function initI3dShowcase() {
   await restoreI3dCustomModelBlobs();
 
   renderI3dModelDropdown();
-  switchI3dModelById(i3dModelsList[0]?.id || 'snaks_bar', false);
+  switchI3dModelById(i3dModelsList[0]?.id || 'cyber_lamp', false);
   initI3dMouseInteractivity();
 }
 
@@ -4632,7 +4629,6 @@ async function restoreI3dCustomModelBlobs() {
 
 function saveI3dModelsState() {
   try {
-    // Save metadata without huge blobs
     const sanitized = i3dModelsList.map(m => ({
       id: m.id,
       name: m.name,
@@ -4643,7 +4639,7 @@ function saveI3dModelsState() {
       locked: m.locked || false,
       hotspots: m.hotspots || []
     }));
-    localStorage.setItem('portfolio_i3d_models_v2', JSON.stringify(sanitized));
+    localStorage.setItem('portfolio_i3d_models_v4', JSON.stringify(sanitized));
     if (portfolioData) {
       portfolioData.settings = portfolioData.settings || {};
       portfolioData.settings.i3dModels = sanitized;
@@ -4682,11 +4678,25 @@ function switchI3dModelById(modelId, notify = true) {
 
   const viewer = document.getElementById('i3dModelViewer');
   if (viewer) {
-    viewer.style.opacity = '0.4';
-    viewer.src = model.src;
-    viewer.addEventListener('load', () => {
+    viewer.style.opacity = '1';
+    if (!viewer.getAttribute('environment-image')) {
+      viewer.setAttribute('environment-image', 'neutral');
+    }
+    if (viewer.src !== model.src) {
+      viewer.src = model.src;
+    }
+    const onLoad = () => {
       viewer.style.opacity = '1';
       saveOriginalModelMaterials();
+    };
+    if (viewer.loaded) {
+      onLoad();
+    } else {
+      viewer.addEventListener('load', onLoad, { once: true });
+    }
+    viewer.addEventListener('error', (e) => {
+      console.warn('Model loading issue:', e);
+      viewer.style.opacity = '1';
     }, { once: true });
   }
 
@@ -4722,7 +4732,7 @@ function renderI3dHotspots(model) {
         <strong>${h.title}</strong>
         <span>${h.desc}</span>
         ${h.specs ? `<span class="hotspot-specs">${h.specs}</span>` : ''}
-        ${!isLocked ? `<button class="hotspot-del-btn" title="Delete hotspot" onclick="deleteI3dHotspot(${idx});event.stopPropagation();">✕</button>` : ''}
+        ${!isLocked ? `<button class="hotspot-del-btn" title="Delete hotspot" onclick="deleteI3dHotspot(${idx});event.stopPropagation();">âœ•</button>` : ''}
       </div>
     `;
 
@@ -4766,7 +4776,7 @@ function renderI3dHotspots(model) {
             h.top = btn.style.top;
             h.left = btn.style.left;
             saveI3dModelsState();
-            showToast('📌 Hotspot repositioned!');
+            showToast('ðŸ“Œ Hotspot repositioned!');
           }
         };
         document.addEventListener('mousemove', onMove);
@@ -4785,7 +4795,7 @@ function deleteI3dHotspot(idx) {
   model.hotspots.splice(idx, 1);
   saveI3dModelsState();
   renderI3dHotspots(model);
-  showToast('🗑️ Hotspot deleted!');
+  showToast('ðŸ—‘ï¸ Hotspot deleted!');
 }
 
 
@@ -4795,14 +4805,14 @@ function promptAddHotspot() {
 
   // Lock check: visitors cannot add hotspots to owner sample models
   if (model.locked) {
-    showToast('🔒 Sample models are read-only. Upload your own GLB to add hotspots!', 'error');
+    showToast('ðŸ”’ Sample models are read-only. Upload your own GLB to add hotspots!', 'error');
     return;
   }
 
   const title = prompt('Hotspot Title (e.g. Structural Column, Glass Facade):');
   if (!title) return;
   const desc = prompt('Hotspot Description (e.g. Reinforced steel framing):') || '';
-  const specs = prompt('Specs or Dimensions (e.g. 450mm x 450mm · ASTM A36):') || '';
+  const specs = prompt('Specs or Dimensions (e.g. 450mm x 450mm Â· ASTM A36):') || '';
 
   model.hotspots = model.hotspots || [];
   model.hotspots.push({
@@ -4815,7 +4825,7 @@ function promptAddHotspot() {
 
   saveI3dModelsState();
   renderI3dHotspots(model);
-  showToast(`✅ Hotspot "${title}" added! Drag it to reposition.`);
+  showToast(`âœ… Hotspot "${title}" added! Drag it to reposition.`);
 }
 
 // 4. Modal Management: Add 3D Model
@@ -4843,17 +4853,17 @@ async function handleSaveNew3dModel(event) {
   const desc = document.getElementById('i3dNewDesc').value.trim();
 
   if (!title) {
-    showToast('❌ Model name is required!', 'error');
+    showToast('âŒ Model name is required!', 'error');
     return;
   }
 
   const file = fileInput?.files?.[0];
   if (!file) {
-    showToast('❌ Please select a .glb or .gltf file!', 'error');
+    showToast('âŒ Please select a .glb or .gltf file!', 'error');
     return;
   }
 
-  showToast(`⏳ Saving & processing "${title}"...`, 'info');
+  showToast(`â³ Saving & processing "${title}"...`, 'info');
 
   try {
     const fileKey = 'i3d_file_' + Date.now();
@@ -4891,20 +4901,20 @@ async function handleSaveNew3dModel(event) {
     switchI3dModelById(newModel.id);
 
     closeAdd3dModelModal();
-    showToast(`✅ "${title}" added to 3D Showcase! You can now explore it.`);
+    showToast(`âœ… "${title}" added to 3D Showcase! You can now explore it.`);
 
     // Reset Form
     event.target.reset();
   } catch(err) {
     console.error('Error adding 3D model:', err);
-    showToast('❌ Error: ' + err.message, 'error');
+    showToast('âŒ Error: ' + err.message, 'error');
   }
 }
 
 // 5. Delete Model
 function deleteCurrent3dModel() {
   if (i3dModelsList.length <= 1) {
-    showToast('⚠️ At least one 3D model must remain in the showcase.', 'error');
+    showToast('âš ï¸ At least one 3D model must remain in the showcase.', 'error');
     return;
   }
 
@@ -4913,7 +4923,7 @@ function deleteCurrent3dModel() {
 
   // Lock check: visitors cannot delete owner sample models
   if (current?.locked) {
-    showToast('🔒 Owner sample models cannot be deleted. Upload your own GLB to manage it!', 'error');
+    showToast('ðŸ”’ Owner sample models cannot be deleted. Upload your own GLB to manage it!', 'error');
     return;
   }
 
@@ -4927,7 +4937,7 @@ function deleteCurrent3dModel() {
     saveI3dModelsState();
     renderI3dModelDropdown();
     switchI3dModelById(i3dModelsList[0].id);
-    showToast(`🗑️ "${name}" deleted from showcase.`);
+    showToast(`ðŸ—‘ï¸ "${name}" deleted from showcase.`);
   }
 }
 
@@ -4972,7 +4982,7 @@ function setI3dMode(mode) {
     tag.innerHTML = `<span class="hud-dot"></span> MODE: ${modeNames[mode] || mode.toUpperCase()}`;
   }
 
-  showToast(`👁️ Mode: ${modeNames[mode] || mode}`, 'info');
+  showToast(`ðŸ‘ï¸ Mode: ${modeNames[mode] || mode}`, 'info');
 }
 
 // 7. Lighting & Studio Controls
@@ -5007,7 +5017,7 @@ function setI3dLighting(preset) {
   if (expVal) expVal.textContent = viewer.exposure.toFixed(2);
   if (expInput) expInput.value = viewer.exposure;
 
-  showToast(`💡 Lighting: ${preset.toUpperCase()}`, 'info');
+  showToast(`ðŸ’¡ Lighting: ${preset.toUpperCase()}`, 'info');
 }
 
 function adjustI3dExposure(val) {
@@ -5046,7 +5056,7 @@ function setI3dCameraPreset(preset) {
   viewer.cameraOrbit = orbits[preset] || '45deg 75deg 105%';
   viewer.fieldOfView = 'auto';
 
-  showToast(`🎥 Camera: ${preset.toUpperCase()}`, 'info');
+  showToast(`ðŸŽ¥ Camera: ${preset.toUpperCase()}`, 'info');
 }
 
 function toggleI3dRotate() {
@@ -5062,19 +5072,19 @@ function toggleI3dRotate() {
   }
 
   if (btn) {
-    btn.innerHTML = `<i class="fas fa-rotate"></i> <span>360° Auto-Rotate: ${i3dRotateActive ? 'ON' : 'OFF'}</span>`;
+    btn.innerHTML = `<i class="fas fa-rotate"></i> <span>360Â° Auto-Rotate: ${i3dRotateActive ? 'ON' : 'OFF'}</span>`;
   }
 
-  showToast(i3dRotateActive ? '🔄 360° Auto-Rotate ON' : '⏸️ Auto-Rotate Paused', 'info');
+  showToast(i3dRotateActive ? 'ðŸ”„ 360Â° Auto-Rotate ON' : 'â¸ï¸ Auto-Rotate Paused', 'info');
 }
 
 function toggleI3dCinematicTour() {
   if (i3dCinematicTimer) {
     stopI3dCinematicTour();
-    showToast('⏸️ Cinematic Tour Paused');
+    showToast('â¸ï¸ Cinematic Tour Paused');
   } else {
     startI3dCinematicTour();
-    showToast('🎬 Cinematic Auto-Tour Started!');
+    showToast('ðŸŽ¬ Cinematic Auto-Tour Started!');
   }
 }
 
@@ -5129,7 +5139,7 @@ function saveOriginalModelMaterials() {
 function applyI3dMaterialTint(hexColor, metallic = 0.8, roughness = 0.25, name = 'Custom') {
   const viewer = document.getElementById('i3dModelViewer');
   if (!viewer?.model?.materials?.length) {
-    showToast('ℹ️ Model materials initializing, please wait a moment...', 'info');
+    showToast('â„¹ï¸ Model materials initializing, please wait a moment...', 'info');
     return;
   }
 
@@ -5148,7 +5158,7 @@ function applyI3dMaterialTint(hexColor, metallic = 0.8, roughness = 0.25, name =
   document.querySelectorAll('#i3dPanelMaterials .i3d-swatch').forEach(b => b.classList.remove('active'));
   if (event?.currentTarget) event.currentTarget.classList.add('active');
 
-  showToast(`🎨 Material Applied: ${name}!`);
+  showToast(`ðŸŽ¨ Material Applied: ${name}!`);
 }
 
 function resetI3dMaterials() {
@@ -5164,7 +5174,7 @@ function resetI3dMaterials() {
   });
 
   document.querySelectorAll('#i3dPanelMaterials .i3d-swatch').forEach(b => b.classList.remove('active'));
-  showToast('🔄 Original PBR Textures Restored!');
+  showToast('ðŸ”„ Original PBR Textures Restored!');
 }
 
 function hexToRgbaArray(hex) {
@@ -5192,7 +5202,7 @@ async function captureI3dScreenshot() {
   const viewer = document.getElementById('i3dModelViewer');
   if (!viewer) return;
 
-  showToast('📸 Capturing HD 3D Render...', 'info');
+  showToast('ðŸ“¸ Capturing HD 3D Render...', 'info');
 
   try {
     const blob = await viewer.toBlob({ idealAspect: true });
@@ -5205,10 +5215,10 @@ async function captureI3dScreenshot() {
     a.click();
     document.body.removeChild(a);
     URL.revokeObjectURL(url);
-    showToast('✅ Screenshot downloaded successfully!');
+    showToast('âœ… Screenshot downloaded successfully!');
   } catch (err) {
     console.error('Screenshot error:', err);
-    showToast('❌ Snapshot failed: ' + err.message, 'error');
+    showToast('âŒ Snapshot failed: ' + err.message, 'error');
   }
 }
 
@@ -5218,7 +5228,7 @@ function resetI3dCamera() {
   stopI3dCinematicTour();
   viewer.cameraOrbit = '45deg 75deg 105%';
   viewer.fieldOfView = 'auto';
-  showToast('🔄 Camera reset to center');
+  showToast('ðŸ”„ Camera reset to center');
 }
 
 // 11. Tab Switcher
@@ -5244,7 +5254,7 @@ function toggleI3dEffect(effectName) {
     if (btnLabels) {
       btnLabels.innerHTML = `<i class="fas fa-tag"></i> <span>Hotspots: ${isOff ? 'OFF' : 'ON'}</span>`;
     }
-    showToast(isOff ? '🏷️ Hotspots Hidden' : '🏷️ Hotspots Visible', 'info');
+    showToast(isOff ? 'ðŸ·ï¸ Hotspots Hidden' : 'ðŸ·ï¸ Hotspots Visible', 'info');
   }
 }
 
@@ -5317,7 +5327,7 @@ function handlePublicGlbUpload(event) {
 
 function loadPublicUserModel(file) {
   if (!file.name.match(/\.(glb|gltf)$/i)) {
-    showToast('❌ Please upload a .glb or .gltf file', 'error');
+    showToast('âŒ Please upload a .glb or .gltf file', 'error');
     return;
   }
   // Revoke old URL
@@ -5332,33 +5342,33 @@ function loadPublicUserModel(file) {
   viewer.setAttribute('auto-rotate', '');
   viewer.setAttribute('camera-controls', '');
 
-  // Clear hotspots (user model — no owner hotspots)
+  // Clear hotspots (user model â€” no owner hotspots)
   const container = document.getElementById('i3dHotspots');
   if (container) container.innerHTML = '';
 
   // Update public zone UI
   const zone = document.getElementById('i3dPublicZone');
   if (zone) {
-    zone.querySelector('.pub-upload-label').textContent = `✅ ${file.name} loaded! Explore below.`;
+    zone.querySelector('.pub-upload-label').textContent = `âœ… ${file.name} loaded! Explore below.`;
     zone.querySelector('.pub-upload-label').style.color = '#00f0ff';
   }
   const dlBtn = document.getElementById('i3dPublicDlBtn');
   if (dlBtn) dlBtn.style.display = 'inline-flex';
 
-  showToast(`🧊 "${file.name}" loaded! Use all tools below to explore in 3D.`);
+  showToast(`ðŸ§Š "${file.name}" loaded! Use all tools below to explore in 3D.`);
 }
 
 async function downloadPublicModelAsVideo() {
   const viewer = document.getElementById('i3dModelViewer');
   if (!viewer) return;
   if (!publicUserModelUrl && !viewer.src) {
-    showToast('⚠️ Please upload a model first!', 'error');
+    showToast('âš ï¸ Please upload a model first!', 'error');
     return;
   }
 
   const dlBtn = document.getElementById('i3dPublicDlBtn');
-  if (dlBtn) { dlBtn.textContent = '⏳ Recording...'; dlBtn.disabled = true; }
-  showToast('🎬 Recording 6-second video — please wait...', 'info');
+  if (dlBtn) { dlBtn.textContent = 'â³ Recording...'; dlBtn.disabled = true; }
+  showToast('ðŸŽ¬ Recording 6-second video â€” please wait...', 'info');
 
   const canvas = document.createElement('canvas');
   canvas.width = 1280;
@@ -5379,7 +5389,7 @@ async function downloadPublicModelAsVideo() {
     a.download = '3d_model_showcase.webm';
     a.click();
     if (dlBtn) { dlBtn.innerHTML = '<i class="fas fa-download"></i> Download as Video'; dlBtn.disabled = false; }
-    showToast('✅ Video downloaded! (Open in browser or rename to .mp4 if needed)');
+    showToast('âœ… Video downloaded! (Open in browser or rename to .mp4 if needed)');
   };
 
   recorder.start(100);
@@ -5418,4 +5428,5 @@ window.downloadPublicModelAsVideo = downloadPublicModelAsVideo;
 window.addEventListener('DOMContentLoaded', () => {
   initI3dShowcase();
 });
+
 
