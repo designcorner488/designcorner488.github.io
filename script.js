@@ -1888,14 +1888,19 @@ function renderReorderList() {
     return;
   }
 
+  let dragSrcIdx = null;
+
   mediaList.forEach((item, idx) => {
     const row = document.createElement('div');
     row.className = `reorder-item${idx === 0 ? ' first-item' : ''}${idx === mediaIndex ? ' active-item' : ''}`;
+    row.setAttribute('draggable', 'true');
+    row.dataset.idx = idx;
 
     const iconClass = item.type === 'video' ? 'fas fa-video' : 'fas fa-cube';
     const badgeText = idx === 0 ? '★ 1' : `#${idx + 1}`;
 
     row.innerHTML = `
+      <span class="drag-handle" title="Drag to reorder"><i class="fas fa-grip-vertical"></i></span>
       <span class="reorder-badge">${badgeText}</span>
       <div class="reorder-info">
         <i class="${iconClass}"></i>
@@ -1907,6 +1912,39 @@ function renderReorderList() {
         <button type="button" class="reorder-btn star-btn" title="Set as #1 First" ${idx === 0 ? 'disabled' : ''} onclick="moveMediaToTop(${idx})"><i class="fas fa-star"></i></button>
       </div>
     `;
+
+    // Drag events
+    row.addEventListener('dragstart', e => {
+      dragSrcIdx = idx;
+      row.classList.add('dragging');
+      e.dataTransfer.effectAllowed = 'move';
+      e.dataTransfer.setData('text/plain', idx);
+    });
+    row.addEventListener('dragend', () => {
+      row.classList.remove('dragging');
+      list.querySelectorAll('.reorder-item').forEach(r => r.classList.remove('drag-over'));
+      dragSrcIdx = null;
+    });
+    row.addEventListener('dragover', e => {
+      e.preventDefault();
+      e.dataTransfer.dropEffect = 'move';
+      list.querySelectorAll('.reorder-item').forEach(r => r.classList.remove('drag-over'));
+      row.classList.add('drag-over');
+    });
+    row.addEventListener('dragleave', e => {
+      if (!row.contains(e.relatedTarget)) row.classList.remove('drag-over');
+    });
+    row.addEventListener('drop', e => {
+      e.preventDefault();
+      row.classList.remove('drag-over');
+      const fromIdx = parseInt(e.dataTransfer.getData('text/plain'));
+      const toIdx = idx;
+      if (!isNaN(fromIdx) && fromIdx !== toIdx) {
+        moveMediaPosition(fromIdx, toIdx);
+      }
+      dragSrcIdx = null;
+    });
+
     list.appendChild(row);
   });
 }

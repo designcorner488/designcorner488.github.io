@@ -791,6 +791,29 @@ body.edit-mode .glb-action-btn {
   background: var(--gold) !important;
   color: #000 !important;
 }
+/* Drag & Drop styles */
+.drag-handle {
+  cursor: grab;
+  color: var(--text-muted);
+  padding: 0 8px 0 2px;
+  font-size: 1rem;
+  user-select: none;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+}
+.drag-handle:active { cursor: grabbing; }
+.reorder-item.dragging {
+  opacity: 0.38;
+  border: 2px dashed var(--accent2);
+  background: rgba(139,92,246,0.08);
+}
+.reorder-item.drag-over {
+  border-color: #00f0ff !important;
+  background: rgba(0, 240, 255, 0.1) !important;
+  transform: scale(1.015);
+  transition: transform 0.1s ease, background 0.1s ease;
+}
 
 .etool-publish{background:rgba(99,102,241,.4);border-color:rgba(99,102,241,.7)}
 .etool-publish:hover{background:rgba(99,102,241,.8)}
