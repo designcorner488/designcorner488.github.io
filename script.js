@@ -154,7 +154,16 @@ async function publishToGitHub() {
     const sizeMB = item.blob.size / (1024 * 1024);
     if (sizeMB > 95) { skipped++; continue; }
 
-    const ext  = item.type === 'glb' ? '.glb' : '.mp4';
+    let ext = '.mp4';
+    if (item.type === 'glb') ext = '.glb';
+    else if (item.type === 'image') {
+      // Try to detect original extension from blob type
+      const mime = item.blob && item.blob.type ? item.blob.type : '';
+      if (mime.includes('png')) ext = '.png';
+      else if (mime.includes('webp')) ext = '.webp';
+      else if (mime.includes('gif')) ext = '.gif';
+      else ext = '.jpg';
+    }
     const safe = (item.name || 'media').replace(/[^a-zA-Z0-9._-]/g, '_') + ext;
 
     if (publishedMap.has(safe)) {
@@ -1863,6 +1872,16 @@ function openReorderModal() {
   modal.style.opacity = '1';
   modal.style.visibility = 'visible';
   modal.classList.add('open');
+  // Wire the in-modal Add Media input
+  const mmInput = document.getElementById('mmAddFileInput');
+  if (mmInput && !mmInput._wired) {
+    mmInput._wired = true;
+    mmInput.addEventListener('change', async e => {
+      await handleUploadFiles(e.target.files);
+      renderReorderList();
+      e.target.value = '';
+    });
+  }
 }
 
 function closeReorderModal() {
@@ -1880,11 +1899,14 @@ window.closeReorderModal = closeReorderModal;
 
 function renderReorderList() {
   const list = document.getElementById('reorderList');
+  const countEl = document.getElementById('mmCount');
   if (!list) return;
   list.innerHTML = '';
 
+  if (countEl) countEl.textContent = `${mediaList.length} / ${MEDIA_MAX} items`;
+
   if (!mediaList.length) {
-    list.innerHTML = '<p style="text-align:center;color:var(--text-muted);padding:1rem;">Koi uploaded model nahi hai.</p>';
+    list.innerHTML = '<p style="text-align:center;color:var(--text-muted);padding:1.5rem;">Koi media nahi hai. Upar Add Media se upload karein.</p>';
     return;
   }
 
@@ -1896,20 +1918,32 @@ function renderReorderList() {
     row.setAttribute('draggable', 'true');
     row.dataset.idx = idx;
 
-    const iconClass = item.type === 'video' ? 'fas fa-video' : 'fas fa-cube';
+    // Icon by type
+    let iconClass = 'fas fa-cube';
+    let typeBadge = 'GLB';
+    let typeBadgeColor = '#8b5cf6';
+    if (item.type === 'video') { iconClass = 'fas fa-video'; typeBadge = 'MP4'; typeBadgeColor = '#06b6d4'; }
+    else if (item.type === 'image') { iconClass = 'fas fa-image'; typeBadge = 'IMG'; typeBadgeColor = '#10b981'; }
+
     const badgeText = idx === 0 ? '★ 1' : `#${idx + 1}`;
+    const isFirst = idx === 0;
 
     row.innerHTML = `
       <span class="drag-handle" title="Drag to reorder"><i class="fas fa-grip-vertical"></i></span>
       <span class="reorder-badge">${badgeText}</span>
+      <span style="background:${typeBadgeColor}22;color:${typeBadgeColor};border:1px solid ${typeBadgeColor}44;border-radius:4px;padding:1px 5px;font-size:0.68rem;font-weight:700;flex-shrink:0;">${typeBadge}</span>
       <div class="reorder-info">
-        <i class="${iconClass}"></i>
-        <span class="reorder-name">${item.name || 'Asset'} ${idx === 0 ? '<strong style="color:var(--gold);font-size:0.75rem;">(Main Display)</strong>' : ''}</span>
+        <span class="reorder-name" title="${item.name || 'Asset'}">${item.name || 'Asset'}${isFirst ? ' <strong style="color:var(--gold);font-size:0.72rem;">(Main)</strong>' : ''}</span>
       </div>
-      <div class="reorder-btns">
-        <button type="button" class="reorder-btn" title="Move Up" ${idx === 0 ? 'disabled' : ''} onclick="moveMediaPosition(${idx}, ${idx - 1})"><i class="fas fa-arrow-up"></i></button>
+      <div class="reorder-btns" style="gap:0.25rem;">
+        <button type="button" class="reorder-btn" title="Move Up" ${isFirst ? 'disabled' : ''} onclick="moveMediaPosition(${idx}, ${idx - 1})"><i class="fas fa-arrow-up"></i></button>
         <button type="button" class="reorder-btn" title="Move Down" ${idx === mediaList.length - 1 ? 'disabled' : ''} onclick="moveMediaPosition(${idx}, ${idx + 1})"><i class="fas fa-arrow-down"></i></button>
-        <button type="button" class="reorder-btn star-btn" title="Set as #1 First" ${idx === 0 ? 'disabled' : ''} onclick="moveMediaToTop(${idx})"><i class="fas fa-star"></i></button>
+        <button type="button" class="reorder-btn star-btn" title="Set as #1" ${isFirst ? 'disabled' : ''} onclick="moveMediaToTop(${idx})"><i class="fas fa-star"></i></button>
+        <label class="reorder-btn" title="Replace this media" style="cursor:pointer;background:rgba(99,102,241,0.3);border-color:rgba(99,102,241,0.6);">
+          <i class="fas fa-sync-alt"></i>
+          <input type="file" accept=".glb,.gltf,.mp4,.webm,.jpg,.jpeg,.png,.webp" style="display:none" onchange="replaceMediaItem(${idx}, this)"/>
+        </label>
+        <button type="button" class="reorder-btn" title="Delete" style="background:rgba(239,68,68,0.2);border-color:rgba(239,68,68,0.5);color:#f87171;" onclick="deleteMediaItem(${idx})"><i class="fas fa-trash-can"></i></button>
       </div>
     `;
 
@@ -1918,7 +1952,7 @@ function renderReorderList() {
       dragSrcIdx = idx;
       row.classList.add('dragging');
       e.dataTransfer.effectAllowed = 'move';
-      e.dataTransfer.setData('text/plain', idx);
+      e.dataTransfer.setData('text/plain', String(idx));
     });
     row.addEventListener('dragend', () => {
       row.classList.remove('dragging');
@@ -1971,6 +2005,61 @@ async function moveMediaToTop(fromIdx) {
 
 window.moveMediaPosition = moveMediaPosition;
 window.moveMediaToTop = moveMediaToTop;
+
+// Delete a specific item by index from Media Manager
+async function deleteMediaItem(idx) {
+  if (idx < 0 || idx >= mediaList.length) return;
+  const item = mediaList[idx];
+  if (!confirm(`"${item.name || 'Item'}" delete karna chahte hain?`)) return;
+  // Remove from IDB
+  if (item.id) {
+    try {
+      const db = await openDB();
+      const tx = db.transaction('media', 'readwrite');
+      tx.objectStore('media').delete(item.id);
+      await new Promise(r => { tx.oncomplete = r; });
+    } catch(e) { console.warn('IDB delete err:', e); }
+  }
+  mediaList.splice(idx, 1);
+  if (mediaList.length === 0) mediaList.push(DEFAULT_SAMPLE_MODEL);
+  await dbSaveAllOrdered(mediaList);
+  renderReorderList();
+  renderMediaDots();
+  setMediaIndex(Math.max(0, idx - 1));
+  showToast(`🗑️ "${item.name || 'Item'}" delete ho gaya!`);
+}
+window.deleteMediaItem = deleteMediaItem;
+
+// Replace a specific item by index
+async function replaceMediaItem(idx, inputEl) {
+  const file = inputEl.files && inputEl.files[0];
+  if (!file) return;
+  const isModel = file.name.match(/\.(glb|gltf)$/i);
+  const isVideo = file.name.match(/\.(mp4|webm)$/i);
+  const isImage = file.name.match(/\.(jpg|jpeg|png|webp|gif)$/i);
+  if (!isModel && !isVideo && !isImage) { showToast('❌ Unsupported format!', 'error'); return; }
+  const oldItem = mediaList[idx];
+  // Remove old from IDB
+  if (oldItem && oldItem.id) {
+    try {
+      const db = await openDB();
+      const tx = db.transaction('media', 'readwrite');
+      tx.objectStore('media').delete(oldItem.id);
+      await new Promise(r => { tx.oncomplete = r; });
+    } catch(e) {}
+  }
+  const newItem = {
+    name: file.name.replace(/\.[^.]+$/, ''),
+    type: isModel ? 'glb' : (isVideo ? 'video' : 'image'),
+    blob: file,
+    rawBlob: file
+  };
+  await dbSaveItem(newItem);
+  showToast(`♻️ "${newItem.name}" replace ho gaya!`);
+  await loadSavedMedia();
+  renderReorderList();
+}
+window.replaceMediaItem = replaceMediaItem;
 
 
 async function initGLBViewer() {
