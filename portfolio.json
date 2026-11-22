@@ -580,5 +580,8 @@
       "downloads": "620+"
     }
   ],
-  "_fontSizes": {}
+  "_fontSizes": {
+    "heroLine3": "28.5px",
+    "heroLine2": "58.5px"
+  }
 }
