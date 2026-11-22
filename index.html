@@ -16,7 +16,7 @@ window.addEventListener('error', function(e) {
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
-  <link rel="stylesheet" href="style.css?v=26.0"/>
+  <link rel="stylesheet" href="style.css?v=27.0"/>
   <script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/3.4.0/model-viewer.min.js"></script>
 </head>
 <body>
@@ -123,8 +123,8 @@ window.addEventListener('error', function(e) {
   <div class="nav-links" id="navLinks">
     <a href="#home"            class="nav-link active">Home</a>
     <a href="#about"           class="nav-link">About</a>
-    <a href="#interactive-3d"  class="nav-link">3D Models</a>
     <a href="#work"            class="nav-link">Portfolio</a>
+    <a href="#interactive-3d"  class="nav-link">3D Studio</a>
     <a href="#services"        class="nav-link">Services &amp; Tools</a>
     <a href="#contact"         class="nav-link">Contact</a>
     <a href="addons-store/" class="nav-link nav-store-drawer-link" target="_blank" style="color:var(--gold);font-weight:700">
@@ -409,6 +409,169 @@ window.addEventListener('error', function(e) {
   </div>
 </section>
 
+<!-- PORTFOLIO / WORK SECTION -->
+<!-- PORTFOLIO / WORK SECTION (CINEMATIC SHOWCASE SLIDER) -->
+<section class="projects section" id="work">
+  <div class="container">
+    <div class="section-header" data-aos="fade-up">
+      <div class="section-tag editable" data-key="workTag">My Work</div>
+      <h2 class="section-title"><span class="editable" data-key="workTitle1">Featured </span><span class="gradient-text editable" data-key="workTitle2">Projects</span></h2>
+      <p class="section-sub editable" data-key="workSub">A showcase of my best work across different domains</p>
+    </div>
+
+    <!-- FILTER BAR & ACTION CONTROLS -->
+    <div class="filter-controls-wrap" data-aos="fade-up">
+      <!-- FILTER TABS � dynamic from portfolio.json -->
+      <div class="filter-tabs" id="filter-bar">
+        <button class="filter-btn active" data-cat="all">All Work</button>
+        <button class="filter-btn" data-cat="architecture">Architecture</button>
+        <button class="filter-btn" data-cat="interior">Interiors</button>
+        <button class="filter-btn" data-cat="product">Product Design</button>
+        <button class="filter-btn" data-cat="graphics">Graphics</button>
+        <button class="filter-btn" data-cat="animation">Animations</button>
+      </div>
+
+      <!-- EDIT & VIEW CONTROLS (Only visible in Edit Mode or View Toggle) -->
+      <div class="projects-toolbar">
+        <button type="button" class="btn-add-project-slide" id="btnAddProjectSlide" onclick="openAddProjectModal()">
+          <i class="fas fa-plus-circle"></i> <span id="btnAddSlideText">Add Slide</span>
+        </button>
+        <div class="view-toggle-wrap">
+          <button type="button" class="view-toggle-btn active" id="viewBtnSlider" onclick="switchProjectsView('slider')" title="Cinematic Slider View">
+            <i class="fas fa-film"></i> <span>Slider</span>
+          </button>
+          <button type="button" class="view-toggle-btn" id="viewBtnGrid" onclick="switchProjectsView('grid')" title="Masonry Grid View">
+            <i class="fas fa-th"></i> <span>Grid</span>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- 1. CINEMATIC SHOWCASE SLIDER (PRIMARY DEFAULT VIEW) -->
+    <div class="projects-slider-container" id="projectsSliderContainer" data-aos="fade-up">
+      <div class="slider-progress-track">
+        <div class="slider-progress-bar" id="sliderProgressBar"></div>
+      </div>
+
+      <div class="slider-stage-wrapper">
+        <!-- LEFT: MEDIA VIEWPORT (Images / MP4 Video / 3D GLB) -->
+        <div class="slider-media-stage" id="sliderMediaStage">
+          <div class="slider-media-badge" id="sliderMediaBadge">
+            <i class="fas fa-image"></i> <span>RENDER</span>
+          </div>
+
+          <img id="sliderImg" src="https://raw.githubusercontent.com/designcorner488/designcorner488.github.io/master/images/1793906345433-44.jpeg" alt="Project Render" style="display:block;width:100%;height:100%;object-fit:cover;" />
+          <video id="sliderVideo" autoplay muted loop playsinline style="display:none;"></video>
+          <model-viewer id="sliderGlb" auto-rotate camera-controls shadow-intensity="1.5" exposure="1.1" style="display:none; width:100%; height:100%;"></model-viewer>
+          <iframe id="sliderIframe" style="display:none; width:100%; height:100%; border:none;" allowfullscreen></iframe>
+
+          <div class="slider-glb-hint" id="sliderGlbHint" style="display:none;">
+            <i class="fas fa-hand-pointer"></i> Drag to rotate in 3D
+          </div>
+
+          <!-- Video Audio Toggle Button -->
+          <button type="button" class="btn-media-audio" id="sliderAudioBtn" onclick="toggleSlideVideoAudio()" title="Mute/Unmute Audio" style="display:none;">
+            <i class="fas fa-volume-mute" id="sliderAudioIcon"></i>
+          </button>
+
+          <!-- Expand / Lightbox overlay button -->
+          <button type="button" class="btn-media-expand" onclick="openCurrentSlideLightbox()" title="View Fullscreen / HD">
+            <i class="fas fa-expand"></i>
+          </button>
+        </div>
+
+        <!-- RIGHT: DETAILS & DESCRIPTION PANEL -->
+        <div class="slider-details-panel">
+          <div>
+            <div class="slider-details-header">
+              <span class="slider-cat-pill" id="sliderCatPill">ARCHITECTURE</span>
+              <span class="slider-counter" id="sliderCounter">01 / 17</span>
+            </div>
+
+            <h3 class="slider-title" id="sliderTitle">Modern Hillside Villa &amp; Cantilever Deck</h3>
+
+            <div class="slider-meta-tags" id="sliderMetaTags">
+              <span class="slider-tag">Blender 4.2</span>
+              <span class="slider-tag">Revit BIM</span>
+              <span class="slider-tag">D5 Render</span>
+              <span class="slider-tag">Exterior 4K</span>
+            </div>
+
+            <div class="slider-desc" id="sliderDesc">
+              Contemporary two-story luxury residence designed with spatial ergonomics and seamless indoor-outdoor living. Features expansive floor-to-ceiling curtain glass, evening perimeter lighting, swimming pool deck, and timber acoustic cladding.
+            </div>
+          </div>
+
+          <div class="slider-details-footer">
+            <div class="slider-actions">
+              <button type="button" class="btn-slider-action btn-slider-primary" onclick="openCurrentSlideLightbox()">
+                <i class="fas fa-expand"></i> <span>View Fullscreen</span>
+              </button>
+
+              <!-- Edit Mode Action Buttons -->
+              <button type="button" class="slider-edit-btn" onclick="openEditCurrentProjectModal()" title="Edit Title, Description & Media">
+                <i class="fas fa-pen"></i> <span>Edit Slide</span>
+              </button>
+              <button type="button" class="slider-edit-btn slider-del-btn" onclick="deleteCurrentProjectSlide()" title="Delete This Slide">
+                <i class="fas fa-trash"></i>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- BOTTOM HUD & THUMBNAILS -->
+      <div class="slider-bottom-hud">
+        <div class="slider-thumbnail-strip" id="sliderThumbStrip">
+          <!-- Dynamic thumbnails by JS -->
+        </div>
+
+        <div class="slider-nav-btns">
+          <button type="button" class="btn-slider-nav" onclick="prevProjectSlide()" title="Previous Slide">
+            <i class="fas fa-chevron-left"></i>
+          </button>
+          <div class="slider-auto-pill" id="sliderAutoPill" onclick="toggleProjectSliderAutoplay()" title="Toggle Auto-Slide">
+            <i class="fas fa-rotate" id="sliderAutoIcon"></i> <span id="sliderAutoText">5s AUTO</span>
+          </div>
+          <button type="button" class="btn-slider-nav" onclick="nextProjectSlide()" title="Next Slide">
+            <i class="fas fa-chevron-right"></i>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- EMPTY STATE FOR CATEGORY WITHOUT SLIDES -->
+    <div class="slider-empty-card" id="sliderEmptyCard" style="display:none;">
+      <div class="slider-empty-icon"><i class="fas fa-folder-open"></i></div>
+      <h3 id="sliderEmptyTitle">No Projects in this Category</h3>
+      <p id="sliderEmptySub">Is category mein abhi koi project nahi hai. Edit mode on kar ke "Add Slide" se render, video ya 3D model add karein!</p>
+      <button type="button" class="btn-add-project-slide" onclick="openAddProjectModal()" style="display:inline-flex; margin-top:1.2rem;">
+        <i class="fas fa-plus"></i> <span>Add Slide Now</span>
+      </button>
+    </div>
+
+    <!-- 2. GALLERY GRID (ACCESSIBLE VIA GRID VIEW TOGGLE) -->
+    <div class="projects-grid gallery-masonry" id="gallery-grid" style="display:none;">
+      <div class="gallery-loading" id="gallery-loading">
+        <div class="loading-spinner"></div>
+        <p>Loading portfolio...</p>
+      </div>
+    </div>
+
+    <div class="gallery-empty-state" id="gallery-empty" style="display:none;">
+      <i class="fas fa-images"></i>
+      <h3>No projects yet</h3>
+      <p>Go to the <a href="admin/">Admin Panel</a> to add your first project.</p>
+    </div>
+
+    <div class="projects-cta" id="load-more-wrap" style="display:none;">
+      <button class="btn-primary" id="load-more-btn"><span>Load More Work</span><i class="fas fa-arrow-down"></i></button>
+    </div>
+  </div>
+</section>
+
+
+
 <!-- INTERACTIVE 3D MODELS: NEXT-GEN SHOWCASE PLATFORM -->
 <section class="i3d-section section" id="interactive-3d">
   <div class="container">
@@ -416,6 +579,28 @@ window.addEventListener('error', function(e) {
       <div class="section-tag editable" data-key="i3dTag">Next-Gen 3D Engine</div>
       <h2 class="section-title"><span class="editable" data-key="i3dTitle1">Interactive </span><span class="gradient-text editable" data-key="i3dTitle2">3D Studio</span></h2>
       <p class="section-sub editable" data-key="i3dSub">Explore, inspect, customize materials, examine blueprints &amp; animate 3D GLB models in real-time</p>
+    </div>
+
+    <!-- PUBLIC VISITOR UPLOAD ZONE -->
+    <div class="i3d-public-zone" id="i3dPublicZone" data-aos="fade-up"
+         ondragover="event.preventDefault();this.classList.add('drag-over')"
+         ondragleave="this.classList.remove('drag-over')"
+         ondrop="handlePublicGlbDrop(event)">
+      <div class="i3d-public-hero">
+        <div class="pub-icon-wrap"><i class="fas fa-cube"></i></div>
+        <div>
+          <h3 class="pub-title">🧊 Upload Your 3D Model &amp; Get Interactive</h3>
+          <p class="pub-sub">Drop your .GLB / .GLTF — explore in 360°, apply VFX effects, and download as video</p>
+        </div>
+      </div>
+      <label class="i3d-public-upload-area" for="i3dPublicFile">
+        <i class="fas fa-cloud-arrow-up pub-upload-icon"></i>
+        <span class="pub-upload-label">Drop .GLB file here or <u>click to browse</u></span>
+        <input type="file" id="i3dPublicFile" accept=".glb,.gltf" style="display:none;" onchange="handlePublicGlbUpload(event)">
+      </label>
+      <button type="button" id="i3dPublicDlBtn" class="btn-pub-download" onclick="downloadPublicModelAsVideo()" style="display:none;">
+        <i class="fas fa-download"></i> Download as Video
+      </button>
     </div>
 
     <div class="i3d-wrapper" id="i3dWrapper" data-aos="fade-up">
@@ -446,6 +631,9 @@ window.addEventListener('error', function(e) {
           </button>
           <button type="button" class="btn-i3d-tool" onclick="resetI3dCamera()" title="Reset Camera View">
             <i class="fas fa-rotate-left"></i>
+          </button>
+          <button type="button" class="btn-i3d-publish" onclick="publishToGitHub()" title="Publish Live to GitHub">
+            <i class="fas fa-cloud-upload-alt"></i> <span>Publish Live</span>
           </button>
         </div>
       </div>
@@ -675,169 +863,6 @@ window.addEventListener('error', function(e) {
     </div>
   </div>
 </section>
-
-<!-- PORTFOLIO / WORK SECTION -->
-<!-- PORTFOLIO / WORK SECTION (CINEMATIC SHOWCASE SLIDER) -->
-<section class="projects section" id="work">
-  <div class="container">
-    <div class="section-header" data-aos="fade-up">
-      <div class="section-tag editable" data-key="workTag">My Work</div>
-      <h2 class="section-title"><span class="editable" data-key="workTitle1">Featured </span><span class="gradient-text editable" data-key="workTitle2">Projects</span></h2>
-      <p class="section-sub editable" data-key="workSub">A showcase of my best work across different domains</p>
-    </div>
-
-    <!-- FILTER BAR & ACTION CONTROLS -->
-    <div class="filter-controls-wrap" data-aos="fade-up">
-      <!-- FILTER TABS � dynamic from portfolio.json -->
-      <div class="filter-tabs" id="filter-bar">
-        <button class="filter-btn active" data-cat="all">All Work</button>
-        <button class="filter-btn" data-cat="architecture">Architecture</button>
-        <button class="filter-btn" data-cat="interior">Interiors</button>
-        <button class="filter-btn" data-cat="product">Product Design</button>
-        <button class="filter-btn" data-cat="graphics">Graphics</button>
-        <button class="filter-btn" data-cat="animation">Animations</button>
-      </div>
-
-      <!-- EDIT & VIEW CONTROLS (Only visible in Edit Mode or View Toggle) -->
-      <div class="projects-toolbar">
-        <button type="button" class="btn-add-project-slide" id="btnAddProjectSlide" onclick="openAddProjectModal()">
-          <i class="fas fa-plus-circle"></i> <span id="btnAddSlideText">Add Slide</span>
-        </button>
-        <div class="view-toggle-wrap">
-          <button type="button" class="view-toggle-btn active" id="viewBtnSlider" onclick="switchProjectsView('slider')" title="Cinematic Slider View">
-            <i class="fas fa-film"></i> <span>Slider</span>
-          </button>
-          <button type="button" class="view-toggle-btn" id="viewBtnGrid" onclick="switchProjectsView('grid')" title="Masonry Grid View">
-            <i class="fas fa-th"></i> <span>Grid</span>
-          </button>
-        </div>
-      </div>
-    </div>
-
-    <!-- 1. CINEMATIC SHOWCASE SLIDER (PRIMARY DEFAULT VIEW) -->
-    <div class="projects-slider-container" id="projectsSliderContainer" data-aos="fade-up">
-      <div class="slider-progress-track">
-        <div class="slider-progress-bar" id="sliderProgressBar"></div>
-      </div>
-
-      <div class="slider-stage-wrapper">
-        <!-- LEFT: MEDIA VIEWPORT (Images / MP4 Video / 3D GLB) -->
-        <div class="slider-media-stage" id="sliderMediaStage">
-          <div class="slider-media-badge" id="sliderMediaBadge">
-            <i class="fas fa-image"></i> <span>RENDER</span>
-          </div>
-
-          <img id="sliderImg" src="https://raw.githubusercontent.com/designcorner488/designcorner488.github.io/master/images/1793906345433-44.jpeg" alt="Project Render" style="display:block;width:100%;height:100%;object-fit:cover;" />
-          <video id="sliderVideo" autoplay muted loop playsinline style="display:none;"></video>
-          <model-viewer id="sliderGlb" auto-rotate camera-controls shadow-intensity="1.5" exposure="1.1" style="display:none; width:100%; height:100%;"></model-viewer>
-          <iframe id="sliderIframe" style="display:none; width:100%; height:100%; border:none;" allowfullscreen></iframe>
-
-          <div class="slider-glb-hint" id="sliderGlbHint" style="display:none;">
-            <i class="fas fa-hand-pointer"></i> Drag to rotate in 3D
-          </div>
-
-          <!-- Video Audio Toggle Button -->
-          <button type="button" class="btn-media-audio" id="sliderAudioBtn" onclick="toggleSlideVideoAudio()" title="Mute/Unmute Audio" style="display:none;">
-            <i class="fas fa-volume-mute" id="sliderAudioIcon"></i>
-          </button>
-
-          <!-- Expand / Lightbox overlay button -->
-          <button type="button" class="btn-media-expand" onclick="openCurrentSlideLightbox()" title="View Fullscreen / HD">
-            <i class="fas fa-expand"></i>
-          </button>
-        </div>
-
-        <!-- RIGHT: DETAILS & DESCRIPTION PANEL -->
-        <div class="slider-details-panel">
-          <div>
-            <div class="slider-details-header">
-              <span class="slider-cat-pill" id="sliderCatPill">ARCHITECTURE</span>
-              <span class="slider-counter" id="sliderCounter">01 / 17</span>
-            </div>
-
-            <h3 class="slider-title" id="sliderTitle">Modern Hillside Villa &amp; Cantilever Deck</h3>
-
-            <div class="slider-meta-tags" id="sliderMetaTags">
-              <span class="slider-tag">Blender 4.2</span>
-              <span class="slider-tag">Revit BIM</span>
-              <span class="slider-tag">D5 Render</span>
-              <span class="slider-tag">Exterior 4K</span>
-            </div>
-
-            <div class="slider-desc" id="sliderDesc">
-              Contemporary two-story luxury residence designed with spatial ergonomics and seamless indoor-outdoor living. Features expansive floor-to-ceiling curtain glass, evening perimeter lighting, swimming pool deck, and timber acoustic cladding.
-            </div>
-          </div>
-
-          <div class="slider-details-footer">
-            <div class="slider-actions">
-              <button type="button" class="btn-slider-action btn-slider-primary" onclick="openCurrentSlideLightbox()">
-                <i class="fas fa-expand"></i> <span>View Fullscreen</span>
-              </button>
-
-              <!-- Edit Mode Action Buttons -->
-              <button type="button" class="slider-edit-btn" onclick="openEditCurrentProjectModal()" title="Edit Title, Description & Media">
-                <i class="fas fa-pen"></i> <span>Edit Slide</span>
-              </button>
-              <button type="button" class="slider-edit-btn slider-del-btn" onclick="deleteCurrentProjectSlide()" title="Delete This Slide">
-                <i class="fas fa-trash"></i>
-              </button>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- BOTTOM HUD & THUMBNAILS -->
-      <div class="slider-bottom-hud">
-        <div class="slider-thumbnail-strip" id="sliderThumbStrip">
-          <!-- Dynamic thumbnails by JS -->
-        </div>
-
-        <div class="slider-nav-btns">
-          <button type="button" class="btn-slider-nav" onclick="prevProjectSlide()" title="Previous Slide">
-            <i class="fas fa-chevron-left"></i>
-          </button>
-          <div class="slider-auto-pill" id="sliderAutoPill" onclick="toggleProjectSliderAutoplay()" title="Toggle Auto-Slide">
-            <i class="fas fa-rotate" id="sliderAutoIcon"></i> <span id="sliderAutoText">5s AUTO</span>
-          </div>
-          <button type="button" class="btn-slider-nav" onclick="nextProjectSlide()" title="Next Slide">
-            <i class="fas fa-chevron-right"></i>
-          </button>
-        </div>
-      </div>
-    </div>
-
-    <!-- EMPTY STATE FOR CATEGORY WITHOUT SLIDES -->
-    <div class="slider-empty-card" id="sliderEmptyCard" style="display:none;">
-      <div class="slider-empty-icon"><i class="fas fa-folder-open"></i></div>
-      <h3 id="sliderEmptyTitle">No Projects in this Category</h3>
-      <p id="sliderEmptySub">Is category mein abhi koi project nahi hai. Edit mode on kar ke "Add Slide" se render, video ya 3D model add karein!</p>
-      <button type="button" class="btn-add-project-slide" onclick="openAddProjectModal()" style="display:inline-flex; margin-top:1.2rem;">
-        <i class="fas fa-plus"></i> <span>Add Slide Now</span>
-      </button>
-    </div>
-
-    <!-- 2. GALLERY GRID (ACCESSIBLE VIA GRID VIEW TOGGLE) -->
-    <div class="projects-grid gallery-masonry" id="gallery-grid" style="display:none;">
-      <div class="gallery-loading" id="gallery-loading">
-        <div class="loading-spinner"></div>
-        <p>Loading portfolio...</p>
-      </div>
-    </div>
-
-    <div class="gallery-empty-state" id="gallery-empty" style="display:none;">
-      <i class="fas fa-images"></i>
-      <h3>No projects yet</h3>
-      <p>Go to the <a href="admin/">Admin Panel</a> to add your first project.</p>
-    </div>
-
-    <div class="projects-cta" id="load-more-wrap" style="display:none;">
-      <button class="btn-primary" id="load-more-btn"><span>Load More Work</span><i class="fas fa-arrow-down"></i></button>
-    </div>
-  </div>
-</section>
-
-
 
 <!-- SERVICES -->
 <section class="services section" id="services">
@@ -1455,9 +1480,10 @@ window.addEventListener('error', function(e) {
   <button type="button" class="btn-fs-reset" onclick="resetActiveFontSize()" title="Reset size"><i class="fas fa-rotate-left"></i></button>
 </div>
 
-<script src="script.js?v=26.0"></script>
+<script src="script.js?v=27.0"></script>
 </body>
 </html>
+
 
 
 

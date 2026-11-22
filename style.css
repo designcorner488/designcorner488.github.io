@@ -3457,6 +3457,99 @@ html {
 /* ============================================================
    INTERACTIVE 3D MODELS SECTION & CYBERPUNK VFX SHADERS
    ============================================================ */
+
+/* ---- PUBLIC VISITOR UPLOAD ZONE ---- */
+.i3d-public-zone {
+  background: linear-gradient(135deg, rgba(0,240,255,0.06), rgba(168,85,247,0.07));
+  border: 1.5px dashed rgba(0, 240, 255, 0.4);
+  border-radius: 20px;
+  padding: 1.6rem 2rem;
+  margin-bottom: 1.5rem;
+  transition: border-color 0.3s;
+}
+.i3d-public-zone.drag-over {
+  border-color: #00f0ff;
+  background: rgba(0, 240, 255, 0.1);
+}
+.i3d-public-hero {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+.pub-icon-wrap {
+  width: 52px; height: 52px;
+  background: linear-gradient(135deg, #00f0ff, #a855f7);
+  border-radius: 14px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1.4rem; color: #fff; flex-shrink: 0;
+}
+.pub-title {
+  font-size: 1.1rem; font-weight: 700; color: #e2e8f0;
+  margin: 0 0 0.25rem;
+}
+.pub-sub { font-size: 0.82rem; color: var(--text-muted); margin: 0; }
+.i3d-public-upload-area {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.4rem;
+  border: 1.5px dashed rgba(0, 240, 255, 0.5);
+  border-radius: 14px;
+  padding: 1.2rem 2rem;
+  cursor: pointer;
+  transition: all 0.3s;
+  text-align: center;
+  margin-bottom: 1rem;
+}
+.i3d-public-upload-area:hover {
+  background: rgba(0, 240, 255, 0.07);
+  border-color: #00f0ff;
+}
+.pub-upload-icon { font-size: 2rem; color: rgba(0,240,255,0.7); }
+.pub-upload-label { font-size: 0.9rem; color: var(--text-muted); }
+.pub-upload-label u { color: #00f0ff; }
+.btn-pub-download {
+  display: inline-flex; align-items: center; gap: 0.5rem;
+  background: linear-gradient(135deg, #a855f7, #7c3aed);
+  color: #fff; border: none; border-radius: 10px;
+  padding: 0.55rem 1.2rem; font-size: 0.85rem; font-weight: 600;
+  cursor: pointer; transition: all 0.25s; margin-top: 0.25rem;
+}
+.btn-pub-download:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(168,85,247,0.5); }
+
+/* ---- PUBLISH LIVE BUTTON in top bar ---- */
+.btn-i3d-publish {
+  display: inline-flex; align-items: center; gap: 0.4rem;
+  background: linear-gradient(135deg, #00f0ff22, #a855f722);
+  border: 1px solid rgba(0,240,255,0.5);
+  color: #00f0ff; border-radius: 10px;
+  padding: 0.4rem 0.9rem; font-size: 0.8rem; font-weight: 600;
+  cursor: pointer; transition: all 0.25s; white-space: nowrap;
+}
+.btn-i3d-publish:hover {
+  background: linear-gradient(135deg, #00f0ff33, #a855f733);
+  border-color: #00f0ff;
+  box-shadow: 0 4px 15px rgba(0,240,255,0.3);
+}
+
+/* ---- HOTSPOT DELETE BUTTON ---- */
+.hotspot-del-btn {
+  display: block;
+  margin-top: 4px;
+  background: rgba(239,68,68,0.15);
+  border: 1px solid rgba(239,68,68,0.5);
+  color: #ef4444;
+  border-radius: 6px;
+  padding: 2px 7px;
+  font-size: 0.7rem;
+  cursor: pointer;
+  transition: background 0.2s;
+  width: 100%;
+  text-align: center;
+}
+.hotspot-del-btn:hover { background: rgba(239,68,68,0.3); }
+
 .i3d-wrapper {
   background: var(--surface);
   border: 1px solid rgba(0, 240, 255, 0.25);
@@ -3597,26 +3690,54 @@ html {
 }
 .i3d-hotspot-card {
   position: absolute;
-  bottom: 26px;
-  left: 50%;
-  transform: translateX(-50%) translateY(6px);
-  background: rgba(10, 14, 32, 0.94);
+  bottom: 50%;
+  left: 32px;
+  transform: translateY(50%) translateX(4px);
+  background: rgba(10, 14, 32, 0.95);
   border: 1px solid rgba(0, 240, 255, 0.45);
-  backdrop-filter: blur(10px);
+  backdrop-filter: blur(14px);
   border-radius: 12px;
   padding: 0.6rem 0.9rem;
-  white-space: nowrap;
+  min-width: 160px;
+  max-width: 220px;
+  white-space: normal;
   pointer-events: auto;
-  opacity: 0.92;
-  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.75), 0 0 20px rgba(0, 240, 255, 0.25);
+  opacity: 0;
+  pointer-events: none;
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.75), 0 0 20px rgba(0, 240, 255, 0.2);
   transition: all 0.25s ease;
+  z-index: 20;
+}
+/* Connector line from dot to card */
+.i3d-hotspot-card::before {
+  content: '';
+  position: absolute;
+  left: -22px;
+  top: 50%;
+  width: 20px;
+  height: 2px;
+  background: linear-gradient(to right, transparent, #00f0ff);
+  transform: translateY(-50%);
+  box-shadow: 0 0 6px #00f0ff;
+}
+/* Arrow head */
+.i3d-hotspot-card::after {
+  content: '';
+  position: absolute;
+  left: -6px;
+  top: 50%;
+  border: 5px solid transparent;
+  border-right-color: #00f0ff;
+  transform: translateY(-50%);
+  filter: drop-shadow(0 0 3px #00f0ff);
 }
 .i3d-hotspot:hover .i3d-hotspot-card,
 .i3d-hotspot.active .i3d-hotspot-card {
-  transform: translateX(-50%) translateY(0);
+  transform: translateY(50%) translateX(0);
   opacity: 1;
+  pointer-events: auto;
   border-color: #00f0ff;
-  box-shadow: 0 12px 35px rgba(0, 240, 255, 0.4);
+  box-shadow: 0 12px 35px rgba(0, 240, 255, 0.35);
 }
 .i3d-hotspot-card strong {
   display: block;

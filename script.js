@@ -4499,6 +4499,7 @@ const DEFAULT_I3D_MODELS = [
     category: 'Architecture BIM',
     src: 'media/snaks_bar.glb',
     desc: 'Full architectural kiosk with reinforced glass and LED lighting',
+    locked: true,
     hotspots: [
       { top: '32%', left: '45%', title: 'Neon Counter', desc: 'Reinforced glass with underglow LED strips', specs: 'Length: 3.2m · Material: Tempered Glass' },
       { top: '58%', left: '62%', title: 'Cooling Unit', desc: 'Commercial beverage refrigeration display', specs: 'Temp: -2°C to 4°C · 350L Capacity' },
@@ -4511,6 +4512,7 @@ const DEFAULT_I3D_MODELS = [
     category: 'Site & Landscape',
     src: 'media/survey_contour_terrain.glb',
     desc: 'Topographical land contour mesh for architectural site planning',
+    locked: true,
     hotspots: [
       { top: '40%', left: '50%', title: 'Elevation Crest', desc: 'Peak contour line +32.5m ASL', specs: 'Slope: 18° · Soil: Clay/Limestone' }
     ]
@@ -4521,6 +4523,7 @@ const DEFAULT_I3D_MODELS = [
     category: 'Furniture Design',
     src: 'media/Modern_Chair_1.glb',
     desc: 'High-end parametric office chair with mesh backing',
+    locked: true,
     hotspots: [
       { top: '40%', left: '50%', title: 'Lumbar Mesh', desc: 'Self-adjusting active lumbar support', specs: 'Breathable Nylon Mesh · 120kg Test' }
     ]
@@ -4531,6 +4534,7 @@ const DEFAULT_I3D_MODELS = [
     category: 'Interior Viz',
     src: 'media/sofa.glb',
     desc: 'Luxury Italian velvet sofa with brushed bronze legs',
+    locked: true,
     hotspots: [
       { top: '48%', left: '50%', title: 'Velvet Upholstery', desc: 'Double-stitched premium Italian velvet', specs: 'Martindale: 50,000 Rubs' }
     ]
@@ -4541,6 +4545,7 @@ const DEFAULT_I3D_MODELS = [
     category: 'Product & Lighting',
     src: 'media/lamp.glb',
     desc: 'Futuristic floor lamp with adjustable luminescence',
+    locked: true,
     hotspots: [
       { top: '30%', left: '50%', title: 'LED Diffuser', desc: '360° addressable RGB COB LED ring', specs: 'Lumens: 2400lm · Color: 6500K' }
     ]
@@ -4551,6 +4556,7 @@ const DEFAULT_I3D_MODELS = [
     category: 'Interior Viz',
     src: 'media/Meshy_AI_Ornate_Wooden_Dining__1031072807_texture.glb',
     desc: 'Hand-carved classical wooden dining ensemble with detailed textures',
+    locked: true,
     hotspots: [
       { top: '42%', left: '48%', title: 'Carved Oak Top', desc: 'Solid French oak with satin oil finish', specs: 'Dimensions: 220cm x 100cm' }
     ]
@@ -4683,6 +4689,7 @@ function renderI3dHotspots(model) {
 
   container.innerHTML = '';
   const hotspots = model.hotspots || [];
+  const isLocked = !!model.locked;
 
   hotspots.forEach((h, idx) => {
     const btn = document.createElement('button');
@@ -4691,7 +4698,7 @@ function renderI3dHotspots(model) {
     btn.style.position = 'absolute';
     btn.style.top = h.top || '50%';
     btn.style.left = h.left || '50%';
-    btn.onclick = () => btn.classList.toggle('active');
+    btn.dataset.idx = idx;
 
     btn.innerHTML = `
       <div class="i3d-hotspot-dot"></div>
@@ -4699,16 +4706,82 @@ function renderI3dHotspots(model) {
         <strong>${h.title}</strong>
         <span>${h.desc}</span>
         ${h.specs ? `<span class="hotspot-specs">${h.specs}</span>` : ''}
+        ${!isLocked ? `<button class="hotspot-del-btn" title="Delete hotspot" onclick="deleteI3dHotspot(${idx});event.stopPropagation();">✕</button>` : ''}
       </div>
     `;
+
+    // Click to toggle card
+    btn.onclick = (e) => {
+      if (e.target.classList.contains('hotspot-del-btn')) return;
+      btn.classList.toggle('active');
+    };
+
+    // Drag to reposition (only for non-locked/user models)
+    if (!isLocked) {
+      btn.setAttribute('draggable', 'false'); // prevent ghost image
+      let isDragging = false, startX, startY, startTop, startLeft;
+
+      btn.addEventListener('mousedown', (e) => {
+        if (e.target.classList.contains('hotspot-del-btn')) return;
+        e.preventDefault();
+        isDragging = false;
+        const stage = container.parentElement;
+        const rect = stage.getBoundingClientRect();
+        startX = e.clientX;
+        startY = e.clientY;
+        startTop = parseFloat(btn.style.top) || 50;
+        startLeft = parseFloat(btn.style.left) || 50;
+
+        const onMove = (ev) => {
+          const dx = ev.clientX - startX;
+          const dy = ev.clientY - startY;
+          if (Math.abs(dx) > 3 || Math.abs(dy) > 3) isDragging = true;
+          if (!isDragging) return;
+          const newTop = Math.max(5, Math.min(95, startTop + (dy / rect.height) * 100));
+          const newLeft = Math.max(5, Math.min(95, startLeft + (dx / rect.width) * 100));
+          btn.style.top = newTop + '%';
+          btn.style.left = newLeft + '%';
+        };
+        const onUp = () => {
+          document.removeEventListener('mousemove', onMove);
+          document.removeEventListener('mouseup', onUp);
+          if (isDragging) {
+            // Save updated position
+            h.top = btn.style.top;
+            h.left = btn.style.left;
+            saveI3dModelsState();
+            showToast('📌 Hotspot repositioned!');
+          }
+        };
+        document.addEventListener('mousemove', onMove);
+        document.addEventListener('mouseup', onUp);
+      });
+    }
 
     container.appendChild(btn);
   });
 }
 
+function deleteI3dHotspot(idx) {
+  const model = i3dModelsList.find(m => m.id === currentI3dModelId);
+  if (!model || model.locked) return;
+  model.hotspots = model.hotspots || [];
+  model.hotspots.splice(idx, 1);
+  saveI3dModelsState();
+  renderI3dHotspots(model);
+  showToast('🗑️ Hotspot deleted!');
+}
+
+
 function promptAddHotspot() {
   const model = i3dModelsList.find(m => m.id === currentI3dModelId);
   if (!model) return;
+
+  // Lock check: visitors cannot add hotspots to owner sample models
+  if (model.locked) {
+    showToast('🔒 Sample models are read-only. Upload your own GLB to add hotspots!', 'error');
+    return;
+  }
 
   const title = prompt('Hotspot Title (e.g. Structural Column, Glass Facade):');
   if (!title) return;
@@ -4726,7 +4799,7 @@ function promptAddHotspot() {
 
   saveI3dModelsState();
   renderI3dHotspots(model);
-  showToast(`✅ Hotspot "${title}" added to model!`);
+  showToast(`✅ Hotspot "${title}" added! Drag it to reposition.`);
 }
 
 // 4. Modal Management: Add 3D Model
@@ -4821,6 +4894,12 @@ function deleteCurrent3dModel() {
 
   const current = i3dModelsList.find(m => m.id === currentI3dModelId);
   const name = current?.name || 'this model';
+
+  // Lock check: visitors cannot delete owner sample models
+  if (current?.locked) {
+    showToast('🔒 Owner sample models cannot be deleted. Upload your own GLB to manage it!', 'error');
+    return;
+  }
 
   if (!confirm(`Are you sure you want to delete "${name}" from the 3D Showcase?`)) {
     return;
@@ -5193,11 +5272,132 @@ window.closeAdd3dModelModal = closeAdd3dModelModal;
 window.handleSaveNew3dModel = handleSaveNew3dModel;
 window.deleteCurrent3dModel = deleteCurrent3dModel;
 window.promptAddHotspot = promptAddHotspot;
+window.deleteI3dHotspot = deleteI3dHotspot;
 window.captureI3dScreenshot = captureI3dScreenshot;
 window.toggleI3dFullscreen = toggleI3dFullscreen;
 window.resetI3dCamera = resetI3dCamera;
 window.switchI3dTab = switchI3dTab;
 window.toggleI3dEffect = toggleI3dEffect;
+
+// =============================================
+// PUBLIC VISITOR 3D UPLOAD ZONE
+// =============================================
+let publicUserModelUrl = null;
+let publicModelRecorder = null;
+
+function handlePublicGlbDrop(event) {
+  event.preventDefault();
+  event.currentTarget.classList.remove('drag-over');
+  const file = event.dataTransfer.files[0];
+  if (!file) return;
+  loadPublicUserModel(file);
+}
+
+function handlePublicGlbUpload(event) {
+  const file = event.target.files[0];
+  if (!file) return;
+  loadPublicUserModel(file);
+}
+
+function loadPublicUserModel(file) {
+  if (!file.name.match(/\.(glb|gltf)$/i)) {
+    showToast('❌ Please upload a .glb or .gltf file', 'error');
+    return;
+  }
+  // Revoke old URL
+  if (publicUserModelUrl) URL.revokeObjectURL(publicUserModelUrl);
+  publicUserModelUrl = URL.createObjectURL(file);
+
+  // Load into the shared viewer
+  const viewer = document.getElementById('i3dModelViewer');
+  if (!viewer) return;
+  viewer.src = publicUserModelUrl;
+  viewer.setAttribute('camera-orbit', '45deg 75deg 2.5m');
+  viewer.setAttribute('auto-rotate', '');
+  viewer.setAttribute('camera-controls', '');
+
+  // Clear hotspots (user model — no owner hotspots)
+  const container = document.getElementById('i3dHotspots');
+  if (container) container.innerHTML = '';
+
+  // Update public zone UI
+  const zone = document.getElementById('i3dPublicZone');
+  if (zone) {
+    zone.querySelector('.pub-upload-label').textContent = `✅ ${file.name} loaded! Explore below.`;
+    zone.querySelector('.pub-upload-label').style.color = '#00f0ff';
+  }
+  const dlBtn = document.getElementById('i3dPublicDlBtn');
+  if (dlBtn) dlBtn.style.display = 'inline-flex';
+
+  showToast(`🧊 "${file.name}" loaded! Use all tools below to explore in 3D.`);
+}
+
+async function downloadPublicModelAsVideo() {
+  const viewer = document.getElementById('i3dModelViewer');
+  if (!viewer) return;
+  if (!publicUserModelUrl && !viewer.src) {
+    showToast('⚠️ Please upload a model first!', 'error');
+    return;
+  }
+
+  const dlBtn = document.getElementById('i3dPublicDlBtn');
+  if (dlBtn) { dlBtn.textContent = '⏳ Recording...'; dlBtn.disabled = true; }
+  showToast('🎬 Recording 6-second video — please wait...', 'info');
+
+  const canvas = document.createElement('canvas');
+  canvas.width = 1280;
+  canvas.height = 720;
+  const ctx = canvas.getContext('2d');
+
+  const mimeType = MediaRecorder.isTypeSupported('video/webm;codecs=vp9')
+    ? 'video/webm;codecs=vp9'
+    : 'video/webm';
+  const stream = canvas.captureStream(25);
+  const recorder = new MediaRecorder(stream, { mimeType, videoBitsPerSecond: 4000000 });
+  const chunks = [];
+  recorder.ondataavailable = e => { if (e.data.size > 0) chunks.push(e.data); };
+  recorder.onstop = () => {
+    const blob = new Blob(chunks, { type: 'video/webm' });
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = '3d_model_showcase.webm';
+    a.click();
+    if (dlBtn) { dlBtn.innerHTML = '<i class="fas fa-download"></i> Download as Video'; dlBtn.disabled = false; }
+    showToast('✅ Video downloaded! (Open in browser or rename to .mp4 if needed)');
+  };
+
+  recorder.start(100);
+  const dur = 6000;
+  const fps = 25;
+  const interval = 1000 / fps;
+  let elapsed = 0;
+
+  const frameLoop = setInterval(async () => {
+    elapsed += interval;
+    try {
+      const blob = await viewer.toBlob({ idealAspect: false });
+      if (blob) {
+        const img = new Image();
+        const imgUrl = URL.createObjectURL(blob);
+        img.onload = () => {
+          ctx.fillStyle = '#0a0e20';
+          ctx.fillRect(0, 0, canvas.width, canvas.height);
+          ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+          URL.revokeObjectURL(imgUrl);
+        };
+        img.src = imgUrl;
+      }
+    } catch (e) { /* model-viewer toBlob may not always fire */ }
+    if (elapsed >= dur) {
+      clearInterval(frameLoop);
+      recorder.stop();
+    }
+  }, interval);
+}
+
+window.handlePublicGlbDrop = handlePublicGlbDrop;
+window.handlePublicGlbUpload = handlePublicGlbUpload;
+window.downloadPublicModelAsVideo = downloadPublicModelAsVideo;
 
 window.addEventListener('DOMContentLoaded', () => {
   initI3dShowcase();
