@@ -151,21 +151,24 @@ class PublishHandler(BaseHTTPRequestHandler):
             json.dump(merged, f, indent=2, ensure_ascii=False)
         print(f"  [E: Drive] portfolio.json saved safely ({len(json.dumps(merged))} bytes)")
 
-        # ---- Git pull rebase + commit + push ----
+        # ---- Git add, commit, rebase, and push cleanly ----
         def git(*args):
             return subprocess.run(
                 ['git'] + list(args), cwd=REPO,
                 capture_output=True, text=True, encoding='utf-8', errors='replace'
             )
 
-        git('pull', '--rebase', 'origin', BRANCH)
         git('add', 'portfolio.json')
-        if os.path.isdir(media_dir) and published_new:
+        if os.path.isdir(media_dir):
             git('add', 'media/')
 
         msg = f'Portfolio update: {len(published_new)} new media, {len(final_media)} total assets'
         c = git('commit', '-m', msg)
         print(c.stdout.strip() or c.stderr.strip() or '(no commit output)')
+
+        # Now that working tree is clean/committed, rebase any remote commits cleanly
+        r = git('pull', '--rebase', 'origin', BRANCH)
+        print(r.stdout.strip() or r.stderr.strip() or '(no rebase output)')
 
         p = git('push', 'origin', BRANCH)
         push_output = (p.stdout or '') + ' ' + (p.stderr or '')

@@ -52,6 +52,8 @@ function buildPublishPayload() {
     updatedJson.settings.softwareTags = currentSoftwareTags;
   const saved = getSavedData();
   if (saved.text) updatedJson._textOverrides = saved.text;
+  if (saved.fontSizes) updatedJson._fontSizes = saved.fontSizes;
+  else if (portfolioData && portfolioData._fontSizes) updatedJson._fontSizes = portfolioData._fontSizes;
   if (saved.scifiAvatar) updatedJson.settings.scifiAvatar = saved.scifiAvatar;
   const savedSkillMedia = saved.skillMedia || portfolioData?.settings?.skillMedia;
   if (savedSkillMedia) updatedJson.settings.skillMedia = savedSkillMedia;
@@ -965,6 +967,98 @@ function setNavLogo(src) {
   }
 }
 
+/* ============================================================
+   DYNAMIC TEXT FONT SIZE ADJUSTMENT ENGINE (A- / A+)
+   ============================================================ */
+let activeEditableEl = null;
+
+function setActiveEditable(el) {
+  activeEditableEl = el;
+  updateFontSizeDisplay();
+  showFloatingTextSizeBar(el);
+}
+
+function updateFontSizeDisplay() {
+  if (!activeEditableEl) {
+    const d1 = document.getElementById('activeFontSizeDisplay');
+    const d2 = document.getElementById('floatingFsDisplay');
+    if (d1) d1.textContent = '--';
+    if (d2) d2.textContent = '--';
+    return;
+  }
+  const current = window.getComputedStyle(activeEditableEl).fontSize;
+  const pxVal = Math.round(parseFloat(current)) + 'px';
+  const d1 = document.getElementById('activeFontSizeDisplay');
+  const d2 = document.getElementById('floatingFsDisplay');
+  if (d1) d1.textContent = pxVal;
+  if (d2) d2.textContent = pxVal;
+}
+
+function showFloatingTextSizeBar(el) {
+  const bar = document.getElementById('floatingTextSizeBar');
+  if (!bar || !editMode || !el) return;
+  const rect = el.getBoundingClientRect();
+  bar.style.display = 'flex';
+  const top = window.scrollY + rect.top - 46;
+  const left = window.scrollX + rect.left;
+  bar.style.top = Math.max(10, top) + 'px';
+  bar.style.left = Math.max(10, left) + 'px';
+}
+
+function hideFloatingTextSizeBar() {
+  const bar = document.getElementById('floatingTextSizeBar');
+  if (bar) bar.style.display = 'none';
+}
+
+function adjustActiveFontSize(delta) {
+  if (!activeEditableEl) {
+    activeEditableEl = document.querySelector('[data-key="heroLine2"]') || 
+                       document.querySelector('.hero-title') || 
+                       document.querySelector('.editable');
+  }
+  if (!activeEditableEl) {
+    showToast('⚠️ Pehle kisi text par click karein!', 'error');
+    return;
+  }
+
+  const currentPx = parseFloat(window.getComputedStyle(activeEditableEl).fontSize) || 16;
+  const newPx = Math.max(10, Math.min(140, currentPx + delta));
+  const newSize = newPx + 'px';
+  activeEditableEl.style.fontSize = newSize;
+  updateFontSizeDisplay();
+  showFloatingTextSizeBar(activeEditableEl);
+
+  // Save font size permanently
+  const key = activeEditableEl.dataset.key;
+  if (key) {
+    const d = getSavedData();
+    d.fontSizes = d.fontSizes || {};
+    d.fontSizes[key] = newSize;
+    saveData(d);
+  }
+  showToast(`🗚 Text Size: ${newSize}`, 'success');
+}
+
+function resetActiveFontSize() {
+  if (!activeEditableEl) return;
+  activeEditableEl.style.fontSize = '';
+  const key = activeEditableEl.dataset.key;
+  if (key) {
+    const d = getSavedData();
+    if (d.fontSizes && d.fontSizes[key]) {
+      delete d.fontSizes[key];
+      saveData(d);
+    }
+  }
+  updateFontSizeDisplay();
+  showFloatingTextSizeBar(activeEditableEl);
+  showToast('Font size reset ho gaya!');
+}
+
+window.adjustActiveFontSize = adjustActiveFontSize;
+window.resetActiveFontSize = resetActiveFontSize;
+window.setActiveEditable = setActiveEditable;
+
 function initEditMode() {
   initLogoUpload();
   const btn = document.getElementById('editToggleBtn');
@@ -1222,6 +1316,12 @@ function toggleEditMode() {
     document.querySelectorAll('.editable').forEach(el => {
       el.setAttribute('contenteditable', 'true');
       el.setAttribute('spellcheck', 'false');
+      // Hook up active font size selection
+      if (!el._hasFsListener) {
+        el._hasFsListener = true;
+        el.addEventListener('click', () => setActiveEditable(el));
+        el.addEventListener('focus', () => setActiveEditable(el));
+      }
       // Auto-save on blur
       if (!el._hasSaveListener && el.dataset.key) {
         el._hasSaveListener = true;
@@ -1233,7 +1333,6 @@ function toggleEditMode() {
         });
       }
     });
-    // GLB viewer handled separately
     // Social links — click to set URL
     document.querySelectorAll('.social-link').forEach(link => {
       link.onclick = e => {
@@ -1242,8 +1341,9 @@ function toggleEditMode() {
         openSocialModal(link.dataset.platform, link);
       };
     });
-    showToast('✏️ Edit Mode ON — text par click kar ke edit karein!');
+    showToast('✏️ Edit Mode ON — text par click kar ke edit ya size change karein!');
   } else {
+    hideFloatingTextSizeBar();
     document.querySelectorAll('.editable').forEach(el => el.removeAttribute('contenteditable'));
     showToast('✅ View Mode — changes browser mein save hain!');
   }
@@ -1511,6 +1611,23 @@ function loadSavedEdits() {
   if (scifiImg) {
     const scifiSrc = data.scifiAvatar || portfolioData?.settings?.scifiAvatar;
     if (scifiSrc) scifiImg.src = scifiSrc;
+  }
+
+  // Restore saved text font sizes permanently
+  const fontSizes = Object.assign({}, portfolioData?._fontSizes || {}, data.fontSizes || {});
+  Object.entries(fontSizes).forEach(([key, size]) => {
+    const el = document.querySelector(`[data-key="${key}"]`);
+    if (el && size) el.style.fontSize = size;
+  });
+
+  // Permanently ensure aboutExpNum is 10+
+  const expEl = document.querySelector('[data-key="aboutExpNum"]');
+  if (expEl && (expEl.textContent.trim() === '3+' || !expEl.textContent.trim())) {
+    expEl.textContent = '10+';
+    if (data.text && data.text.aboutExpNum) {
+      data.text.aboutExpNum = '10+';
+      saveData(data);
+    }
   }
   if (typeof renderAddons === 'function') renderAddons();
   if (data.socialLinks) {

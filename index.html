@@ -31,6 +31,13 @@ window.addEventListener('error', function(e) {
       <button class="etool etool-token" id="btnToken" onclick="openGhTokenModal()" title="GitHub Token Setup"><i class="fab fa-github"></i></button>
       <button class="etool etool-inquiries" id="btnInquiries" onclick="openInquiriesModal()" title="View Client Messages"><i class="fas fa-inbox"></i> Inquiries (<span id="inquiryCount">0</span>)</button>
       <button class="etool etool-softwares" id="btnManageSoftwares" onclick="openSoftwareModal()"><i class="fas fa-tags"></i> Software Tags</button>
+      <div class="etool-fontsize-group" id="etoolFontSizeGroup" title="Kisi bhi text par click karein phir yahan se size chota ya bara karein">
+        <span class="fs-label"><i class="fas fa-text-height"></i> Text Size:</span>
+        <button type="button" class="btn-fs-step" onclick="adjustActiveFontSize(-2)" title="Text chota karein (A-)">A-</button>
+        <span id="activeFontSizeDisplay" class="fs-display">--</span>
+        <button type="button" class="btn-fs-step" onclick="adjustActiveFontSize(+2)" title="Text bara karein (A+)">A+</button>
+        <button type="button" class="btn-fs-reset" onclick="resetActiveFontSize()" title="Original size par reset karein"><i class="fas fa-rotate-left"></i></button>
+      </div>
       <button class="etool etool-reset" id="btnReset"><i class="fas fa-rotate-left"></i> Reset</button>
       <button class="etool etool-lock" id="btnLock" onclick="lockEditMode()" title="Lock & Logout"><i class="fas fa-lock"></i> Lock</button>
     </div>
@@ -327,7 +334,7 @@ window.addEventListener('error', function(e) {
               ></model-viewer>
               <video
                 id="mainVideoViewer"
-                src="media/4.mp4"
+                src="media/hvac_samply_.mp4"
                 autoplay
                 loop
                 muted
@@ -1137,7 +1144,16 @@ window.addEventListener('error', function(e) {
   </div>
 </div>
 
-<script src="script.js?v=24.1"></script>
+<!-- FLOATING TEXT SIZE QUICK TOOLBAR FOR EDIT MODE -->
+<div class="floating-text-size-bar" id="floatingTextSizeBar">
+  <span style="font-size:0.75rem; color:#00f0ff; font-weight:700;"><i class="fas fa-text-height"></i> Size:</span>
+  <button type="button" class="btn-fs-step" onclick="adjustActiveFontSize(-2)" title="Text chota karein">A-</button>
+  <span id="floatingFsDisplay" class="fs-display">--</span>
+  <button type="button" class="btn-fs-step" onclick="adjustActiveFontSize(+2)" title="Text bara karein">A+</button>
+  <button type="button" class="btn-fs-reset" onclick="resetActiveFontSize()" title="Reset size"><i class="fas fa-rotate-left"></i></button>
+</div>
+
+<script src="script.js?v=24.2"></script>
 </body>
 </html>
 
