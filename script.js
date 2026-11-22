@@ -4587,7 +4587,22 @@ async function initI3dShowcase() {
   }
 
   if (saved && Array.isArray(saved) && saved.length) {
-    i3dModelsList = saved;
+    // Merge saved with DEFAULT to restore src/locked for built-in models
+    // (in case old save strips src or locked fields)
+    i3dModelsList = saved.map(savedModel => {
+      const def = DEFAULT_I3D_MODELS.find(d => d.id === savedModel.id);
+      if (def) {
+        // Built-in model: always use DEFAULT src and locked, preserve saved hotspots
+        return {
+          ...def,
+          hotspots: savedModel.hotspots && savedModel.hotspots.length > 0
+            ? savedModel.hotspots
+            : def.hotspots
+        };
+      }
+      // User-uploaded model: keep as-is
+      return savedModel;
+    });
   } else {
     i3dModelsList = JSON.parse(JSON.stringify(DEFAULT_I3D_MODELS));
   }
@@ -4625,6 +4640,7 @@ function saveI3dModelsState() {
       src: m.fileKey ? '' : m.src,
       fileKey: m.fileKey || '',
       desc: m.desc || '',
+      locked: m.locked || false,
       hotspots: m.hotspots || []
     }));
     localStorage.setItem('portfolio_i3d_models_v2', JSON.stringify(sanitized));
