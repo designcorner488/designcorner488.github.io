@@ -3073,11 +3073,6 @@ function renderSkillMedia(tool, subIdx) {
   }
 }
 
-  if (manual && !document.body.classList.contains('edit-mode')) {
-    startSkillAutoTimer();
-  }
-}
-
 function nextSkillTool() {
   selectSkillTool((currentSkillToolIdx + 1) % DEFAULT_SKILL_TOOLS.length, true);
 }
