@@ -4489,76 +4489,469 @@ function replyViaWhatsAppDirect(name, clientMsg) {
 window.addEventListener('DOMContentLoaded', updateInquiryBadge);
 
 /* ============================================================
-   INTERACTIVE 3D MODELS ENGINE & CYBERPUNK VFX SUITE
+   NEXT-GENERATION INTERACTIVE 3D GLB SHOWCASE PLATFORM
    ============================================================ */
-let i3dEffectsState = {
-  neon: false,
-  edges: false,
-  holo: false,
-  dissolve: false,
-  matrix: false,
-  labels: true,
-  rotate: true
-};
 
-function toggleI3dEffect(effectName) {
-  const stage = document.getElementById('i3dStage');
-  if (!stage) return;
+const DEFAULT_I3D_MODELS = [
+  {
+    id: 'snaks_bar',
+    name: 'Snack Bar Kiosk',
+    category: 'Architecture BIM',
+    src: 'media/snaks_bar.glb',
+    desc: 'Full architectural kiosk with reinforced glass and LED lighting',
+    hotspots: [
+      { top: '32%', left: '45%', title: 'Neon Counter', desc: 'Reinforced glass with underglow LED strips', specs: 'Length: 3.2m · Material: Tempered Glass' },
+      { top: '58%', left: '62%', title: 'Cooling Unit', desc: 'Commercial beverage refrigeration display', specs: 'Temp: -2°C to 4°C · 350L Capacity' },
+      { top: '25%', left: '75%', title: 'Digital Menu', desc: 'Overhead high-contrast acrylic signage', specs: '4K Display · Aluminum Frame' }
+    ]
+  },
+  {
+    id: 'terrain_site',
+    name: 'Survey Contour Terrain',
+    category: 'Site & Landscape',
+    src: 'media/survey_contour_terrain.glb',
+    desc: 'Topographical land contour mesh for architectural site planning',
+    hotspots: [
+      { top: '40%', left: '50%', title: 'Elevation Crest', desc: 'Peak contour line +32.5m ASL', specs: 'Slope: 18° · Soil: Clay/Limestone' }
+    ]
+  },
+  {
+    id: 'modern_chair',
+    name: 'Modern Ergonomic Chair',
+    category: 'Furniture Design',
+    src: 'media/Modern_Chair_1.glb',
+    desc: 'High-end parametric office chair with mesh backing',
+    hotspots: [
+      { top: '40%', left: '50%', title: 'Lumbar Mesh', desc: 'Self-adjusting active lumbar support', specs: 'Breathable Nylon Mesh · 120kg Test' }
+    ]
+  },
+  {
+    id: 'designer_sofa',
+    name: 'Velvet Designer Sofa',
+    category: 'Interior Viz',
+    src: 'media/sofa.glb',
+    desc: 'Luxury Italian velvet sofa with brushed bronze legs',
+    hotspots: [
+      { top: '48%', left: '50%', title: 'Velvet Upholstery', desc: 'Double-stitched premium Italian velvet', specs: 'Martindale: 50,000 Rubs' }
+    ]
+  },
+  {
+    id: 'cyber_lamp',
+    name: 'Cyberpunk Floor Lamp',
+    category: 'Product & Lighting',
+    src: 'media/lamp.glb',
+    desc: 'Futuristic floor lamp with adjustable luminescence',
+    hotspots: [
+      { top: '30%', left: '50%', title: 'LED Diffuser', desc: '360° addressable RGB COB LED ring', specs: 'Lumens: 2400lm · Color: 6500K' }
+    ]
+  },
+  {
+    id: 'ornate_dining',
+    name: 'Ornate Dining Table & Chairs',
+    category: 'Interior Viz',
+    src: 'media/Meshy_AI_Ornate_Wooden_Dining__1031072807_texture.glb',
+    desc: 'Hand-carved classical wooden dining ensemble with detailed textures',
+    hotspots: [
+      { top: '42%', left: '48%', title: 'Carved Oak Top', desc: 'Solid French oak with satin oil finish', specs: 'Dimensions: 220cm x 100cm' }
+    ]
+  }
+];
 
-  const btnMap = {
-    neon: 'btnFxNeon',
-    edges: 'btnFxEdges',
-    holo: 'btnFxHolo',
-    dissolve: 'btnFxDissolve',
-    matrix: 'btnFxMatrix',
-    labels: 'btnFxLabels'
-  };
+let i3dModelsList = [];
+let currentI3dModelId = 'snaks_bar';
+let i3dCinematicTimer = null;
+let i3dCinematicAngle = 45;
+let i3dCinematicElev = 75;
+let i3dCinematicDir = 1;
+let i3dRotateActive = true;
+let i3dOriginalMaterialsSaved = false;
+let i3dOriginalBaseColors = [];
 
-  const classMap = {
-    neon: 'neon-on',
-    edges: 'edges-on',
-    holo: 'holo-on',
-    dissolve: 'dissolve-on',
-    matrix: 'matrix-on',
-    labels: 'labels-off'
-  };
+// 1. Initialization and Loading Models
+async function initI3dShowcase() {
+  // Load saved models from localStorage or portfolioData
+  let saved = null;
+  try {
+    const raw = localStorage.getItem('portfolio_i3d_models_v2');
+    if (raw) saved = JSON.parse(raw);
+  } catch(e) {}
 
-  if (effectName === 'labels') {
-    i3dEffectsState.labels = !i3dEffectsState.labels;
-    stage.classList.toggle('labels-off', !i3dEffectsState.labels);
-    const btn = document.getElementById(btnMap.labels);
-    if (btn) {
-      btn.classList.toggle('active', i3dEffectsState.labels);
-      const st = btn.querySelector('.fx-status');
-      if (st) st.textContent = i3dEffectsState.labels ? 'ON' : 'OFF';
+  if (!saved && portfolioData?.settings?.i3dModels?.length) {
+    saved = portfolioData.settings.i3dModels;
+  }
+
+  if (saved && Array.isArray(saved) && saved.length) {
+    i3dModelsList = saved;
+  } else {
+    i3dModelsList = JSON.parse(JSON.stringify(DEFAULT_I3D_MODELS));
+  }
+
+  // Restore any IndexedDB custom file blobs
+  await restoreI3dCustomModelBlobs();
+
+  renderI3dModelDropdown();
+  switchI3dModelById(i3dModelsList[0]?.id || 'snaks_bar', false);
+  initI3dMouseInteractivity();
+}
+
+async function restoreI3dCustomModelBlobs() {
+  for (const item of i3dModelsList) {
+    if (item.fileKey) {
+      try {
+        const record = await dbGetItem(item.fileKey);
+        if (record && record.blob) {
+          item.src = URL.createObjectURL(record.blob);
+        }
+      } catch (err) {
+        console.warn('IDB restore note for model:', item.name, err);
+      }
     }
-    showToast(i3dEffectsState.labels ? '🏷️ Hotspot labels ON' : '🏷️ Hotspot labels OFF', 'info');
+  }
+}
+
+function saveI3dModelsState() {
+  try {
+    // Save metadata without huge blobs
+    const sanitized = i3dModelsList.map(m => ({
+      id: m.id,
+      name: m.name,
+      category: m.category,
+      src: m.fileKey ? '' : m.src,
+      fileKey: m.fileKey || '',
+      desc: m.desc || '',
+      hotspots: m.hotspots || []
+    }));
+    localStorage.setItem('portfolio_i3d_models_v2', JSON.stringify(sanitized));
+    if (portfolioData) {
+      portfolioData.settings = portfolioData.settings || {};
+      portfolioData.settings.i3dModels = sanitized;
+    }
+  } catch(e) {
+    console.warn('Save i3d models state error:', e);
+  }
+}
+
+// 2. Dropdown & Switcher
+function renderI3dModelDropdown() {
+  const select = document.getElementById('i3dModelSelect');
+  if (!select) return;
+
+  select.innerHTML = '';
+  i3dModelsList.forEach((m, idx) => {
+    const opt = document.createElement('option');
+    opt.value = m.id;
+    opt.textContent = `${idx + 1}. ${m.name} (${m.category || '3D'})`;
+    select.appendChild(opt);
+  });
+
+  select.value = currentI3dModelId;
+}
+
+function switchI3dModelById(modelId, notify = true) {
+  const model = i3dModelsList.find(m => m.id === modelId) || i3dModelsList[0];
+  if (!model) return;
+
+  currentI3dModelId = model.id;
+  const select = document.getElementById('i3dModelSelect');
+  if (select && select.value !== model.id) select.value = model.id;
+
+  const badge = document.getElementById('i3dCategoryBadge');
+  if (badge) badge.textContent = model.category || '3D Showcase';
+
+  const viewer = document.getElementById('i3dModelViewer');
+  if (viewer) {
+    viewer.style.opacity = '0.4';
+    viewer.src = model.src;
+    viewer.addEventListener('load', () => {
+      viewer.style.opacity = '1';
+      saveOriginalModelMaterials();
+    }, { once: true });
+  }
+
+  // Render model-specific hotspots
+  renderI3dHotspots(model);
+
+  if (notify) {
+    showToast(`🧊 Loaded: ${model.name}`, 'info');
+  }
+}
+
+// 3. Hotspots Rendering
+function renderI3dHotspots(model) {
+  const container = document.getElementById('i3dHotspots');
+  if (!container) return;
+
+  container.innerHTML = '';
+  const hotspots = model.hotspots || [];
+
+  hotspots.forEach((h, idx) => {
+    const btn = document.createElement('button');
+    btn.type = 'button';
+    btn.className = 'i3d-hotspot';
+    btn.style.position = 'absolute';
+    btn.style.top = h.top || '50%';
+    btn.style.left = h.left || '50%';
+    btn.onclick = () => btn.classList.toggle('active');
+
+    btn.innerHTML = `
+      <div class="i3d-hotspot-dot"></div>
+      <div class="i3d-hotspot-card">
+        <strong>${h.title}</strong>
+        <span>${h.desc}</span>
+        ${h.specs ? `<span class="hotspot-specs">${h.specs}</span>` : ''}
+      </div>
+    `;
+
+    container.appendChild(btn);
+  });
+}
+
+function promptAddHotspot() {
+  const model = i3dModelsList.find(m => m.id === currentI3dModelId);
+  if (!model) return;
+
+  const title = prompt('Hotspot Title (e.g. Structural Column, Glass Facade):');
+  if (!title) return;
+  const desc = prompt('Hotspot Description (e.g. Reinforced steel framing):') || '';
+  const specs = prompt('Specs or Dimensions (e.g. 450mm x 450mm · ASTM A36):') || '';
+
+  model.hotspots = model.hotspots || [];
+  model.hotspots.push({
+    top: `${30 + Math.floor(Math.random() * 40)}%`,
+    left: `${25 + Math.floor(Math.random() * 50)}%`,
+    title: title,
+    desc: desc,
+    specs: specs
+  });
+
+  saveI3dModelsState();
+  renderI3dHotspots(model);
+  showToast(`✅ Hotspot "${title}" added to model!`);
+}
+
+// 4. Modal Management: Add 3D Model
+function openAdd3dModelModal() {
+  const modal = document.getElementById('i3dAddModal');
+  if (modal) {
+    modal.style.display = 'flex';
+    modal.classList.add('open');
+  }
+}
+
+function closeAdd3dModelModal() {
+  const modal = document.getElementById('i3dAddModal');
+  if (modal) {
+    modal.style.display = 'none';
+    modal.classList.remove('open');
+  }
+}
+
+async function handleSaveNew3dModel(event) {
+  event.preventDefault();
+  const title = document.getElementById('i3dNewTitle').value.trim();
+  const category = document.getElementById('i3dNewCategory').value;
+  const fileInput = document.getElementById('i3dNewFile');
+  const desc = document.getElementById('i3dNewDesc').value.trim();
+
+  if (!title) {
+    showToast('❌ Model name is required!', 'error');
     return;
   }
 
-  const cls = classMap[effectName];
-  if (!cls) return;
-
-  i3dEffectsState[effectName] = !i3dEffectsState[effectName];
-  const isOn = i3dEffectsState[effectName];
-  stage.classList.toggle(cls, isOn);
-
-  const btn = document.getElementById(btnMap[effectName]);
-  if (btn) {
-    btn.classList.toggle('active', isOn);
-    const st = btn.querySelector('.fx-status');
-    if (st) st.textContent = isOn ? 'ON' : 'OFF';
+  const file = fileInput?.files?.[0];
+  if (!file) {
+    showToast('❌ Please select a .glb or .gltf file!', 'error');
+    return;
   }
 
-  const labels = {
-    neon: '⚡ Neon Lighting',
-    edges: '✨ Edges Glowing',
-    holo: '🌌 Hologram Effect',
-    dissolve: '💨 Dissolve Effect',
-    matrix: '☁️ Point Cloud Grid'
+  showToast(`⏳ Saving & processing "${title}"...`, 'info');
+
+  try {
+    const fileKey = 'i3d_file_' + Date.now();
+    const objectUrl = URL.createObjectURL(file);
+
+    // Persist into IndexedDB
+    try {
+      await dbSaveItem({
+        id: fileKey,
+        name: file.name,
+        type: 'glb',
+        blob: file,
+        size: file.size,
+        date: new Date().toISOString()
+      });
+    } catch(err) {
+      console.warn('IDB save warning:', err);
+    }
+
+    const newModel = {
+      id: 'i3d_' + Date.now(),
+      name: title,
+      category: category,
+      src: objectUrl,
+      fileKey: fileKey,
+      desc: desc,
+      hotspots: [
+        { top: '45%', left: '50%', title: title, desc: desc || 'Interactive 3D component', specs: 'PBR 3D Asset' }
+      ]
+    };
+
+    i3dModelsList.push(newModel);
+    saveI3dModelsState();
+    renderI3dModelDropdown();
+    switchI3dModelById(newModel.id);
+
+    closeAdd3dModelModal();
+    showToast(`✅ "${title}" added to 3D Showcase! You can now explore it.`);
+
+    // Reset Form
+    event.target.reset();
+  } catch(err) {
+    console.error('Error adding 3D model:', err);
+    showToast('❌ Error: ' + err.message, 'error');
+  }
+}
+
+// 5. Delete Model
+function deleteCurrent3dModel() {
+  if (i3dModelsList.length <= 1) {
+    showToast('⚠️ At least one 3D model must remain in the showcase.', 'error');
+    return;
+  }
+
+  const current = i3dModelsList.find(m => m.id === currentI3dModelId);
+  const name = current?.name || 'this model';
+
+  if (!confirm(`Are you sure you want to delete "${name}" from the 3D Showcase?`)) {
+    return;
+  }
+
+  const idx = i3dModelsList.findIndex(m => m.id === currentI3dModelId);
+  if (idx !== -1) {
+    i3dModelsList.splice(idx, 1);
+    saveI3dModelsState();
+    renderI3dModelDropdown();
+    switchI3dModelById(i3dModelsList[0].id);
+    showToast(`🗑️ "${name}" deleted from showcase.`);
+  }
+}
+
+// 6. Exploration Modes
+function setI3dMode(mode) {
+  const stage = document.getElementById('i3dStage');
+  const tag = document.getElementById('i3dActiveModeTag');
+  if (!stage) return;
+
+  // Reset all mode classes
+  stage.classList.remove(
+    'mode-normal',
+    'mode-wireframe',
+    'mode-blueprint',
+    'mode-xray',
+    'mode-hologram',
+    'mode-clay',
+    'mode-explode'
+  );
+
+  stage.classList.add(`mode-${mode}`);
+
+  // Update active state in panel buttons
+  document.querySelectorAll('#i3dPanelModes .btn-i3d-mode').forEach(b => {
+    b.classList.remove('active');
+  });
+  if (event?.currentTarget) {
+    event.currentTarget.classList.add('active');
+  }
+
+  const modeNames = {
+    normal: 'NORMAL PBR',
+    wireframe: 'WIREFRAME MESH',
+    blueprint: 'TECHNICAL BLUEPRINT',
+    xray: 'X-RAY TRANSLUCENT',
+    hologram: 'CYBER HOLOGRAM',
+    clay: 'ARCHITECTURAL CLAY',
+    explode: 'EXPLODED PULSE'
   };
 
-  showToast(`${labels[effectName] || effectName}: ${isOn ? 'ACTIVE' : 'OFF'}`, 'info');
+  if (tag) {
+    tag.innerHTML = `<span class="hud-dot"></span> MODE: ${modeNames[mode] || mode.toUpperCase()}`;
+  }
+
+  showToast(`👁️ Mode: ${modeNames[mode] || mode}`, 'info');
+}
+
+// 7. Lighting & Studio Controls
+function setI3dLighting(preset) {
+  const viewer = document.getElementById('i3dModelViewer');
+  if (!viewer) return;
+
+  document.querySelectorAll('#i3dPanelLighting .btn-i3d-light').forEach(b => b.classList.remove('active'));
+  if (event?.currentTarget) event.currentTarget.classList.add('active');
+
+  const expInput = document.querySelector('#i3dPanelLighting input[type="range"]');
+  const expVal = document.getElementById('exposureVal');
+
+  if (preset === 'studio') {
+    viewer.exposure = 1.1;
+    viewer.shadowIntensity = 1.5;
+    viewer.style.filter = '';
+  } else if (preset === 'night') {
+    viewer.exposure = 0.75;
+    viewer.shadowIntensity = 2.2;
+    viewer.style.filter = 'drop-shadow(0 0 20px #00f0ff) drop-shadow(0 0 40px #a855f7)';
+  } else if (preset === 'sunset') {
+    viewer.exposure = 1.15;
+    viewer.shadowIntensity = 1.8;
+    viewer.style.filter = 'sepia(0.25) saturate(1.2)';
+  } else if (preset === 'dramatic') {
+    viewer.exposure = 1.35;
+    viewer.shadowIntensity = 2.8;
+    viewer.style.filter = 'contrast(1.25)';
+  }
+
+  if (expVal) expVal.textContent = viewer.exposure.toFixed(2);
+  if (expInput) expInput.value = viewer.exposure;
+
+  showToast(`💡 Lighting: ${preset.toUpperCase()}`, 'info');
+}
+
+function adjustI3dExposure(val) {
+  const viewer = document.getElementById('i3dModelViewer');
+  const display = document.getElementById('exposureVal');
+  if (viewer) viewer.exposure = parseFloat(val);
+  if (display) display.textContent = parseFloat(val).toFixed(2);
+}
+
+function adjustI3dShadows(val) {
+  const viewer = document.getElementById('i3dModelViewer');
+  const display = document.getElementById('shadowVal');
+  if (viewer) viewer.shadowIntensity = parseFloat(val);
+  if (display) display.textContent = parseFloat(val).toFixed(1);
+}
+
+// 8. Camera Presets & Tour
+function setI3dCameraPreset(preset) {
+  const viewer = document.getElementById('i3dModelViewer');
+  if (!viewer) return;
+
+  // Stop cinematic tour if manual camera is clicked
+  stopI3dCinematicTour();
+
+  document.querySelectorAll('#i3dPanelCamera .btn-i3d-cam').forEach(b => b.classList.remove('active'));
+  if (event?.currentTarget) event.currentTarget.classList.add('active');
+
+  const orbits = {
+    perspective: '45deg 75deg 105%',
+    front: '0deg 90deg 100%',
+    top: '0deg 0deg 100%',
+    iso: '45deg 55deg 110%',
+    closeup: '30deg 80deg 50%'
+  };
+
+  viewer.cameraOrbit = orbits[preset] || '45deg 75deg 105%';
+  viewer.fieldOfView = 'auto';
+
+  showToast(`🎥 Camera: ${preset.toUpperCase()}`, 'info');
 }
 
 function toggleI3dRotate() {
@@ -4566,106 +4959,247 @@ function toggleI3dRotate() {
   const btn = document.getElementById('btnFxRotate');
   if (!viewer) return;
 
-  i3dEffectsState.rotate = !i3dEffectsState.rotate;
-  if (i3dEffectsState.rotate) {
+  i3dRotateActive = !i3dRotateActive;
+  if (i3dRotateActive) {
     viewer.setAttribute('auto-rotate', '');
   } else {
     viewer.removeAttribute('auto-rotate');
   }
 
   if (btn) {
-    btn.classList.toggle('active', i3dEffectsState.rotate);
-    const st = btn.querySelector('.fx-status');
-    if (st) st.textContent = i3dEffectsState.rotate ? 'ON' : 'OFF';
+    btn.innerHTML = `<i class="fas fa-rotate"></i> <span>360° Auto-Rotate: ${i3dRotateActive ? 'ON' : 'OFF'}</span>`;
   }
 
-  showToast(i3dEffectsState.rotate ? '🔄 360° Auto-Rotate ON' : '⏸️ Auto-Rotate Paused', 'info');
+  showToast(i3dRotateActive ? '🔄 360° Auto-Rotate ON' : '⏸️ Auto-Rotate Paused', 'info');
 }
 
-function switchI3dModel(src) {
+function toggleI3dCinematicTour() {
+  if (i3dCinematicTimer) {
+    stopI3dCinematicTour();
+    showToast('⏸️ Cinematic Tour Paused');
+  } else {
+    startI3dCinematicTour();
+    showToast('🎬 Cinematic Auto-Tour Started!');
+  }
+}
+
+function startI3dCinematicTour() {
   const viewer = document.getElementById('i3dModelViewer');
+  const btn = document.getElementById('btnCinematicTour');
   if (!viewer) return;
 
-  viewer.style.opacity = '0.5';
-  viewer.src = src;
-  viewer.addEventListener('load', () => {
-    viewer.style.opacity = '1';
-  }, { once: true });
-
-  // Update hotspots visibility or positions if custom model
-  const hotspots = document.getElementById('i3dHotspots');
-  if (hotspots) {
-    hotspots.style.display = src.includes('snaks_bar') ? 'block' : 'none';
+  if (btn) {
+    btn.classList.add('active');
+    btn.innerHTML = `<i class="fas fa-pause"></i> <span>Cinematic Tour: ACTIVE</span>`;
   }
 
-  showToast('🧊 3D Model loaded: ' + src.split('/').pop(), 'info');
+  viewer.removeAttribute('auto-rotate');
+  i3dCinematicTimer = setInterval(() => {
+    i3dCinematicAngle = (i3dCinematicAngle + 0.6) % 360;
+    i3dCinematicElev += 0.15 * i3dCinematicDir;
+    if (i3dCinematicElev > 82) i3dCinematicDir = -1;
+    if (i3dCinematicElev < 55) i3dCinematicDir = 1;
+
+    viewer.cameraOrbit = `${i3dCinematicAngle.toFixed(1)}deg ${i3dCinematicElev.toFixed(1)}deg 105%`;
+  }, 40);
 }
 
-function handleI3dUpload(event) {
-  const file = event?.target?.files?.[0];
-  if (!file) return;
+function stopI3dCinematicTour() {
+  if (i3dCinematicTimer) {
+    clearInterval(i3dCinematicTimer);
+    i3dCinematicTimer = null;
+  }
+  const btn = document.getElementById('btnCinematicTour');
+  if (btn) {
+    btn.classList.remove('active');
+    btn.innerHTML = `<i class="fas fa-film"></i> <span>Cinematic Auto-Tour</span>`;
+  }
+}
 
-  if (!file.name.match(/\.(glb|gltf)$/i)) {
-    showToast('❌ Faqat .glb ya .gltf 3D file upload karein!', 'error');
+// 9. Material Customization Studio (Real-Time PBR Colors)
+function saveOriginalModelMaterials() {
+  const viewer = document.getElementById('i3dModelViewer');
+  if (!viewer?.model?.materials) return;
+
+  i3dOriginalBaseColors = [];
+  viewer.model.materials.forEach(mat => {
+    if (mat.pbrMetallicRoughness) {
+      const color = mat.pbrMetallicRoughness.baseColorFactor;
+      i3dOriginalBaseColors.push(color ? [...color] : [1, 1, 1, 1]);
+    }
+  });
+  i3dOriginalMaterialsSaved = true;
+}
+
+function applyI3dMaterialTint(hexColor, metallic = 0.8, roughness = 0.25, name = 'Custom') {
+  const viewer = document.getElementById('i3dModelViewer');
+  if (!viewer?.model?.materials?.length) {
+    showToast('ℹ️ Model materials initializing, please wait a moment...', 'info');
     return;
   }
 
-  showToast('⏳ 3D Model process ho raha hai...', 'info');
+  if (!i3dOriginalMaterialsSaved) saveOriginalModelMaterials();
 
-  try {
-    const objectUrl = URL.createObjectURL(file);
-    const select = document.getElementById('i3dModelSelect');
-    if (select) {
-      const opt = document.createElement('option');
-      opt.value = objectUrl;
-      opt.textContent = `📁 ${file.name} (Custom Upload)`;
-      opt.selected = true;
-      select.appendChild(opt);
+  const rgba = hexToRgbaArray(hexColor);
+
+  viewer.model.materials.forEach(mat => {
+    if (mat.pbrMetallicRoughness) {
+      mat.pbrMetallicRoughness.setBaseColorFactor(rgba);
+      mat.pbrMetallicRoughness.setMetallicFactor(metallic);
+      mat.pbrMetallicRoughness.setRoughnessFactor(roughness);
     }
+  });
 
-    switchI3dModel(objectUrl);
-    showToast(`✅ "${file.name}" 360° Interactive Viewer me load ho gaya!`);
-  } catch (err) {
-    console.error('3D upload error:', err);
-    showToast('❌ Error loading 3D model: ' + err.message, 'error');
+  document.querySelectorAll('#i3dPanelMaterials .i3d-swatch').forEach(b => b.classList.remove('active'));
+  if (event?.currentTarget) event.currentTarget.classList.add('active');
+
+  showToast(`🎨 Material Applied: ${name}!`);
+}
+
+function resetI3dMaterials() {
+  const viewer = document.getElementById('i3dModelViewer');
+  if (!viewer?.model?.materials) return;
+
+  viewer.model.materials.forEach((mat, idx) => {
+    if (mat.pbrMetallicRoughness && i3dOriginalBaseColors[idx]) {
+      mat.pbrMetallicRoughness.setBaseColorFactor(i3dOriginalBaseColors[idx]);
+      mat.pbrMetallicRoughness.setMetallicFactor(0.5);
+      mat.pbrMetallicRoughness.setRoughnessFactor(0.5);
+    }
+  });
+
+  document.querySelectorAll('#i3dPanelMaterials .i3d-swatch').forEach(b => b.classList.remove('active'));
+  showToast('🔄 Original PBR Textures Restored!');
+}
+
+function hexToRgbaArray(hex) {
+  let c = hex.replace('#', '');
+  if (c.length === 3) c = c.split('').map(x => x + x).join('');
+  const num = parseInt(c, 16);
+  return [(num >> 16 & 255) / 255, (num >> 8 & 255) / 255, (num & 255) / 255, 1.0];
+}
+
+// 10. Tools: Fullscreen, Screenshot & Reset
+function toggleI3dFullscreen() {
+  const wrapper = document.getElementById('i3dWrapper');
+  if (!wrapper) return;
+
+  if (!document.fullscreenElement) {
+    wrapper.requestFullscreen().catch(err => {
+      showToast('Fullscreen error: ' + err.message, 'error');
+    });
+  } else {
+    document.exitFullscreen();
   }
 }
 
-function toggleHotspotCard(hotspotEl) {
-  if (!hotspotEl) return;
-  hotspotEl.classList.toggle('active');
+async function captureI3dScreenshot() {
+  const viewer = document.getElementById('i3dModelViewer');
+  if (!viewer) return;
+
+  showToast('📸 Capturing HD 3D Render...', 'info');
+
+  try {
+    const blob = await viewer.toBlob({ idealAspect: true });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    const model = i3dModelsList.find(m => m.id === currentI3dModelId);
+    a.download = `${(model?.name || '3D_Model').replace(/\s+/g, '_')}_render.png`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+    showToast('✅ Screenshot downloaded successfully!');
+  } catch (err) {
+    console.error('Screenshot error:', err);
+    showToast('❌ Snapshot failed: ' + err.message, 'error');
+  }
 }
 
-// Mouse interactive 3D perspective parallax on hover
+function resetI3dCamera() {
+  const viewer = document.getElementById('i3dModelViewer');
+  if (!viewer) return;
+  stopI3dCinematicTour();
+  viewer.cameraOrbit = '45deg 75deg 105%';
+  viewer.fieldOfView = 'auto';
+  showToast('🔄 Camera reset to center');
+}
+
+// 11. Tab Switcher
+function switchI3dTab(tabName) {
+  const tabIds = ['modes', 'lighting', 'camera', 'materials', 'hotspots'];
+
+  tabIds.forEach(t => {
+    const btn = document.getElementById(`tabBtn${t.charAt(0).toUpperCase() + t.slice(1)}`);
+    const panel = document.getElementById(`i3dPanel${t.charAt(0).toUpperCase() + t.slice(1)}`);
+    if (btn) btn.classList.toggle('active', t === tabName);
+    if (panel) panel.classList.toggle('active', t === tabName);
+  });
+}
+
+// 12. Compatibility helper for toggleI3dEffect
+function toggleI3dEffect(effectName) {
+  const stage = document.getElementById('i3dStage');
+  const btnLabels = document.getElementById('btnToggleHotspots');
+  if (!stage) return;
+
+  if (effectName === 'labels') {
+    const isOff = stage.classList.toggle('labels-off');
+    if (btnLabels) {
+      btnLabels.innerHTML = `<i class="fas fa-tag"></i> <span>Hotspots: ${isOff ? 'OFF' : 'ON'}</span>`;
+    }
+    showToast(isOff ? '🏷️ Hotspots Hidden' : '🏷️ Hotspots Visible', 'info');
+  }
+}
+
+// 13. Interactive Mouse Parallax (Tilts subtly with cursor)
 function initI3dMouseInteractivity() {
   const stage = document.getElementById('i3dStage');
   const viewer = document.getElementById('i3dModelViewer');
   if (!stage || !viewer) return;
 
   stage.addEventListener('mousemove', (e) => {
+    // Only apply tilt if not dragging
+    if (e.buttons > 0) return;
+
     const rect = stage.getBoundingClientRect();
     const x = e.clientX - rect.left;
     const y = e.clientY - rect.top;
-    const centerX = rect.width / 2;
-    const centerY = rect.height / 2;
-    const normX = (x - centerX) / centerX;
-    const normY = (y - centerY) / centerY;
+    const normX = (x - rect.width / 2) / (rect.width / 2);
+    const normY = (y - rect.height / 2) / (rect.height / 2);
 
-    viewer.style.transform = `perspective(1000px) rotateY(${normX * 6}deg) rotateX(${-normY * 5}deg) scale3d(1.01, 1.01, 1.01)`;
+    viewer.style.transform = `perspective(1000px) rotateY(${normX * 5}deg) rotateX(${-normY * 4}deg) scale(1.01)`;
   });
 
   stage.addEventListener('mouseleave', () => {
-    viewer.style.transform = 'perspective(1000px) rotateY(0deg) rotateX(0deg) scale3d(1, 1, 1)';
+    viewer.style.transform = 'perspective(1000px) rotateY(0deg) rotateX(0deg) scale(1)';
   });
 }
 
-// Expose to window for inline onclick handlers
-window.toggleI3dEffect = toggleI3dEffect;
+// Expose globals for inline event handlers
+window.switchI3dModelById = switchI3dModelById;
+window.setI3dMode = setI3dMode;
+window.setI3dLighting = setI3dLighting;
+window.adjustI3dExposure = adjustI3dExposure;
+window.adjustI3dShadows = adjustI3dShadows;
+window.setI3dCameraPreset = setI3dCameraPreset;
 window.toggleI3dRotate = toggleI3dRotate;
-window.switchI3dModel = switchI3dModel;
-window.handleI3dUpload = handleI3dUpload;
-window.toggleHotspotCard = toggleHotspotCard;
+window.toggleI3dCinematicTour = toggleI3dCinematicTour;
+window.applyI3dMaterialTint = applyI3dMaterialTint;
+window.resetI3dMaterials = resetI3dMaterials;
+window.openAdd3dModelModal = openAdd3dModelModal;
+window.closeAdd3dModelModal = closeAdd3dModelModal;
+window.handleSaveNew3dModel = handleSaveNew3dModel;
+window.deleteCurrent3dModel = deleteCurrent3dModel;
+window.promptAddHotspot = promptAddHotspot;
+window.captureI3dScreenshot = captureI3dScreenshot;
+window.toggleI3dFullscreen = toggleI3dFullscreen;
+window.resetI3dCamera = resetI3dCamera;
+window.switchI3dTab = switchI3dTab;
+window.toggleI3dEffect = toggleI3dEffect;
 
 window.addEventListener('DOMContentLoaded', () => {
-  initI3dMouseInteractivity();
+  initI3dShowcase();
 });
+

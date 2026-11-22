@@ -3600,15 +3600,15 @@ html {
   bottom: 26px;
   left: 50%;
   transform: translateX(-50%) translateY(6px);
-  background: rgba(10, 14, 32, 0.92);
-  border: 1px solid rgba(0, 240, 255, 0.4);
-  backdrop-filter: blur(8px);
-  border-radius: 10px;
-  padding: 0.5rem 0.8rem;
+  background: rgba(10, 14, 32, 0.94);
+  border: 1px solid rgba(0, 240, 255, 0.45);
+  backdrop-filter: blur(10px);
+  border-radius: 12px;
+  padding: 0.6rem 0.9rem;
   white-space: nowrap;
-  pointer-events: none;
-  opacity: 0.9;
-  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.6), 0 0 15px rgba(0, 240, 255, 0.2);
+  pointer-events: auto;
+  opacity: 0.92;
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.75), 0 0 20px rgba(0, 240, 255, 0.25);
   transition: all 0.25s ease;
 }
 .i3d-hotspot:hover .i3d-hotspot-card,
@@ -3616,86 +3616,81 @@ html {
   transform: translateX(-50%) translateY(0);
   opacity: 1;
   border-color: #00f0ff;
-  box-shadow: 0 10px 30px rgba(0, 240, 255, 0.4);
+  box-shadow: 0 12px 35px rgba(0, 240, 255, 0.4);
 }
 .i3d-hotspot-card strong {
   display: block;
-  font-size: 0.82rem;
+  font-size: 0.85rem;
   color: #00f0ff;
   font-weight: 700;
 }
 .i3d-hotspot-card span {
   display: block;
-  font-size: 0.72rem;
+  font-size: 0.74rem;
   color: var(--text-muted);
+}
+.i3d-hotspot-card .hotspot-specs {
+  display: block;
+  font-size: 0.68rem;
+  color: #a855f7;
+  margin-top: 2px;
+  font-family: monospace;
 }
 .i3d-viewer-stage.labels-off .i3d-hotspot {
   display: none !important;
 }
 
-/* Control Bar for VFX toggles */
-.i3d-controls-bar {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 0.8rem;
-  margin-top: 1rem;
-  flex-wrap: wrap;
-  padding: 0.8rem 1rem;
-  background: rgba(255, 255, 255, 0.03);
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  border-radius: 14px;
+/* EXPLORATION MODES ON 3D STAGE */
+.i3d-blueprint-grid {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 4;
+  display: none;
+  background-image: 
+    linear-gradient(rgba(0, 240, 255, 0.2) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0, 240, 255, 0.2) 1px, transparent 1px);
+  background-size: 24px 24px;
 }
-.i3d-vfx-group {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  flex-wrap: wrap;
+.i3d-viewer-stage.mode-blueprint {
+  background: #061933 !important;
 }
-.i3d-btn-vfx {
-  background: rgba(255, 255, 255, 0.06);
-  border: 1px solid rgba(255, 255, 255, 0.15);
-  color: var(--text);
-  padding: 0.5rem 0.85rem;
-  border-radius: 9px;
-  font-size: 0.82rem;
-  font-weight: 600;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  gap: 0.45rem;
-  transition: all 0.25s ease;
+.i3d-viewer-stage.mode-blueprint .i3d-blueprint-grid {
+  display: block;
 }
-.i3d-btn-vfx:hover {
-  background: rgba(0, 240, 255, 0.12);
-  border-color: rgba(0, 240, 255, 0.4);
-  color: #00f0ff;
-  transform: translateY(-2px);
+.i3d-viewer-stage.mode-blueprint model-viewer {
+  filter: invert(1) hue-rotate(180deg) brightness(1.2) contrast(1.4);
 }
-.i3d-btn-vfx.active {
-  background: linear-gradient(135deg, rgba(0, 240, 255, 0.25), rgba(168, 85, 247, 0.25));
-  border-color: #00f0ff;
-  color: #00f0ff;
-  box-shadow: 0 0 16px rgba(0, 240, 255, 0.35);
+.i3d-viewer-stage.mode-wireframe model-viewer {
+  filter: drop-shadow(0 0 10px #00f0ff) drop-shadow(0 0 20px #00f0ff) contrast(1.6) saturate(1.8) brightness(1.1);
 }
-.i3d-model-select-group {
-  display: flex;
-  align-items: center;
-  gap: 0.6rem;
-  flex-wrap: wrap;
+.i3d-viewer-stage.mode-xray {
+  background: #020308 !important;
 }
-.i3d-select {
-  background: var(--bg);
-  border: 1px solid rgba(0, 240, 255, 0.3);
-  color: var(--text);
-  padding: 0.45rem 0.8rem;
-  border-radius: 8px;
-  font-size: 0.82rem;
-  font-weight: 600;
-  outline: none;
-  cursor: pointer;
+.i3d-viewer-stage.mode-xray model-viewer {
+  filter: drop-shadow(0 0 25px #00f0ff) invert(0.88) contrast(2) opacity(0.82);
+}
+.i3d-viewer-stage.mode-clay {
+  background: radial-gradient(circle at center, #1e2238 0%, #0d0f1a 100%) !important;
+}
+.i3d-viewer-stage.mode-clay model-viewer {
+  filter: grayscale(1) contrast(0.95) brightness(1.3) sepia(0.06);
+}
+.i3d-viewer-stage.mode-hologram .i3d-holo-layer {
+  display: block;
+}
+.i3d-viewer-stage.mode-hologram model-viewer {
+  filter: drop-shadow(0 0 16px #00f0ff) drop-shadow(0 0 32px #a855f7) brightness(1.22) contrast(1.15);
+}
+.i3d-viewer-stage.mode-explode model-viewer {
+  animation: i3dExplodePulse 3s ease-in-out infinite alternate;
+}
+@keyframes i3dExplodePulse {
+  0% { transform: scale(0.96); filter: contrast(1); }
+  100% { transform: scale(1.12); filter: drop-shadow(0 0 30px #00f0ff) contrast(1.35); }
 }
 
+/* TOP HUD BAR */
 .i3d-top-bar {
   display: flex;
   align-items: center;
@@ -3704,41 +3699,142 @@ html {
   margin-bottom: 1rem;
   flex-wrap: wrap;
 }
-
+.i3d-model-select-group {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  flex-wrap: wrap;
+}
 .i3d-select-label {
   font-size: 0.82rem;
   color: var(--text-muted);
   display: flex;
   align-items: center;
   gap: 0.4rem;
+  font-weight: 600;
 }
-
-.btn-i3d-upload {
-  background: linear-gradient(135deg, rgba(0, 240, 255, 0.15), rgba(168, 85, 247, 0.15));
+.i3d-select {
+  background: var(--bg);
+  border: 1px solid rgba(0, 240, 255, 0.35);
+  color: var(--text);
+  padding: 0.45rem 0.85rem;
+  border-radius: 9px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  outline: none;
+  cursor: pointer;
+  max-width: 320px;
+}
+.i3d-category-pill {
+  font-size: 0.72rem;
+  font-weight: 700;
+  padding: 0.25rem 0.65rem;
+  border-radius: 50px;
+  background: rgba(0, 240, 255, 0.12);
   border: 1px solid rgba(0, 240, 255, 0.4);
   color: #00f0ff;
-  padding: 0.45rem 0.95rem;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+}
+.i3d-top-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+.btn-i3d-action {
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  color: var(--text);
+  padding: 0.45rem 0.85rem;
   border-radius: 8px;
-  font-size: 0.82rem;
+  font-size: 0.8rem;
   font-weight: 600;
   cursor: pointer;
   display: flex;
   align-items: center;
-  gap: 0.5rem;
-  transition: all 0.25s ease;
+  gap: 0.45rem;
+  transition: all 0.2s ease;
 }
-
-.btn-i3d-upload:hover {
-  background: linear-gradient(135deg, rgba(0, 240, 255, 0.3), rgba(168, 85, 247, 0.3));
-  box-shadow: 0 0 16px rgba(0, 240, 255, 0.4);
+.btn-i3d-action:hover {
+  background: rgba(0, 240, 255, 0.15);
+  border-color: #00f0ff;
+  color: #00f0ff;
+  transform: translateY(-2px);
+}
+.btn-i3d-add {
+  background: linear-gradient(135deg, rgba(0, 240, 255, 0.2), rgba(168, 85, 247, 0.2));
+  border-color: rgba(0, 240, 255, 0.45);
+  color: #00f0ff;
+}
+.btn-i3d-del {
+  border-color: rgba(239, 68, 68, 0.35);
+  color: #fca5a5;
+}
+.btn-i3d-del:hover {
+  background: rgba(239, 68, 68, 0.2);
+  border-color: #ef4444;
+  color: #ef4444;
+}
+.btn-i3d-tool {
+  width: 34px;
+  height: 34px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  color: var(--text-muted);
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+.btn-i3d-tool:hover {
+  color: #00f0ff;
+  border-color: #00f0ff;
+  background: rgba(0, 240, 255, 0.1);
   transform: translateY(-2px);
 }
 
-.i3d-drag-hint {
+/* STAGE HUD & HINTS */
+.i3d-stage-hud {
   position: absolute;
-  bottom: 16px;
-  left: 50%;
-  transform: translateX(-50%);
+  bottom: 14px;
+  left: 16px;
+  right: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  pointer-events: none;
+  z-index: 12;
+}
+.i3d-active-mode-tag {
+  background: rgba(4, 7, 20, 0.85);
+  border: 1px solid rgba(0, 240, 255, 0.35);
+  border-radius: 20px;
+  padding: 0.35rem 0.8rem;
+  font-size: 0.72rem;
+  color: #00f0ff;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+  backdrop-filter: blur(8px);
+}
+.i3d-active-mode-tag .hud-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #00f0ff;
+  box-shadow: 0 0 8px #00f0ff;
+  animation: i3dDotBlink 1.5s infinite;
+}
+@keyframes i3dDotBlink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.3; }
+}
+.i3d-drag-hint {
   background: rgba(3, 4, 12, 0.75);
   border: 1px solid rgba(0, 240, 255, 0.25);
   backdrop-filter: blur(6px);
@@ -3747,47 +3843,263 @@ html {
   padding: 0.35rem 0.8rem;
   border-radius: 20px;
   pointer-events: none;
-  z-index: 12;
   display: flex;
   align-items: center;
   gap: 0.45rem;
-  transition: opacity 0.3s ease;
 }
 
-.i3d-effects-grid {
+/* FUTURISTIC STUDIO DOCK */
+.i3d-studio-dock {
+  margin-top: 1.2rem;
+  background: rgba(14, 18, 38, 0.7);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 16px;
+  padding: 1rem;
+  backdrop-filter: blur(12px);
+}
+.i3d-dock-tabs {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  overflow-x: auto;
+  padding-bottom: 0.8rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  margin-bottom: 1rem;
+}
+.i3d-tab-btn {
+  background: transparent;
+  border: 1px solid transparent;
+  color: var(--text-muted);
+  padding: 0.5rem 0.9rem;
+  border-radius: 8px;
+  font-size: 0.82rem;
+  font-weight: 600;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+  white-space: nowrap;
+  transition: all 0.2s ease;
+}
+.i3d-tab-btn:hover {
+  color: #fff;
+  background: rgba(255, 255, 255, 0.05);
+}
+.i3d-tab-btn.active {
+  background: rgba(0, 240, 255, 0.12);
+  border-color: rgba(0, 240, 255, 0.35);
+  color: #00f0ff;
+  box-shadow: 0 0 12px rgba(0, 240, 255, 0.2);
+}
+.i3d-panel {
+  display: none;
+  animation: i3dPanelFade 0.25s ease;
+}
+.i3d-panel.active {
+  display: block;
+}
+@keyframes i3dPanelFade {
+  from { opacity: 0; transform: translateY(4px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* BUTTONS GRID FOR MODES */
+.i3d-buttons-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+  gap: 0.6rem;
+}
+.btn-i3d-mode {
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 10px;
+  padding: 0.65rem 0.6rem;
+  color: var(--text);
+  cursor: pointer;
+  text-align: left;
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  transition: all 0.2s ease;
+}
+.btn-i3d-mode:hover {
+  border-color: rgba(0, 240, 255, 0.3);
+  background: rgba(0, 240, 255, 0.08);
+  transform: translateY(-2px);
+}
+.btn-i3d-mode.active {
+  background: linear-gradient(135deg, rgba(0, 240, 255, 0.2), rgba(168, 85, 247, 0.2));
+  border-color: #00f0ff;
+  color: #00f0ff;
+  box-shadow: 0 0 15px rgba(0, 240, 255, 0.3);
+}
+.btn-i3d-mode .mode-icon {
+  font-size: 1.25rem;
+}
+.btn-i3d-mode .mode-info strong {
+  display: block;
+  font-size: 0.8rem;
+  line-height: 1.2;
+}
+.btn-i3d-mode .mode-info small {
+  display: block;
+  font-size: 0.68rem;
+  color: var(--text-muted);
+}
+
+/* LIGHTING & CAMERA ROWS */
+.i3d-lighting-row, .i3d-camera-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+.i3d-presets-group {
   display: flex;
   align-items: center;
   gap: 0.5rem;
   flex-wrap: wrap;
 }
-
-.fx-icon {
-  font-size: 0.95rem;
+.btn-i3d-light, .btn-i3d-cam {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: var(--text);
+  padding: 0.45rem 0.8rem;
+  border-radius: 8px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+  transition: all 0.2s ease;
 }
-
-.fx-status {
-  font-size: 0.68rem;
-  padding: 0.1rem 0.35rem;
-  border-radius: 4px;
-  background: rgba(255, 255, 255, 0.08);
+.btn-i3d-light:hover, .btn-i3d-cam:hover {
+  border-color: #00f0ff;
+  color: #00f0ff;
+}
+.btn-i3d-light.active, .btn-i3d-cam.active {
+  background: rgba(0, 240, 255, 0.15);
+  border-color: #00f0ff;
+  color: #00f0ff;
+}
+.i3d-sliders-group {
+  display: flex;
+  align-items: center;
+  gap: 1.2rem;
+  flex-wrap: wrap;
+}
+.i3d-slider-item {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+  font-size: 0.75rem;
   color: var(--text-muted);
 }
+.i3d-slider-item input[type="range"] {
+  accent-color: #00f0ff;
+  cursor: pointer;
+  width: 120px;
+}
+.i3d-tour-controls {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  flex-wrap: wrap;
+}
 
-.i3d-btn-vfx.active .fx-status {
-  background: rgba(0, 240, 255, 0.2);
+/* MATERIAL SWATCHES */
+.i3d-materials-wrap {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+.i3d-mat-title {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  font-weight: 600;
+}
+.i3d-swatches-grid {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  flex-wrap: wrap;
+}
+.i3d-swatch {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  padding: 0.4rem 0.75rem;
+  border-radius: 8px;
+  color: var(--text);
+  font-size: 0.78rem;
+  font-weight: 600;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  transition: all 0.2s ease;
+}
+.i3d-swatch::before {
+  content: '';
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: var(--swatch);
+  box-shadow: 0 0 6px var(--swatch);
+}
+.i3d-swatch:hover, .i3d-swatch.active {
+  border-color: var(--swatch);
+  background: rgba(255, 255, 255, 0.1);
+  color: #fff;
+  box-shadow: 0 0 12px rgba(0, 240, 255, 0.2);
+}
+.btn-i3d-mat-reset {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  color: var(--text-muted);
+  padding: 0.4rem 0.75rem;
+  border-radius: 8px;
+  font-size: 0.78rem;
+  font-weight: 600;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  transition: all 0.2s ease;
+}
+.btn-i3d-mat-reset:hover {
   color: #00f0ff;
+  border-color: #00f0ff;
+}
+
+/* HOTSPOTS BAR */
+.i3d-hotspots-bar {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+.i3d-hotspot-hint {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
 }
 
 @media (max-width: 768px) {
   .i3d-viewer-stage {
-    height: 380px;
-    min-height: 360px;
+    height: 420px;
+    min-height: 380px;
   }
-  .i3d-controls-bar {
-    justify-content: center;
+  .i3d-buttons-grid {
+    grid-template-columns: repeat(2, 1fr);
   }
-  .i3d-effects-grid {
-    justify-content: center;
+  .i3d-top-bar {
+    flex-direction: column;
+    align-items: stretch;
   }
 }
+
 
