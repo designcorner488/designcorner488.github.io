@@ -2247,7 +2247,7 @@ body.edit-mode .btn-add-project-slide {
 /* Stage Wrapper: Left Media, Right Details */
 .slider-stage-wrapper {
   display: grid;
-  grid-template-columns: 1.4fr 1fr;
+  grid-template-columns: 1.55fr 1fr;
   min-height: 500px;
 }
 
@@ -2266,10 +2266,10 @@ body.edit-mode .btn-add-project-slide {
 .slider-media-stage video {
   width: 100%;
   height: 100%;
-  object-fit: cover;
+  max-height: 550px;
+  object-fit: contain !important;
   display: block;
 }
-
 .slider-media-stage model-viewer {
   width: 100%;
   height: 100%;
@@ -3453,3 +3453,341 @@ html {
   color: var(--text-muted);
   font-weight: 600;
 }
+
+/* ============================================================
+   INTERACTIVE 3D MODELS SECTION & CYBERPUNK VFX SHADERS
+   ============================================================ */
+.i3d-wrapper {
+  background: var(--surface);
+  border: 1px solid rgba(0, 240, 255, 0.25);
+  border-radius: 24px;
+  padding: 1.5rem;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.7), 0 0 40px rgba(0, 240, 255, 0.1);
+  position: relative;
+  overflow: hidden;
+}
+
+.i3d-viewer-stage {
+  position: relative;
+  width: 100%;
+  height: 580px;
+  min-height: 500px;
+  border-radius: 18px;
+  overflow: hidden;
+  background: radial-gradient(circle at center, #0e122b 0%, #03040c 100%);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.i3d-viewer-stage model-viewer {
+  width: 100%;
+  height: 100%;
+  background: transparent;
+  transition: filter 0.3s ease, transform 0.2s ease-out;
+}
+
+/* 1. Neon Lighting Effect */
+.i3d-viewer-stage.neon-on model-viewer {
+  filter: drop-shadow(0 0 16px #00f0ff) drop-shadow(0 0 32px #a855f7) brightness(1.22) contrast(1.15);
+}
+
+/* 2. Edges Glowing Effect */
+.i3d-viewer-stage.edges-on model-viewer {
+  filter: drop-shadow(0 0 8px #00f0ff) drop-shadow(0 0 18px #00f0ff) contrast(1.35) saturate(1.4);
+}
+
+/* Combined Neon + Edges */
+.i3d-viewer-stage.neon-on.edges-on model-viewer {
+  filter: drop-shadow(0 0 20px #00f0ff) drop-shadow(0 0 40px #a855f7) drop-shadow(0 0 60px #ec4899) brightness(1.25) contrast(1.25);
+}
+
+/* 3. Hologram Effect Overlay */
+.i3d-holo-layer {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 5;
+  display: none;
+  background: repeating-linear-gradient(
+    0deg,
+    rgba(0, 240, 255, 0.12) 0px,
+    rgba(0, 240, 255, 0.12) 2px,
+    transparent 2px,
+    transparent 5px
+  );
+  mix-blend-mode: screen;
+  animation: i3dHoloScan 3s linear infinite;
+  opacity: 0.85;
+}
+.i3d-viewer-stage.holo-on .i3d-holo-layer {
+  display: block;
+}
+@keyframes i3dHoloScan {
+  0% { background-position: 0 0; }
+  100% { background-position: 0 100px; }
+}
+.i3d-viewer-stage.holo-on {
+  box-shadow: inset 0 0 50px rgba(0, 240, 255, 0.3);
+}
+
+/* 4. Dissolve Glitch Effect */
+.i3d-dissolve-layer {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 6;
+  display: none;
+  background: radial-gradient(circle, transparent 40%, rgba(168, 85, 247, 0.25) 90%),
+              repeating-radial-gradient(circle, rgba(0,240,255,0.08) 0, transparent 4px, transparent 8px);
+  animation: i3dDissolvePulse 1.8s ease-in-out infinite alternate;
+  mix-blend-mode: screen;
+}
+.i3d-viewer-stage.dissolve-on .i3d-dissolve-layer {
+  display: block;
+}
+@keyframes i3dDissolvePulse {
+  0% { opacity: 0.3; transform: scale(1); filter: hue-rotate(0deg); }
+  50% { opacity: 0.8; transform: scale(1.02); filter: hue-rotate(90deg); }
+  100% { opacity: 0.4; transform: scale(0.99); filter: hue-rotate(180deg); }
+}
+
+/* 5. Point Cloud / Matrix Mode */
+.i3d-matrix-layer {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 5;
+  display: none;
+  background-image: radial-gradient(rgba(0, 240, 255, 0.45) 1.5px, transparent 0);
+  background-size: 18px 18px;
+  animation: i3dMatrixDrift 10s linear infinite;
+  opacity: 0.75;
+}
+.i3d-viewer-stage.matrix-on .i3d-matrix-layer {
+  display: block;
+}
+@keyframes i3dMatrixDrift {
+  0% { background-position: 0 0; }
+  100% { background-position: 36px 36px; }
+}
+
+/* 6. Hotspots (Text Labelling) */
+.i3d-hotspot {
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  position: relative;
+  padding: 0;
+  outline: none;
+  z-index: 10;
+  transition: transform 0.2s ease;
+}
+.i3d-hotspot-dot {
+  width: 18px;
+  height: 18px;
+  background: #00f0ff;
+  border-radius: 50%;
+  box-shadow: 0 0 12px #00f0ff, 0 0 24px rgba(0, 240, 255, 0.8);
+  position: relative;
+  animation: i3dHotspotPulse 1.8s infinite;
+}
+@keyframes i3dHotspotPulse {
+  0% { transform: scale(0.85); box-shadow: 0 0 0 0 rgba(0, 240, 255, 0.7); }
+  70% { transform: scale(1.15); box-shadow: 0 0 0 14px rgba(0, 240, 255, 0); }
+  100% { transform: scale(0.85); box-shadow: 0 0 0 0 rgba(0, 240, 255, 0); }
+}
+.i3d-hotspot-card {
+  position: absolute;
+  bottom: 26px;
+  left: 50%;
+  transform: translateX(-50%) translateY(6px);
+  background: rgba(10, 14, 32, 0.92);
+  border: 1px solid rgba(0, 240, 255, 0.4);
+  backdrop-filter: blur(8px);
+  border-radius: 10px;
+  padding: 0.5rem 0.8rem;
+  white-space: nowrap;
+  pointer-events: none;
+  opacity: 0.9;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.6), 0 0 15px rgba(0, 240, 255, 0.2);
+  transition: all 0.25s ease;
+}
+.i3d-hotspot:hover .i3d-hotspot-card,
+.i3d-hotspot.active .i3d-hotspot-card {
+  transform: translateX(-50%) translateY(0);
+  opacity: 1;
+  border-color: #00f0ff;
+  box-shadow: 0 10px 30px rgba(0, 240, 255, 0.4);
+}
+.i3d-hotspot-card strong {
+  display: block;
+  font-size: 0.82rem;
+  color: #00f0ff;
+  font-weight: 700;
+}
+.i3d-hotspot-card span {
+  display: block;
+  font-size: 0.72rem;
+  color: var(--text-muted);
+}
+.i3d-viewer-stage.labels-off .i3d-hotspot {
+  display: none !important;
+}
+
+/* Control Bar for VFX toggles */
+.i3d-controls-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.8rem;
+  margin-top: 1rem;
+  flex-wrap: wrap;
+  padding: 0.8rem 1rem;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 14px;
+}
+.i3d-vfx-group {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+.i3d-btn-vfx {
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  color: var(--text);
+  padding: 0.5rem 0.85rem;
+  border-radius: 9px;
+  font-size: 0.82rem;
+  font-weight: 600;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+  transition: all 0.25s ease;
+}
+.i3d-btn-vfx:hover {
+  background: rgba(0, 240, 255, 0.12);
+  border-color: rgba(0, 240, 255, 0.4);
+  color: #00f0ff;
+  transform: translateY(-2px);
+}
+.i3d-btn-vfx.active {
+  background: linear-gradient(135deg, rgba(0, 240, 255, 0.25), rgba(168, 85, 247, 0.25));
+  border-color: #00f0ff;
+  color: #00f0ff;
+  box-shadow: 0 0 16px rgba(0, 240, 255, 0.35);
+}
+.i3d-model-select-group {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  flex-wrap: wrap;
+}
+.i3d-select {
+  background: var(--bg);
+  border: 1px solid rgba(0, 240, 255, 0.3);
+  color: var(--text);
+  padding: 0.45rem 0.8rem;
+  border-radius: 8px;
+  font-size: 0.82rem;
+  font-weight: 600;
+  outline: none;
+  cursor: pointer;
+}
+
+.i3d-top-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 1rem;
+  flex-wrap: wrap;
+}
+
+.i3d-select-label {
+  font-size: 0.82rem;
+  color: var(--text-muted);
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.btn-i3d-upload {
+  background: linear-gradient(135deg, rgba(0, 240, 255, 0.15), rgba(168, 85, 247, 0.15));
+  border: 1px solid rgba(0, 240, 255, 0.4);
+  color: #00f0ff;
+  padding: 0.45rem 0.95rem;
+  border-radius: 8px;
+  font-size: 0.82rem;
+  font-weight: 600;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  transition: all 0.25s ease;
+}
+
+.btn-i3d-upload:hover {
+  background: linear-gradient(135deg, rgba(0, 240, 255, 0.3), rgba(168, 85, 247, 0.3));
+  box-shadow: 0 0 16px rgba(0, 240, 255, 0.4);
+  transform: translateY(-2px);
+}
+
+.i3d-drag-hint {
+  position: absolute;
+  bottom: 16px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(3, 4, 12, 0.75);
+  border: 1px solid rgba(0, 240, 255, 0.25);
+  backdrop-filter: blur(6px);
+  color: var(--text-muted);
+  font-size: 0.75rem;
+  padding: 0.35rem 0.8rem;
+  border-radius: 20px;
+  pointer-events: none;
+  z-index: 12;
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+  transition: opacity 0.3s ease;
+}
+
+.i3d-effects-grid {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.fx-icon {
+  font-size: 0.95rem;
+}
+
+.fx-status {
+  font-size: 0.68rem;
+  padding: 0.1rem 0.35rem;
+  border-radius: 4px;
+  background: rgba(255, 255, 255, 0.08);
+  color: var(--text-muted);
+}
+
+.i3d-btn-vfx.active .fx-status {
+  background: rgba(0, 240, 255, 0.2);
+  color: #00f0ff;
+}
+
+@media (max-width: 768px) {
+  .i3d-viewer-stage {
+    height: 380px;
+    min-height: 360px;
+  }
+  .i3d-controls-bar {
+    justify-content: center;
+  }
+  .i3d-effects-grid {
+    justify-content: center;
+  }
+}
+

@@ -3538,14 +3538,9 @@ function triggerActiveToolMediaUpload() {
 
 function initSkillShowcase() {
   const panel = document.getElementById('skillsViewportPanel');
-  if (panel) {
-    // Pause auto-cycle when hovering over viewport screen
-    panel.addEventListener('mouseenter', () => {
-      if (skillAutoTimer) clearInterval(skillAutoTimer);
-    });
-    panel.addEventListener('mouseleave', () => {
-      if (!document.body.classList.contains('edit-mode')) startSkillAutoTimer();
-    });
+  if (!panel) {
+    // Viewport removed per user request: software cards now live under Services
+    return;
   }
 
   // Handle Skill Media File Upload
@@ -4492,3 +4487,185 @@ function replyViaWhatsAppDirect(name, clientMsg) {
 
 // Initial badge check
 window.addEventListener('DOMContentLoaded', updateInquiryBadge);
+
+/* ============================================================
+   INTERACTIVE 3D MODELS ENGINE & CYBERPUNK VFX SUITE
+   ============================================================ */
+let i3dEffectsState = {
+  neon: false,
+  edges: false,
+  holo: false,
+  dissolve: false,
+  matrix: false,
+  labels: true,
+  rotate: true
+};
+
+function toggleI3dEffect(effectName) {
+  const stage = document.getElementById('i3dStage');
+  if (!stage) return;
+
+  const btnMap = {
+    neon: 'btnFxNeon',
+    edges: 'btnFxEdges',
+    holo: 'btnFxHolo',
+    dissolve: 'btnFxDissolve',
+    matrix: 'btnFxMatrix',
+    labels: 'btnFxLabels'
+  };
+
+  const classMap = {
+    neon: 'neon-on',
+    edges: 'edges-on',
+    holo: 'holo-on',
+    dissolve: 'dissolve-on',
+    matrix: 'matrix-on',
+    labels: 'labels-off'
+  };
+
+  if (effectName === 'labels') {
+    i3dEffectsState.labels = !i3dEffectsState.labels;
+    stage.classList.toggle('labels-off', !i3dEffectsState.labels);
+    const btn = document.getElementById(btnMap.labels);
+    if (btn) {
+      btn.classList.toggle('active', i3dEffectsState.labels);
+      const st = btn.querySelector('.fx-status');
+      if (st) st.textContent = i3dEffectsState.labels ? 'ON' : 'OFF';
+    }
+    showToast(i3dEffectsState.labels ? '🏷️ Hotspot labels ON' : '🏷️ Hotspot labels OFF', 'info');
+    return;
+  }
+
+  const cls = classMap[effectName];
+  if (!cls) return;
+
+  i3dEffectsState[effectName] = !i3dEffectsState[effectName];
+  const isOn = i3dEffectsState[effectName];
+  stage.classList.toggle(cls, isOn);
+
+  const btn = document.getElementById(btnMap[effectName]);
+  if (btn) {
+    btn.classList.toggle('active', isOn);
+    const st = btn.querySelector('.fx-status');
+    if (st) st.textContent = isOn ? 'ON' : 'OFF';
+  }
+
+  const labels = {
+    neon: '⚡ Neon Lighting',
+    edges: '✨ Edges Glowing',
+    holo: '🌌 Hologram Effect',
+    dissolve: '💨 Dissolve Effect',
+    matrix: '☁️ Point Cloud Grid'
+  };
+
+  showToast(`${labels[effectName] || effectName}: ${isOn ? 'ACTIVE' : 'OFF'}`, 'info');
+}
+
+function toggleI3dRotate() {
+  const viewer = document.getElementById('i3dModelViewer');
+  const btn = document.getElementById('btnFxRotate');
+  if (!viewer) return;
+
+  i3dEffectsState.rotate = !i3dEffectsState.rotate;
+  if (i3dEffectsState.rotate) {
+    viewer.setAttribute('auto-rotate', '');
+  } else {
+    viewer.removeAttribute('auto-rotate');
+  }
+
+  if (btn) {
+    btn.classList.toggle('active', i3dEffectsState.rotate);
+    const st = btn.querySelector('.fx-status');
+    if (st) st.textContent = i3dEffectsState.rotate ? 'ON' : 'OFF';
+  }
+
+  showToast(i3dEffectsState.rotate ? '🔄 360° Auto-Rotate ON' : '⏸️ Auto-Rotate Paused', 'info');
+}
+
+function switchI3dModel(src) {
+  const viewer = document.getElementById('i3dModelViewer');
+  if (!viewer) return;
+
+  viewer.style.opacity = '0.5';
+  viewer.src = src;
+  viewer.addEventListener('load', () => {
+    viewer.style.opacity = '1';
+  }, { once: true });
+
+  // Update hotspots visibility or positions if custom model
+  const hotspots = document.getElementById('i3dHotspots');
+  if (hotspots) {
+    hotspots.style.display = src.includes('snaks_bar') ? 'block' : 'none';
+  }
+
+  showToast('🧊 3D Model loaded: ' + src.split('/').pop(), 'info');
+}
+
+function handleI3dUpload(event) {
+  const file = event?.target?.files?.[0];
+  if (!file) return;
+
+  if (!file.name.match(/\.(glb|gltf)$/i)) {
+    showToast('❌ Faqat .glb ya .gltf 3D file upload karein!', 'error');
+    return;
+  }
+
+  showToast('⏳ 3D Model process ho raha hai...', 'info');
+
+  try {
+    const objectUrl = URL.createObjectURL(file);
+    const select = document.getElementById('i3dModelSelect');
+    if (select) {
+      const opt = document.createElement('option');
+      opt.value = objectUrl;
+      opt.textContent = `📁 ${file.name} (Custom Upload)`;
+      opt.selected = true;
+      select.appendChild(opt);
+    }
+
+    switchI3dModel(objectUrl);
+    showToast(`✅ "${file.name}" 360° Interactive Viewer me load ho gaya!`);
+  } catch (err) {
+    console.error('3D upload error:', err);
+    showToast('❌ Error loading 3D model: ' + err.message, 'error');
+  }
+}
+
+function toggleHotspotCard(hotspotEl) {
+  if (!hotspotEl) return;
+  hotspotEl.classList.toggle('active');
+}
+
+// Mouse interactive 3D perspective parallax on hover
+function initI3dMouseInteractivity() {
+  const stage = document.getElementById('i3dStage');
+  const viewer = document.getElementById('i3dModelViewer');
+  if (!stage || !viewer) return;
+
+  stage.addEventListener('mousemove', (e) => {
+    const rect = stage.getBoundingClientRect();
+    const x = e.clientX - rect.left;
+    const y = e.clientY - rect.top;
+    const centerX = rect.width / 2;
+    const centerY = rect.height / 2;
+    const normX = (x - centerX) / centerX;
+    const normY = (y - centerY) / centerY;
+
+    viewer.style.transform = `perspective(1000px) rotateY(${normX * 6}deg) rotateX(${-normY * 5}deg) scale3d(1.01, 1.01, 1.01)`;
+  });
+
+  stage.addEventListener('mouseleave', () => {
+    viewer.style.transform = 'perspective(1000px) rotateY(0deg) rotateX(0deg) scale3d(1, 1, 1)';
+  });
+}
+
+// Expose to window for inline onclick handlers
+window.toggleI3dEffect = toggleI3dEffect;
+window.toggleI3dRotate = toggleI3dRotate;
+window.switchI3dModel = switchI3dModel;
+window.handleI3dUpload = handleI3dUpload;
+window.toggleHotspotCard = toggleHotspotCard;
+
+window.addEventListener('DOMContentLoaded', () => {
+  initI3dMouseInteractivity();
+});
