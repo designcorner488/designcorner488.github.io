@@ -53,6 +53,8 @@ function applySlideTimersLive() {
   const projSec = Math.round(getTimerMs('projects', 5000) / 1000);
   const vpAuto = document.querySelector('.vp-auto-text');
   if (vpAuto) vpAuto.innerHTML = `<i class="fas fa-rotate"></i> ${skillSec}s AUTO-CYCLE`;
+  const vpBadge = document.getElementById('vpTimerBadge');
+  if (vpBadge) vpBadge.textContent = `${skillSec}s`;
   const autoTxt = document.getElementById('sliderAutoText');
   if (autoTxt) autoTxt.textContent = `${projSec}s AUTO`;
 
@@ -78,21 +80,36 @@ function openSlideTimerModal() {
     if (el) el.value = t[k] || defaults[k];
   });
   const modal = document.getElementById('slideTimerModal');
-  if (modal) modal.style.display = 'flex';
+  if (modal) {
+    modal.style.display = 'flex';
+    modal.style.opacity = '1';
+    modal.style.visibility = 'visible';
+    modal.classList.add('open');
+  }
 }
 function closeSlideTimerModal() {
   const modal = document.getElementById('slideTimerModal');
-  if (modal) modal.style.display = 'none';
+  if (modal) {
+    modal.style.display = 'none';
+    modal.style.opacity = '0';
+    modal.style.visibility = 'hidden';
+    modal.classList.remove('open');
+  }
 }
 function stepTimer(section, delta) {
   const id = 'timer' + section.charAt(0).toUpperCase() + section.slice(1);
   const el = document.getElementById(id);
   if (!el) return;
-  let val = parseFloat(el.value) + delta;
+  let val = (parseFloat(el.value) || 5) + delta;
   val = Math.min(30, Math.max(1, val));
   el.value = val;
 }
 function previewTimer(section, val) { /* live preview */ }
+function setQuickSkillTimer(sec) {
+  const el = document.getElementById('timerSkills');
+  if (el) el.value = sec;
+  showToast(`⚡ Tools & Skills speed ${sec}s par set ho gayi! Save & Apply karein.`);
+}
 function saveAllTimers() {
   const sections = ['about', 'skills', 'projects', 'addons', 'hero'];
   const t = {};
@@ -126,6 +143,7 @@ window.previewTimer = previewTimer;
 window.saveAllTimers = saveAllTimers;
 window.resetAllTimers = resetAllTimers;
 window.applySlideTimersLive = applySlideTimersLive;
+window.setQuickSkillTimer = setQuickSkillTimer;
 
 /* ============================================================
    AUTO-PUBLISH HELPER — uploads + publishes after a section change
