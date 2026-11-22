@@ -41,8 +41,8 @@
     },
     "slideTimers": {
       "about": 5,
-      "skills": 5,
-      "projects": 2,
+      "skills": 1,
+      "projects": 5,
       "addons": 6,
       "hero": 5
     }
