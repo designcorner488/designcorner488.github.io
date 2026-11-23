@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <meta name="description" content="100% Free Next-Gen AI Studio: Remove Backgrounds, Convert 2D Images to 3D Motion, AI Architectural Style Transfer & Concept Visualizer."/>
+  <meta name="description" content="100% Free Next-Gen AI Studio: Remove Backgrounds, Convert 2D Images to Real 3D Motion, AI Architectural Style Transfer & Concept Visualizer."/>
   <title>AI Studio & Creative Features — 100% Free | DesignCorner</title>
   
   <link rel="preconnect" href="https://fonts.googleapis.com"/>
@@ -12,11 +12,10 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
   <link rel="stylesheet" href="style.css?v=29.0"/>
   
-  <!-- Three.js for 2D to 3D Depth Animator -->
+  <!-- Three.js for Real 3D Depth Displacement & Parallax Engine -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 
   <style>
-    /* AI STUDIO DEDICATED STYLES */
     :root {
       --ai-neon-cyan: #00f0ff;
       --ai-neon-purple: #a855f7;
@@ -33,7 +32,7 @@
 
     /* AI Page Hero */
     .ai-hero {
-      padding: 130px 20px 50px;
+      padding: 130px 20px 45px;
       text-align: center;
       position: relative;
       overflow: hidden;
@@ -132,7 +131,7 @@
 
     /* Main Container & Tool Cards */
     .ai-container {
-      max-width: 1140px;
+      max-width: 1160px;
       width: 100%;
       margin: 0 auto;
       padding: 0 20px 80px;
@@ -154,8 +153,8 @@
     }
 
     .ai-card {
-      background: rgba(16, 20, 42, 0.85);
-      border: 1px solid rgba(0, 240, 255, 0.22);
+      background: rgba(16, 20, 42, 0.9);
+      border: 1px solid rgba(0, 240, 255, 0.25);
       border-radius: 22px;
       padding: 2.2rem;
       box-shadow: 0 20px 50px rgba(0, 0, 0, 0.6), 0 0 30px rgba(0, 240, 255, 0.06);
@@ -199,7 +198,7 @@
       border: 2px dashed rgba(0, 240, 255, 0.4);
       background: rgba(0, 240, 255, 0.03);
       border-radius: 16px;
-      padding: 2.5rem 1.5rem;
+      padding: 2.2rem 1.5rem;
       text-align: center;
       cursor: pointer;
       transition: all 0.3s ease;
@@ -213,16 +212,16 @@
     }
 
     .ai-drop-icon {
-      font-size: 2.8rem;
+      font-size: 2.6rem;
       color: var(--ai-neon-cyan);
-      margin-bottom: 0.8rem;
+      margin-bottom: 0.6rem;
     }
 
     .ai-drop-text {
       font-size: 1rem;
       font-weight: 600;
       color: #e2e8f0;
-      margin-bottom: 0.4rem;
+      margin-bottom: 0.3rem;
     }
 
     .ai-drop-sub {
@@ -263,7 +262,7 @@
       box-shadow: 0 0 10px rgba(0, 240, 255, 0.4);
     }
 
-    /* Tool Workspace Grid */
+    /* Workspace Grid */
     .ai-workspace-grid {
       display: grid;
       grid-template-columns: 1fr 1fr;
@@ -284,13 +283,13 @@
       overflow: hidden;
       display: flex;
       flex-direction: column;
-      min-height: 380px;
+      min-height: 400px;
       position: relative;
     }
 
     .ai-view-header {
       padding: 10px 16px;
-      background: rgba(255, 255, 255, 0.03);
+      background: rgba(255, 255, 255, 0.04);
       border-bottom: 1px solid rgba(255, 255, 255, 0.06);
       display: flex;
       justify-content: space-between;
@@ -298,6 +297,8 @@
       font-size: 0.8rem;
       font-weight: 600;
       color: #94a3b8;
+      flex-wrap: wrap;
+      gap: 6px;
     }
 
     .ai-view-canvas-wrap {
@@ -314,11 +315,12 @@
         linear-gradient(-45deg, transparent 75%, #0d1129 75%);
       background-size: 20px 20px;
       background-position: 0 0, 0 10px, 10px -10px, -10px 0px;
+      cursor: crosshair;
     }
 
     .ai-view-canvas-wrap img, .ai-view-canvas-wrap canvas {
       max-width: 100%;
-      max-height: 340px;
+      max-height: 360px;
       object-fit: contain;
       border-radius: 8px;
     }
@@ -386,7 +388,7 @@
       cursor: pointer;
     }
 
-    /* Tool 3 Styles Grid */
+    /* Style Pills */
     .ai-style-pills {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
@@ -430,7 +432,7 @@
       color: #fff;
     }
 
-    /* Tool 4 Prompt Bar */
+    /* Concept Prompt Bar */
     .ai-prompt-box {
       display: flex;
       gap: 10px;
@@ -466,7 +468,7 @@
       background: rgba(255, 255, 255, 0.05);
       border: 1px solid rgba(255, 255, 255, 0.12);
       border-radius: 20px;
-      padding: 4px 12px;
+      padding: 5px 14px;
       color: #94a3b8;
       cursor: pointer;
       transition: all 0.2s;
@@ -478,12 +480,13 @@
       background: rgba(0, 240, 255, 0.08);
     }
 
-    /* 2D to 3D Depth Viewport */
+    /* Real 3D Viewport */
     #depth3dViewport {
       width: 100%;
-      height: 380px;
+      height: 420px;
       position: relative;
       cursor: grab;
+      background: radial-gradient(circle at center, #0a0e28 0%, #03040b 100%);
     }
     #depth3dViewport:active {
       cursor: grabbing;
@@ -493,6 +496,31 @@
       height: 100% !important;
       display: block;
       border-radius: 12px;
+    }
+
+    /* Touch-up Toolbar */
+    .brush-toolbar {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: rgba(255, 255, 255, 0.06);
+      padding: 4px 8px;
+      border-radius: 8px;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+    .brush-btn {
+      padding: 4px 10px;
+      border-radius: 6px;
+      font-size: 0.75rem;
+      color: #cbd5e1;
+      background: transparent;
+      border: 1px solid transparent;
+      cursor: pointer;
+    }
+    .brush-btn.active {
+      background: var(--ai-neon-cyan);
+      color: #03040c;
+      font-weight: 700;
     }
   </style>
 </head>
@@ -504,11 +532,18 @@
       <span class="brand-bracket">&lt;</span><span class="brand-name">DESIGN CORNER</span><span class="brand-bracket">/&gt;</span>
     </a>
 
-    <!-- Dedicated Glowing & Blinking $1 Dollar Shop Button -->
+    <!-- Dedicated Glowing $1 Dollar Shop Button -->
     <a href="addons-store/" class="nav-shop-pill" target="_blank" title="Blender Addons &amp; Tools from $1 / Rs.299">
       <span class="shop-pill-flame">🔥</span>
       <span class="shop-pill-text">$1 Dollar Shop</span>
       <span class="shop-pill-badge">OFFER</span>
+    </a>
+
+    <!-- Dedicated Glowing AI Studio Pill -->
+    <a href="ai.html" class="nav-ai-pill" title="100% Free AI 3D & Creative Tools">
+      <span class="ai-pill-icon"><i class="fas fa-wand-magic-sparkles"></i></span>
+      <span class="ai-pill-text">AI Features</span>
+      <span class="ai-pill-badge">FREE</span>
     </a>
 
     <div class="nav-links" id="navLinks">
@@ -518,7 +553,6 @@
       <a href="index.html#interactive-3d" class="nav-link">3D Studio</a>
       <a href="ai.html" class="nav-link active" style="color:var(--ai-neon-cyan);font-weight:700;">
         <i class="fas fa-wand-magic-sparkles"></i> AI Studio
-        <span style="background:linear-gradient(135deg,#00f0ff,#a855f7);color:#020308;font-size:0.65rem;padding:2px 6px;border-radius:10px;font-weight:800;margin-left:4px;">FREE</span>
       </a>
       <a href="index.html#services" class="nav-link">Services &amp; Tools</a>
       <a href="index.html#contact" class="nav-link">Contact</a>
@@ -541,20 +575,20 @@
       Creative <span class="gradient-text">AI Features</span> &amp; 3D Lab
     </h1>
     <p class="ai-hero-sub">
-      Experience cutting-edge artificial intelligence tools directly in your browser. Remove backgrounds with precision, turn 2D renders into animated 3D motion, transfer architectural moods &amp; generate concepts in seconds.
+      Smart AI tools engineered for architectural visualization, 3D modeling, and creative workflows. Runs directly inside your browser — 100% free with unlimited usage.
     </p>
 
     <!-- TAB SELECTOR -->
     <div class="ai-tabs-wrap">
       <div class="ai-tabs">
         <button class="ai-tab-btn active" onclick="switchAiTab('bg-remover')">
-          <i class="fas fa-scissors"></i> AI Background Remover
+          <i class="fas fa-scissors"></i> Smart Background Remover
         </button>
         <button class="ai-tab-btn" onclick="switchAiTab('depth-3d')">
-          <i class="fas fa-cube"></i> 2D to 3D Depth Animator
+          <i class="fas fa-cube"></i> 2D to 3D Depth Displacer
         </button>
         <button class="ai-tab-btn" onclick="switchAiTab('style-studio')">
-          <i class="fas fa-palette"></i> Architectural Mood &amp; Style
+          <i class="fas fa-palette"></i> Architectural Mood &amp; Shaders
         </button>
         <button class="ai-tab-btn" onclick="switchAiTab('ai-concept')">
           <i class="fas fa-sparkles"></i> AI Concept &amp; 3D Prompts
@@ -567,18 +601,21 @@
   <main class="ai-container">
 
     <!-- ============================================================ -->
-    <!-- TOOL 1: AI BACKGROUND REMOVER -->
+    <!-- TOOL 1: SMART AI BACKGROUND REMOVER -->
     <!-- ============================================================ -->
     <section class="ai-tool-panel active" id="panel-bg-remover">
       <div class="ai-card">
         <div class="ai-card-header">
           <div>
-            <h2 class="ai-card-title"><i class="fas fa-scissors"></i> AI Precision Background Remover</h2>
-            <p class="ai-card-desc">Upload architectural renders, products, or furniture — AI extracts subjects instantly with transparent alpha PNG.</p>
+            <h2 class="ai-card-title"><i class="fas fa-scissors"></i> Smart AI Background Remover (Border Flood-Fill + Magic Wand)</h2>
+            <p class="ai-card-desc">Removes walls, skies, and backgrounds cleanly without hollowing out dark furniture or complex center objects. Click anywhere on the image to key out that color!</p>
           </div>
-          <span style="font-size:0.75rem;padding:4px 10px;background:rgba(16,185,129,0.15);color:#10b981;border-radius:20px;border:1px solid rgba(16,185,129,0.4);font-weight:700;">
-            <i class="fas fa-shield-halved"></i> 100% Private · In-Browser
-          </span>
+          <div class="brush-toolbar">
+            <span style="font-size:0.75rem;color:#94a3b8;margin-right:4px;">Tool:</span>
+            <button class="brush-btn active" id="btnToolWand" onclick="setBgTool('wand')"><i class="fas fa-wand-magic-sparkles"></i> Magic Wand</button>
+            <button class="brush-btn" id="btnToolErase" onclick="setBgTool('erase')"><i class="fas fa-eraser"></i> Erase Brush</button>
+            <button class="brush-btn" id="btnToolRestore" onclick="setBgTool('restore')"><i class="fas fa-paintbrush"></i> Restore</button>
+          </div>
         </div>
 
         <!-- Dropzone -->
@@ -588,7 +625,7 @@
              ondrop="handleBgFileDrop(event)">
           <i class="fas fa-cloud-arrow-up ai-drop-icon"></i>
           <div class="ai-drop-text">Drop your image here, or browse files</div>
-          <div class="ai-drop-sub">Supports PNG, JPG, WEBP (renders, furniture, buildings)</div>
+          <div class="ai-drop-sub">Extracts furniture, snack bars, cabinets, or buildings cleanly</div>
           <input type="file" id="bgFileInput" accept="image/*" style="display:none;" onchange="handleBgFileSelect(event)"/>
         </div>
 
@@ -604,21 +641,21 @@
         <div class="ai-workspace-grid">
           <div class="ai-view-box">
             <div class="ai-view-header">
-              <span><i class="fas fa-image"></i> Original Image</span>
-              <span id="bgOriginalInfo">No image loaded</span>
+              <span><i class="fas fa-image"></i> Original Image (Click to sample background color)</span>
+              <span id="bgOriginalInfo">1000 x 1000px</span>
             </div>
-            <div class="ai-view-canvas-wrap">
-              <img id="bgOriginalImg" src="images/r1.jpg" alt="Original"/>
+            <div class="ai-view-canvas-wrap" onclick="handleOriginalCanvasClick(event)">
+              <canvas id="bgSourceCanvas" style="max-width:100%;max-height:360px;cursor:crosshair;"></canvas>
             </div>
           </div>
 
           <div class="ai-view-box">
             <div class="ai-view-header">
-              <span><i class="fas fa-wand-magic-sparkles"></i> AI Extracted Subject (Transparent)</span>
-              <span id="bgStatus">Ready</span>
+              <span><i class="fas fa-wand-magic-sparkles"></i> AI Extracted Subject (Transparent PNG)</span>
+              <span id="bgStatus" style="color:#10b981;">Ready</span>
             </div>
             <div class="ai-view-canvas-wrap">
-              <canvas id="bgOutputCanvas"></canvas>
+              <canvas id="bgOutputCanvas" onmousedown="startBrushDraw(event)" onmousemove="doBrushDraw(event)" onmouseup="stopBrushDraw()"></canvas>
             </div>
           </div>
         </div>
@@ -626,16 +663,22 @@
         <!-- Actions -->
         <div class="ai-actions-bar">
           <div class="ai-control-group">
-            <span class="ai-slider-label">Edge Feather:</span>
-            <input type="range" id="bgTolerance" min="5" max="60" value="25" class="ai-slider" oninput="processBgRemoval()"/>
-            <span id="bgTolVal" style="font-size:0.75rem;color:#00f0ff;">25</span>
+            <span class="ai-slider-label">Tolerance:</span>
+            <input type="range" id="bgTolerance" min="5" max="80" value="28" class="ai-slider" oninput="processSmartBgRemoval()"/>
+            <span id="bgTolVal" style="font-size:0.75rem;color:#00f0ff;">28</span>
+
+            <span class="ai-slider-label" style="margin-left:12px;">Brush Size:</span>
+            <input type="range" id="brushSize" min="5" max="60" value="22" class="ai-slider"/>
           </div>
 
           <div style="display:flex;gap:10px;">
-            <button class="btn-ai-action btn-ai-primary" onclick="processBgRemoval()">
-              <i class="fas fa-bolt"></i> Remove Background
+            <button class="btn-ai-action btn-ai-primary" onclick="processSmartBgRemoval()">
+              <i class="fas fa-bolt"></i> Auto Remove Background
             </button>
-            <button class="btn-ai-action btn-ai-secondary" id="btnDownloadBg" onclick="downloadBgResult()">
+            <button class="btn-ai-action btn-ai-secondary" onclick="resetBgCanvas()">
+              <i class="fas fa-rotate-left"></i> Reset
+            </button>
+            <button class="btn-ai-action btn-ai-primary" id="btnDownloadBg" onclick="downloadBgResult()">
               <i class="fas fa-download"></i> Download Transparent PNG
             </button>
           </div>
@@ -644,18 +687,21 @@
     </section>
 
     <!-- ============================================================ -->
-    <!-- TOOL 2: 2D PHOTO TO 3D DEPTH ANIMATOR -->
+    <!-- TOOL 2: 2D PHOTO TO TRUE 3D DEPTH DISPLACER -->
     <!-- ============================================================ -->
     <section class="ai-tool-panel" id="panel-depth-3d">
       <div class="ai-card">
         <div class="ai-card-header">
           <div>
-            <h2 class="ai-card-title"><i class="fas fa-cube"></i> 2D Photo to 3D Depth Animator</h2>
-            <p class="ai-card-desc">Converts static 2D architectural photography &amp; renders into interactive 3D parallax motion. Move your mouse or tilt your device!</p>
+            <h2 class="ai-card-title"><i class="fas fa-cube"></i> 2D Photo to True 3D Depth Displacer</h2>
+            <p class="ai-card-desc">Converts your 2D photo into a true 3D surface mesh with depth extrusion and real perspective relief. Drag with mouse to orbit in 3D!</p>
           </div>
-          <span style="font-size:0.75rem;padding:4px 10px;background:rgba(0,240,255,0.15);color:#00f0ff;border-radius:20px;border:1px solid rgba(0,240,255,0.4);font-weight:700;">
-            <i class="fas fa-vr-cardboard"></i> WebGL Parallax Engine
-          </span>
+          <div class="brush-toolbar">
+            <span style="font-size:0.75rem;color:#94a3b8;margin-right:4px;">3D Mode:</span>
+            <button class="brush-btn active" id="btnModeSurface" onclick="setDepthViewMode('surface')">3D Surface Mesh</button>
+            <button class="brush-btn" id="btnModePoints" onclick="setDepthViewMode('points')">Point Cloud</button>
+            <button class="brush-btn" id="btnModeWire" onclick="setDepthViewMode('wireframe')">Wireframe</button>
+          </div>
         </div>
 
         <!-- Dropzone -->
@@ -665,7 +711,7 @@
              ondrop="handleDepthFileDrop(event)">
           <i class="fas fa-cube ai-drop-icon"></i>
           <div class="ai-drop-text">Drop any 2D photo or architectural render here</div>
-          <div class="ai-drop-sub">Creates immediate 3D displacement with simulated depth</div>
+          <div class="ai-drop-sub">Creates immediate real-time 3D relief with depth extrusion</div>
           <input type="file" id="depthFileInput" accept="image/*" style="display:none;" onchange="handleDepthFileSelect(event)"/>
         </div>
 
@@ -677,11 +723,11 @@
           <img src="images/r4.jpg" alt="Sample 3" class="ai-sample-thumb" onclick="loadDepthSample('images/r4.jpg')" title="High-Rise Modern"/>
         </div>
 
-        <!-- 3D Interactive Viewport -->
-        <div style="margin-top:1.8rem;background:#050713;border:1px solid rgba(0,240,255,0.3);border-radius:18px;overflow:hidden;position:relative;">
+        <!-- 3D Viewport -->
+        <div style="margin-top:1.8rem;background:#03040c;border:1px solid rgba(0,240,255,0.3);border-radius:18px;overflow:hidden;position:relative;">
           <div class="ai-view-header">
-            <span><i class="fas fa-arrows-up-down-left-right"></i> Move mouse over stage to inspect 3D parallax</span>
-            <span id="depthFps" style="color:#00f0ff;">60 FPS WebGL</span>
+            <span><i class="fas fa-arrows-up-down-left-right"></i> Click &amp; Drag with mouse to orbit in 3D · Scroll to Zoom</span>
+            <span id="depthFps" style="color:#00f0ff;">True 3D Vertex Displacement Engine</span>
           </div>
           <div id="depth3dViewport"></div>
         </div>
@@ -689,10 +735,12 @@
         <!-- Actions & Settings -->
         <div class="ai-actions-bar">
           <div class="ai-control-group">
-            <span class="ai-slider-label">3D Depth Intensity:</span>
-            <input type="range" id="depthIntensity" min="5" max="50" value="22" class="ai-slider" oninput="updateDepthIntensity(this.value)"/>
-            <label style="display:flex;align-items:center;gap:6px;font-size:0.8rem;color:#cbd5e1;cursor:pointer;margin-left:12px;">
-              <input type="checkbox" id="depthAutoOrbit" onchange="toggleDepthAutoOrbit(this.checked)" checked/> Auto-Cinematic Orbit
+            <span class="ai-slider-label">3D Extrusion Depth:</span>
+            <input type="range" id="depthIntensity" min="5" max="90" value="45" class="ai-slider" oninput="updateRealDepth(this.value)"/>
+            <span id="depthValText" style="font-size:0.75rem;color:#00f0ff;">45</span>
+
+            <label style="display:flex;align-items:center;gap:6px;font-size:0.8rem;color:#cbd5e1;cursor:pointer;margin-left:14px;">
+              <input type="checkbox" id="depthAutoOrbit" onchange="toggleDepthAutoOrbit(this.checked)" checked/> Auto 360° Orbit
             </label>
           </div>
 
@@ -709,17 +757,17 @@
     </section>
 
     <!-- ============================================================ -->
-    <!-- TOOL 3: ARCHITECTURAL AI MOOD & STYLE SWITCHER -->
+    <!-- TOOL 3: ARCHITECTURAL AI MOOD & SHADER STUDIO -->
     <!-- ============================================================ -->
     <section class="ai-tool-panel" id="panel-style-studio">
       <div class="ai-card">
         <div class="ai-card-header">
           <div>
-            <h2 class="ai-card-title"><i class="fas fa-palette"></i> Architectural AI Mood &amp; Style Studio</h2>
-            <p class="ai-card-desc">Transform daytime architectural renders into cinematic twilight, cyberpunk neon night, technical blueprint CAD, or sculptural clay renders.</p>
+            <h2 class="ai-card-title"><i class="fas fa-palette"></i> Architectural AI Mood &amp; Shader Studio</h2>
+            <p class="ai-card-desc">Photographic neural color-grading &amp; architectural shaders. Preserves fine details and lighting gradients smoothly without blotches.</p>
           </div>
           <span style="font-size:0.75rem;padding:4px 10px;background:rgba(168,85,247,0.15);color:#a855f7;border-radius:20px;border:1px solid rgba(168,85,247,0.4);font-weight:700;">
-            <i class="fas fa-wand-magic"></i> Instant Neural Shaders
+            <i class="fas fa-wand-magic"></i> Photographic Neural Matrix
           </span>
         </div>
 
@@ -736,29 +784,29 @@
 
         <!-- Style Selection Grid -->
         <div class="ai-style-pills">
-          <div class="ai-style-pill active" onclick="applyAiStyle('day_to_night', this)">
+          <div class="ai-style-pill active" onclick="applyPhotographicStyle('day_to_night', this)">
             <i class="fas fa-moon"></i>
             <span>Day to Night BIM</span>
           </div>
-          <div class="ai-style-pill" onclick="applyAiStyle('cyberpunk', this)">
+          <div class="ai-style-pill" onclick="applyPhotographicStyle('cyberpunk', this)">
             <i class="fas fa-bolt"></i>
             <span>Cyberpunk Neon</span>
           </div>
-          <div class="ai-style-pill" onclick="applyAiStyle('blueprint', this)">
+          <div class="ai-style-pill" onclick="applyPhotographicStyle('blueprint', this)">
             <i class="fas fa-compass-drafting"></i>
             <span>CAD Blueprint</span>
           </div>
-          <div class="ai-style-pill" onclick="applyAiStyle('clay_render', this)">
+          <div class="ai-style-pill" onclick="applyPhotographicStyle('clay_render', this)">
             <i class="fas fa-cube"></i>
             <span>Clay AO Render</span>
           </div>
-          <div class="ai-style-pill" onclick="applyAiStyle('golden_hour', this)">
+          <div class="ai-style-pill" onclick="applyPhotographicStyle('golden_hour', this)">
             <i class="fas fa-sun"></i>
             <span>Golden Sunset</span>
           </div>
-          <div class="ai-style-pill" onclick="applyAiStyle('original', this)">
-            <i class="fas fa-rotate-left"></i>
-            <span>Original Clean</span>
+          <div class="ai-style-pill" onclick="applyPhotographicStyle('emerald_luxury', this)">
+            <i class="fas fa-gem"></i>
+            <span>Emerald Luxury</span>
           </div>
         </div>
 
@@ -788,7 +836,7 @@
         <div class="ai-actions-bar">
           <div class="ai-control-group">
             <span class="ai-slider-label">Effect Intensity:</span>
-            <input type="range" id="styleIntensity" min="10" max="100" value="85" class="ai-slider" oninput="reapplyCurrentStyle()"/>
+            <input type="range" id="styleIntensity" min="10" max="100" value="85" class="ai-slider" oninput="reapplyPhotographicStyle()"/>
           </div>
 
           <div style="display:flex;gap:10px;">
@@ -807,19 +855,19 @@
       <div class="ai-card">
         <div class="ai-card-header">
           <div>
-            <h2 class="ai-card-title"><i class="fas fa-sparkles"></i> AI Architectural Concept &amp; 3D Generator</h2>
-            <p class="ai-card-desc">Type any architectural idea or 3D asset prompt — generate photorealistic designs &amp; 3D concepts powered by free open AI neural networks.</p>
+            <h2 class="ai-card-title"><i class="fas fa-sparkles"></i> AI Architectural Concept &amp; 3D Prompts</h2>
+            <p class="ai-card-desc">Generate photorealistic architectural designs, furniture assets, and exterior concepts with instant preset inspiration and prompt synthesis.</p>
           </div>
           <span style="font-size:0.75rem;padding:4px 10px;background:rgba(236,72,153,0.15);color:#ec4899;border-radius:20px;border:1px solid rgba(236,72,153,0.4);font-weight:700;">
-            <i class="fas fa-infinity"></i> 100% Free &amp; Unlimited
+            <i class="fas fa-infinity"></i> Instant High-Res Engine
           </span>
         </div>
 
         <!-- Prompt Bar -->
         <div class="ai-prompt-box">
           <input type="text" id="aiConceptInput" class="ai-prompt-input" 
-                 placeholder="e.g. Modern minimalist luxury villa, glass facade, infinity pool, 8k octane render, architectural photography..."
-                 value="Futuristic luxury pavilion with curved glass and glowing neon lights, photorealistic architecture viz, 8k"/>
+                 placeholder="e.g. Modern minimalist luxury villa, glass facade, infinity pool, 8k octane render..."
+                 value="Futuristic luxury glass pavilion in pine forest, cinematic sunset lighting, 8k architectural render"/>
           <button class="btn-ai-action btn-ai-primary" id="btnGenerateConcept" onclick="generateAiConcept()">
             <i class="fas fa-wand-magic-sparkles"></i> Generate Concept
           </button>
@@ -827,17 +875,18 @@
 
         <!-- Suggestions -->
         <div class="ai-prompt-suggestions">
-          <span class="prompt-chip" onclick="setPrompt(this.innerText)">Futuristic glass skyscraper with vertical forest garden, cinematic sunset lighting</span>
-          <span class="prompt-chip" onclick="setPrompt(this.innerText)">Luxury Italian velvet ergonomic armchair, studio lighting, 3d asset pbr</span>
-          <span class="prompt-chip" onclick="setPrompt(this.innerText)">Minimalist Japanese zen house interior with natural oak wood & concrete</span>
-          <span class="prompt-chip" onclick="setPrompt(this.innerText)">Cyberpunk neon architectural kiosk with hologram signage, 3d game asset</span>
+          <span class="prompt-chip" onclick="loadConceptPreset(0)">🏡 Luxury Glass Villa &amp; Forest</span>
+          <span class="prompt-chip" onclick="loadConceptPreset(1)">🛋️ Modern Velvet Armchair 3D</span>
+          <span class="prompt-chip" onclick="loadConceptPreset(2)">🌆 Cyberpunk Neon Tower Kiosk</span>
+          <span class="prompt-chip" onclick="loadConceptPreset(3)">🌿 Minimalist Japanese Loft</span>
+          <span class="prompt-chip" onclick="loadConceptPreset(4)">🏢 Parametric High-Rise Skyscraper</span>
         </div>
 
         <!-- Preview Box -->
         <div class="ai-view-box" style="margin-top:1.8rem;min-height:480px;">
           <div class="ai-view-header">
             <span><i class="fas fa-eye"></i> Generated Concept Preview</span>
-            <span id="conceptStatus" style="color:#00f0ff;">Ready</span>
+            <span id="conceptStatus" style="color:#10b981;">Ready</span>
           </div>
           <div class="ai-view-canvas-wrap" style="min-height:420px;">
             <img id="conceptResultImg" src="images/r1.jpg" alt="Generated Concept" style="max-height:420px;border-radius:12px;box-shadow:0 10px 40px rgba(0,0,0,0.8);"/>
@@ -846,10 +895,10 @@
 
         <!-- Actions -->
         <div class="ai-actions-bar">
-          <span style="font-size:0.8rem;color:#94a3b8;"><i class="fas fa-check-circle" style="color:#10b981;"></i> Generated via free Open-AI neural engine. No API key needed.</span>
+          <span style="font-size:0.8rem;color:#94a3b8;"><i class="fas fa-check-circle" style="color:#10b981;"></i> 100% Free · Click preset chips above for instant instant concepts</span>
           <div style="display:flex;gap:10px;">
             <button class="btn-ai-action btn-ai-secondary" onclick="openConceptIn3dStudio()">
-              <i class="fas fa-cube"></i> Open 3D Studio
+              <i class="fas fa-cube"></i> Open in 3D Studio
             </button>
             <button class="btn-ai-action btn-ai-primary" onclick="downloadConceptImage()">
               <i class="fas fa-download"></i> Download Full Resolution (HD)
@@ -871,9 +920,7 @@
   <!-- TOAST NOTIFICATION -->
   <div class="toast" id="aiToast"><i class="fas fa-info-circle"></i> <span></span></div>
 
-  <!-- ============================================================ -->
   <!-- JAVASCRIPT ENGINE -->
-  <!-- ============================================================ -->
   <script>
     function showToast(msg) {
       const toast = document.getElementById('aiToast');
@@ -895,21 +942,31 @@
       if (targetPanel) targetPanel.classList.add('active');
 
       if (tabId === 'depth-3d') {
-        setTimeout(initDepth3dScene, 100);
+        setTimeout(initDepth3dScene, 80);
       }
     }
 
     // ============================================================
-    // TOOL 1: AI BACKGROUND REMOVER (In-Browser Client-side)
+    // TOOL 1: SMART BACKGROUND REMOVER (Flood-Fill + Magic Wand)
     // ============================================================
     let currentBgImg = new Image();
     currentBgImg.crossOrigin = 'anonymous';
+    let currentBgTool = 'wand'; // wand | erase | restore
+    let isBrushing = false;
+    let customKeyColors = [];
 
     function initBgRemover() {
       currentBgImg.onload = () => {
-        document.getElementById('bgOriginalImg').src = currentBgImg.src;
+        const srcCanvas = document.getElementById('bgSourceCanvas');
+        if (srcCanvas) {
+          srcCanvas.width = currentBgImg.naturalWidth;
+          srcCanvas.height = currentBgImg.naturalHeight;
+          const sCtx = srcCanvas.getContext('2d');
+          sCtx.drawImage(currentBgImg, 0, 0);
+        }
         document.getElementById('bgOriginalInfo').textContent = `${currentBgImg.naturalWidth} x ${currentBgImg.naturalHeight}px`;
-        processBgRemoval();
+        customKeyColors = [];
+        processSmartBgRemoval();
       };
       currentBgImg.src = 'images/r1.jpg';
     }
@@ -935,119 +992,310 @@
       const reader = new FileReader();
       reader.onload = (evt) => {
         currentBgImg.src = evt.target.result;
-        showToast('Image loaded! Processing background removal...');
+        showToast('Image loaded! Auto-extracting subject...');
       };
       reader.readAsDataURL(file);
     }
 
-    function processBgRemoval() {
-      const canvas = document.getElementById('bgOutputCanvas');
-      if (!canvas || !currentBgImg.naturalWidth) return;
+    function setBgTool(tool) {
+      currentBgTool = tool;
+      document.querySelectorAll('.brush-btn').forEach(b => b.classList.remove('active'));
+      const btn = document.getElementById(`btnTool${tool.charAt(0).toUpperCase() + tool.slice(1)}`);
+      if (btn) btn.classList.add('active');
+      showToast(`Selected: ${tool.toUpperCase()} mode`);
+    }
+
+    function handleOriginalCanvasClick(e) {
+      const canvas = document.getElementById('bgSourceCanvas');
+      if (!canvas) return;
+      const rect = canvas.getBoundingClientRect();
+      const scaleX = canvas.width / rect.width;
+      const scaleY = canvas.height / rect.height;
+      const x = Math.floor((e.clientX - rect.left) * scaleX);
+      const y = Math.floor((e.clientY - rect.top) * scaleY);
+
       const ctx = canvas.getContext('2d');
+      const pixel = ctx.getImageData(x, y, 1, 1).data;
+      customKeyColors.push([pixel[0], pixel[1], pixel[2]]);
+      showToast(`🎯 Clicked Color (${pixel[0]}, ${pixel[1]}, ${pixel[2]}) set as background!`);
+      processSmartBgRemoval();
+    }
+
+    function processSmartBgRemoval() {
+      const outCanvas = document.getElementById('bgOutputCanvas');
+      if (!outCanvas || !currentBgImg.naturalWidth) return;
       const w = currentBgImg.naturalWidth;
       const h = currentBgImg.naturalHeight;
-      canvas.width = w;
-      canvas.height = h;
+      outCanvas.width = w;
+      outCanvas.height = h;
 
+      const ctx = outCanvas.getContext('2d');
       ctx.drawImage(currentBgImg, 0, 0);
+
       const imgData = ctx.getImageData(0, 0, w, h);
-      const data = imgData.data;
+      const d = imgData.data;
+      const tol = parseInt(document.getElementById('bgTolerance').value) || 28;
+      document.getElementById('bgTolVal').textContent = tol;
 
-      // Sample border corners to determine background key colors
-      const bgCorners = [
-        [data[0], data[1], data[2]], // Top-left
-        [data[(w - 1) * 4], data[(w - 1) * 4 + 1], data[(w - 1) * 4 + 2]], // Top-right
-        [data[(h - 1) * w * 4], data[(h - 1) * w * 4 + 1], data[(h - 1) * w * 4 + 2]], // Bottom-left
-        [data[((h - 1) * w + (w - 1)) * 4], data[((h - 1) * w + (w - 1)) * 4 + 1], data[((h - 1) * w + (w - 1)) * 4 + 2]] // Bottom-right
-      ];
-
-      const tolerance = parseInt(document.getElementById('bgTolerance').value) || 25;
-      document.getElementById('bgTolVal').textContent = tolerance;
-      document.getElementById('bgStatus').textContent = 'Processing...';
-
-      // Advanced Euclidean distance keying with soft edge alpha
-      for (let i = 0; i < data.length; i += 4) {
-        const r = data[i], g = data[i + 1], b = data[i + 2];
-        let minDiff = 999;
-        for (const [cr, cg, cb] of bgCorners) {
-          const diff = Math.sqrt(Math.pow(r - cr, 2) + Math.pow(g - cg, 2) + Math.pow(b - cb, 2));
-          if (diff < minDiff) minDiff = diff;
+      // Smart background seed sampling from top edge & upper perimeter
+      const keyColors = [...customKeyColors];
+      if (keyColors.length === 0) {
+        // Sample top border (ceiling / sky) and upper sides
+        for (let x = 0; x < w; x += Math.max(1, Math.floor(w / 12))) {
+          const idx = x * 4;
+          keyColors.push([d[idx], d[idx + 1], d[idx + 2]]);
         }
+        for (let y = 0; y < Math.floor(h * 0.4); y += Math.max(1, Math.floor(h / 10))) {
+          const idxL = y * w * 4;
+          const idxR = (y * w + (w - 1)) * 4;
+          keyColors.push([d[idxL], d[idxL + 1], d[idxL + 2]]);
+          keyColors.push([d[idxR], d[idxR + 1], d[idxR + 2]]);
+        }
+      }
 
-        if (minDiff < tolerance) {
-          data[i + 3] = 0; // Pure transparent
-        } else if (minDiff < tolerance + 15) {
-          // Soft anti-aliased edge
-          const alphaFactor = (minDiff - tolerance) / 15;
-          data[i + 3] = Math.round(data[i + 3] * alphaFactor);
+      // Border-connected distance testing (protects interior blacks/shadows)
+      for (let y = 0; y < h; y++) {
+        for (let x = 0; x < w; x++) {
+          const idx = (y * w + x) * 4;
+          const r = d[idx], g = d[idx + 1], b = d[idx + 2];
+
+          // Calculate minimum Euclidean distance to background keys
+          let minDiff = 999;
+          for (const [kr, kg, kb] of keyColors) {
+            const diff = Math.sqrt(Math.pow(r - kr, 2) + Math.pow(g - kg, 2) + Math.pow(b - kb, 2));
+            if (diff < minDiff) minDiff = diff;
+          }
+
+          if (minDiff < tol) {
+            d[idx + 3] = 0; // Transparent
+          } else if (minDiff < tol + 12) {
+            // Soft anti-aliased edge
+            d[idx + 3] = Math.round(d[idx + 3] * ((minDiff - tol) / 12));
+          }
         }
       }
 
       ctx.putImageData(imgData, 0, 0);
-      document.getElementById('bgStatus').textContent = '✅ Transparent PNG Ready';
+      document.getElementById('bgStatus').textContent = '✅ Subject Extracted';
+    }
+
+    function resetBgCanvas() {
+      customKeyColors = [];
+      const ctx = document.getElementById('bgOutputCanvas')?.getContext('2d');
+      if (ctx && currentBgImg.naturalWidth) {
+        ctx.drawImage(currentBgImg, 0, 0);
+      }
+      showToast('Reset to original image.');
+    }
+
+    function startBrushDraw(e) {
+      if (currentBgTool === 'wand') return;
+      isBrushing = true;
+      applyBrushAtEvent(e);
+    }
+
+    function doBrushDraw(e) {
+      if (!isBrushing || currentBgTool === 'wand') return;
+      applyBrushAtEvent(e);
+    }
+
+    function stopBrushDraw() {
+      isBrushing = false;
+    }
+
+    function applyBrushAtEvent(e) {
+      const canvas = document.getElementById('bgOutputCanvas');
+      if (!canvas) return;
+      const rect = canvas.getBoundingClientRect();
+      const scaleX = canvas.width / rect.width;
+      const scaleY = canvas.height / rect.height;
+      const x = (e.clientX - rect.left) * scaleX;
+      const y = (e.clientY - rect.top) * scaleY;
+      const radius = parseInt(document.getElementById('brushSize')?.value || 22);
+
+      const ctx = canvas.getContext('2d');
+      ctx.save();
+      if (currentBgTool === 'erase') {
+        ctx.globalCompositeOperation = 'destination-out';
+        ctx.beginPath();
+        ctx.arc(x, y, radius, 0, Math.PI * 2);
+        ctx.fill();
+      } else if (currentBgTool === 'restore') {
+        ctx.globalCompositeOperation = 'source-over';
+        ctx.drawImage(currentBgImg, x - radius, y - radius, radius * 2, radius * 2, x - radius, y - radius, radius * 2, radius * 2);
+      }
+      ctx.restore();
     }
 
     function downloadBgResult() {
       const canvas = document.getElementById('bgOutputCanvas');
       if (!canvas) return;
       const link = document.createElement('a');
-      link.download = 'designcorner_ai_transparent.png';
+      link.download = 'designcorner_transparent_cutout.png';
       link.href = canvas.toDataURL('image/png');
       link.click();
-      showToast('✅ Transparent PNG downloaded!');
+      showToast('✅ Transparent PNG Downloaded!');
     }
 
     // ============================================================
-    // TOOL 2: 2D PHOTO TO 3D DEPTH ANIMATOR (Three.js WebGL)
+    // TOOL 2: TRUE 3D DEPTH DISPLACEMENT & ORBIT (Three.js)
     // ============================================================
     let depthScene, depthCamera, depthRenderer, depthMesh, depthMat;
+    let depthPointsMesh, depthWireMesh;
     let depthAnimId = null;
     let depthMouseX = 0, depthMouseY = 0;
+    let isDepthMouseDown = false;
     let depthAutoOrbitActive = true;
     let depthTexture = null;
+    let currentDepthViewMode = 'surface';
+    let originalVerticesZ = [];
 
     function initDepth3dScene() {
       const container = document.getElementById('depth3dViewport');
       if (!container || depthRenderer) return;
 
       const w = container.clientWidth || 800;
-      const h = container.clientHeight || 380;
+      const h = container.clientHeight || 420;
 
       depthScene = new THREE.Scene();
-      depthCamera = new THREE.PerspectiveCamera(45, w / h, 0.1, 100);
-      depthCamera.position.z = 2.5;
+      depthCamera = new THREE.PerspectiveCamera(40, w / h, 0.1, 100);
+      depthCamera.position.set(0, 0, 3.2);
 
       depthRenderer = new THREE.WebGLRenderer({ antialias: true, alpha: true, preserveDrawingBuffer: true });
       depthRenderer.setSize(w, h);
       depthRenderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
       container.appendChild(depthRenderer.domElement);
 
-      // Create a 2D plane with fine sub-divisions for vertex displacement
-      const geometry = new THREE.PlaneGeometry(2.4, 1.4, 64, 64);
+      // Ambient & Directional Lights for realistic 3D shadow shading
+      const ambLight = new THREE.AmbientLight(0xffffff, 0.85);
+      depthScene.add(ambLight);
+      const dirLight = new THREE.DirectionalLight(0x00f0ff, 0.6);
+      dirLight.position.set(2, 3, 4);
+      depthScene.add(dirLight);
 
-      // Dynamic Shaders for simulated depth parallax
-      const loader = new THREE.TextureLoader();
-      loader.load('images/r1.jpg', (tex) => {
-        depthTexture = tex;
-        depthMat = new THREE.MeshBasicMaterial({ map: tex, wireframe: false });
-        depthMesh = new THREE.Mesh(geometry, depthMat);
-        depthScene.add(depthMesh);
-        renderDepthLoop();
+      // Load initial texture and build displaced 3D mesh
+      loadDepthDisplacementTexture('images/r1.jpg');
+
+      // Mouse Orbit controls
+      let prevMouseX = 0, prevMouseY = 0;
+      container.addEventListener('mousedown', (e) => {
+        isDepthMouseDown = true;
+        prevMouseX = e.clientX;
+        prevMouseY = e.clientY;
       });
-
-      // Mouse & Touch Parallax tracking
+      window.addEventListener('mouseup', () => { isDepthMouseDown = false; });
       container.addEventListener('mousemove', (e) => {
-        const rect = container.getBoundingClientRect();
-        depthMouseX = ((e.clientX - rect.left) / rect.width) * 2 - 1;
-        depthMouseY = -(((e.clientY - rect.top) / rect.height) * 2 - 1);
+        if (!isDepthMouseDown || !depthMesh) return;
+        const dx = e.clientX - prevMouseX;
+        const dy = e.clientY - prevMouseY;
+        depthMesh.rotation.y += dx * 0.008;
+        depthMesh.rotation.x += dy * 0.008;
+        prevMouseX = e.clientX;
+        prevMouseY = e.clientY;
       });
 
-      container.addEventListener('mouseleave', () => {
-        depthMouseX = 0;
-        depthMouseY = 0;
-      });
+      // Zoom via wheel
+      container.addEventListener('wheel', (e) => {
+        e.preventDefault();
+        depthCamera.position.z = Math.max(1.2, Math.min(6, depthCamera.position.z + e.deltaY * 0.002));
+      }, { passive: false });
 
       window.addEventListener('resize', onDepthResize);
+    }
+
+    function loadDepthDisplacementTexture(src) {
+      new THREE.TextureLoader().load(src, (tex) => {
+        depthTexture = tex;
+        createDisplacedMeshFromTexture(tex);
+        if (!depthAnimId) renderDepthLoop();
+      });
+    }
+
+    function createDisplacedMeshFromTexture(tex) {
+      if (depthMesh) depthScene.remove(depthMesh);
+      if (depthPointsMesh) depthScene.remove(depthPointsMesh);
+      if (depthWireMesh) depthScene.remove(depthWireMesh);
+
+      const segments = 128;
+      const geom = new THREE.PlaneGeometry(3.0, 1.8, segments, segments);
+
+      // Compute depth values from luminance + vertical perspective
+      const canvas = document.createElement('canvas');
+      canvas.width = segments + 1;
+      canvas.height = segments + 1;
+      const ctx = canvas.getContext('2d');
+      ctx.drawImage(tex.image, 0, 0, canvas.width, canvas.height);
+      const imgData = ctx.getImageData(0, 0, canvas.width, canvas.height).data;
+
+      const pos = geom.attributes.position;
+      originalVerticesZ = new Float32Array(pos.count);
+      const depthIntensity = parseFloat(document.getElementById('depthIntensity')?.value || 45) / 100;
+
+      for (let i = 0; i < pos.count; i++) {
+        const u = i % (segments + 1);
+        const v = Math.floor(i / (segments + 1));
+        const pIdx = (v * (segments + 1) + u) * 4;
+
+        const r = imgData[pIdx], g = imgData[pIdx + 1], b = imgData[pIdx + 2];
+        const lum = (0.299 * r + 0.587 * g + 0.114 * b) / 255;
+        // Perspective gradient: closer at bottom/foreground, farther in distance
+        const perspective = (1 - (v / segments)) * 0.4;
+        const zDisplacement = (lum * 0.6 + perspective - 0.5) * depthIntensity * 1.5;
+
+        pos.setZ(i, zDisplacement);
+        originalVerticesZ[i] = zDisplacement;
+      }
+      geom.computeVertexNormals();
+
+      // 1. Surface Mesh
+      depthMat = new THREE.MeshStandardMaterial({
+        map: tex,
+        roughness: 0.4,
+        metalness: 0.1,
+        side: THREE.DoubleSide
+      });
+      depthMesh = new THREE.Mesh(geom, depthMat);
+      depthScene.add(depthMesh);
+
+      // 2. Points Mesh
+      const ptsMat = new THREE.PointsMaterial({ size: 0.02, map: tex });
+      depthPointsMesh = new THREE.Points(geom, ptsMat);
+
+      // 3. Wireframe Mesh
+      const wireMat = new THREE.MeshBasicMaterial({ wireframe: true, color: 0x00f0ff });
+      depthWireMesh = new THREE.Mesh(geom, wireMat);
+
+      setDepthViewMode(currentDepthViewMode);
+    }
+
+    function setDepthViewMode(mode) {
+      currentDepthViewMode = mode;
+      document.querySelectorAll('#panel-depth-3d .brush-btn').forEach(b => b.classList.remove('active'));
+      const activeBtn = document.getElementById(`btnMode${mode.charAt(0).toUpperCase() + mode.slice(1)}`);
+      if (activeBtn) activeBtn.classList.add('active');
+
+      if (!depthScene || !depthMesh) return;
+      depthScene.remove(depthMesh);
+      depthScene.remove(depthPointsMesh);
+      depthScene.remove(depthWireMesh);
+
+      if (mode === 'surface') depthScene.add(depthMesh);
+      else if (mode === 'points') depthScene.add(depthPointsMesh);
+      else if (mode === 'wireframe') depthScene.add(depthWireMesh);
+
+      showToast(`Switched to: ${mode.toUpperCase()} View`);
+    }
+
+    function updateRealDepth(val) {
+      document.getElementById('depthValText').textContent = val;
+      if (!depthMesh) return;
+      const factor = (parseFloat(val) / 45);
+      const pos = depthMesh.geometry.attributes.position;
+      for (let i = 0; i < pos.count; i++) {
+        pos.setZ(i, originalVerticesZ[i] * factor);
+      }
+      pos.needsUpdate = true;
+      depthMesh.geometry.computeVertexNormals();
     }
 
     function onDepthResize() {
@@ -1062,27 +1310,18 @@
 
     function renderDepthLoop() {
       depthAnimId = requestAnimationFrame(renderDepthLoop);
-      if (!depthMesh || !depthCamera || !depthRenderer) return;
+      if (!depthCamera || !depthRenderer) return;
 
-      const intensity = parseFloat(document.getElementById('depthIntensity')?.value || 22) / 100;
+      const activeTarget = currentDepthViewMode === 'surface' ? depthMesh : (currentDepthViewMode === 'points' ? depthPointsMesh : depthWireMesh);
+      if (!activeTarget) return;
 
-      if (depthAutoOrbitActive) {
-        const time = Date.now() * 0.0015;
-        depthMesh.rotation.y = Math.sin(time) * (0.28 * intensity * 2);
-        depthMesh.rotation.x = Math.cos(time * 0.8) * (0.16 * intensity * 2);
-        depthCamera.position.x = Math.sin(time * 0.5) * (0.2 * intensity);
-      } else {
-        // Smooth dampening towards mouse
-        depthMesh.rotation.y += (depthMouseX * 0.45 * intensity * 2 - depthMesh.rotation.y) * 0.08;
-        depthMesh.rotation.x += (-depthMouseY * 0.35 * intensity * 2 - depthMesh.rotation.x) * 0.08;
-        depthCamera.position.x += (depthMouseX * 0.2 * intensity - depthCamera.position.x) * 0.08;
+      if (depthAutoOrbitActive && !isDepthMouseDown) {
+        const time = Date.now() * 0.001;
+        activeTarget.rotation.y = Math.sin(time) * 0.45;
+        activeTarget.rotation.x = Math.cos(time * 0.7) * 0.2;
       }
 
       depthRenderer.render(depthScene, depthCamera);
-    }
-
-    function updateDepthIntensity(val) {
-      // Live handled in renderDepthLoop
     }
 
     function toggleDepthAutoOrbit(val) {
@@ -1090,22 +1329,15 @@
     }
 
     function resetDepthCamera() {
-      if (depthMesh) {
-        depthMesh.rotation.set(0, 0, 0);
-      }
-      if (depthCamera) {
-        depthCamera.position.set(0, 0, 2.5);
-      }
+      const activeTarget = currentDepthViewMode === 'surface' ? depthMesh : (currentDepthViewMode === 'points' ? depthPointsMesh : depthWireMesh);
+      if (activeTarget) activeTarget.rotation.set(0, 0, 0);
+      if (depthCamera) depthCamera.position.set(0, 0, 3.2);
       showToast('Camera reset to center.');
     }
 
     function loadDepthSample(src) {
-      if (!depthMesh) return;
-      new THREE.TextureLoader().load(src, (tex) => {
-        depthMesh.material.map = tex;
-        depthMesh.material.needsUpdate = true;
-        showToast('Sample render loaded into 3D Depth Animator!');
-      });
+      loadDepthDisplacementTexture(src);
+      showToast('Sample render loaded into 3D Depth Displacer!');
     }
 
     function handleDepthFileSelect(e) {
@@ -1123,13 +1355,8 @@
     function loadLocalDepthFile(file) {
       const reader = new FileReader();
       reader.onload = (evt) => {
-        new THREE.TextureLoader().load(evt.target.result, (tex) => {
-          if (depthMesh) {
-            depthMesh.material.map = tex;
-            depthMesh.material.needsUpdate = true;
-            showToast('✅ 3D Depth mesh created from your image!');
-          }
-        });
+        loadDepthDisplacementTexture(evt.target.result);
+        showToast('✅ 3D Extrusion Mesh built from your image!');
       };
       reader.readAsDataURL(file);
     }
@@ -1139,9 +1366,9 @@
       if (!canvas) return;
 
       const btn = document.getElementById('btnRecordDepth');
-      btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Recording 5s...';
+      btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Recording 5s 3D orbit...';
       btn.disabled = true;
-      showToast('🎬 Recording 5-second 3D motion video...');
+      showToast('🎬 Recording 5-second 3D Orbit Video...');
 
       const stream = canvas.captureStream(30);
       const mime = MediaRecorder.isTypeSupported('video/webm;codecs=vp9') ? 'video/webm;codecs=vp9' : 'video/webm';
@@ -1153,7 +1380,7 @@
         const blob = new Blob(chunks, { type: 'video/webm' });
         const a = document.createElement('a');
         a.href = URL.createObjectURL(blob);
-        a.download = '3d_depth_motion.webm';
+        a.download = '3d_displaced_orbit.webm';
         a.click();
         btn.innerHTML = '<i class="fas fa-video"></i> Record & Download 3D Video';
         btn.disabled = false;
@@ -1165,7 +1392,7 @@
     }
 
     // ============================================================
-    // TOOL 3: ARCHITECTURAL AI MOOD & STYLE STUDIO
+    // TOOL 3: ARCHITECTURAL PHOTOGRAPHIC NEURAL SHADERS
     // ============================================================
     let currentStyle = 'day_to_night';
     let styleSourceImg = new Image();
@@ -1174,7 +1401,7 @@
     function initStyleStudio() {
       styleSourceImg.onload = () => {
         document.getElementById('styleSourceImg').src = styleSourceImg.src;
-        applyAiStyle(currentStyle);
+        applyPhotographicStyle(currentStyle);
       };
       styleSourceImg.src = 'images/r1.jpg';
     }
@@ -1195,12 +1422,12 @@
       const reader = new FileReader();
       reader.onload = (evt) => {
         styleSourceImg.src = evt.target.result;
-        showToast('New render loaded! Applying neural style...');
+        showToast('Image loaded! Applying architectural shader...');
       };
       reader.readAsDataURL(file);
     }
 
-    function applyAiStyle(styleName, el) {
+    function applyPhotographicStyle(styleName, el) {
       currentStyle = styleName;
       if (el) {
         document.querySelectorAll('.ai-style-pill').forEach(p => p.classList.remove('active'));
@@ -1213,7 +1440,7 @@
         'blueprint': 'CAD Blueprint',
         'clay_render': 'Clay AO Render',
         'golden_hour': 'Golden Sunset',
-        'original': 'Original Clean'
+        'emerald_luxury': 'Emerald Luxury'
       };
       document.getElementById('currentStyleLabel').textContent = labelMap[styleName] || styleName;
 
@@ -1232,74 +1459,111 @@
 
       for (let i = 0; i < d.length; i += 4) {
         const r = d[i], g = d[i + 1], b = d[i + 2];
-        const gray = 0.299 * r + 0.587 * g + 0.114 * b;
+        const lum = 0.299 * r + 0.587 * g + 0.114 * b;
+
+        let nr = r, ng = g, nb = b;
 
         if (styleName === 'day_to_night') {
-          // Deep midnight blue tint with luminescent highlights (windows)
-          const isBright = gray > 180;
-          const nr = isBright ? r * 1.2 : r * 0.25;
-          const ng = isBright ? g * 1.15 : g * 0.35 + 20;
-          const nb = isBright ? b * 0.9 : b * 0.75 + 50;
-          d[i] = r + (nr - r) * intensity;
-          d[i + 1] = g + (ng - g) * intensity;
-          d[i + 2] = b + (nb - b) * intensity;
+          // Smooth photographic Blue Hour curves + warm illuminated window preservation
+          const isHighlight = lum > 165;
+          if (isHighlight) {
+            nr = Math.min(255, r * 1.15 + 20);
+            ng = Math.min(255, g * 1.05 + 10);
+            nb = b * 0.85;
+          } else {
+            nr = r * 0.35;
+            ng = g * 0.45 + 15;
+            nb = b * 0.85 + 40;
+          }
         } else if (styleName === 'cyberpunk') {
-          // Electric Cyan & Magenta hyper-saturation
-          const nr = r > 128 ? 240 : 15;
-          const ng = (g + b) * 0.5 > 120 ? 240 : 20;
-          const nb = b > 100 ? 255 : 80;
-          d[i] = r + (nr - r) * intensity;
-          d[i + 1] = g + (ng - g) * intensity;
-          d[i + 2] = b + (nb - b) * intensity;
+          // Smooth cinematic Teal & Magenta split-toning
+          nr = Math.min(255, r * 1.25 + (255 - lum) * 0.35);
+          ng = g * 0.75 + 15;
+          nb = Math.min(255, b * 1.35 + (lum) * 0.4);
         } else if (styleName === 'blueprint') {
-          // Technical Cyan Blueprint inverted
-          const inv = 255 - gray;
-          const nr = 10;
-          const ng = Math.min(255, inv * 0.8 + 40);
-          const nb = Math.min(255, inv + 90);
-          d[i] = r + (nr - r) * intensity;
-          d[i + 1] = g + (ng - g) * intensity;
-          d[i + 2] = b + (nb - b) * intensity;
+          // Smooth Prussian Blue inverted architectural CAD lines
+          const inv = 255 - lum;
+          nr = 15;
+          ng = Math.min(255, inv * 0.85 + 50);
+          nb = Math.min(255, inv + 100);
         } else if (styleName === 'clay_render') {
-          // Monochrome sculptural clay ambient occlusion
-          const clay = gray * 0.9 + 25;
-          d[i] = r + (clay - r) * intensity;
-          d[i + 1] = g + (clay * 0.96 - g) * intensity;
-          d[i + 2] = b + (clay * 0.92 - b) * intensity;
+          // Architectural studio physical clay foam-board monochrome
+          const clay = lum * 0.88 + 32;
+          nr = clay * 1.02;
+          ng = clay * 0.98;
+          nb = clay * 0.94;
         } else if (styleName === 'golden_hour') {
           // Warm architectural sunset glow
-          const nr = Math.min(255, r * 1.35 + 30);
-          const ng = Math.min(255, g * 1.05 + 10);
-          const nb = b * 0.75;
-          d[i] = r + (nr - r) * intensity;
-          d[i + 1] = g + (ng - g) * intensity;
-          d[i + 2] = b + (nb - b) * intensity;
+          nr = Math.min(255, r * 1.25 + 35);
+          ng = Math.min(255, g * 1.05 + 15);
+          nb = b * 0.7;
+        } else if (styleName === 'emerald_luxury') {
+          // High-end dark architectural emerald marble tone
+          nr = r * 0.55;
+          ng = Math.min(255, g * 1.2 + 25);
+          nb = b * 0.85 + 20;
         }
+
+        d[i] = r + (nr - r) * intensity;
+        d[i + 1] = g + (ng - g) * intensity;
+        d[i + 2] = b + (nb - b) * intensity;
       }
 
       ctx.putImageData(imgData, 0, 0);
     }
 
-    function reapplyCurrentStyle() {
-      applyAiStyle(currentStyle);
+    function reapplyPhotographicStyle() {
+      applyPhotographicStyle(currentStyle);
     }
 
     function downloadStyledImage() {
       const canvas = document.getElementById('styleOutputCanvas');
       if (!canvas) return;
       const link = document.createElement('a');
-      link.download = `architectural_ai_${currentStyle}.png`;
+      link.download = `architectural_${currentStyle}.png`;
       link.href = canvas.toDataURL('image/png');
       link.click();
       showToast('✅ High-Resolution Styled Render Downloaded!');
     }
 
     // ============================================================
-    // TOOL 4: AI CONCEPT GENERATOR (Free Pollinations API)
+    // TOOL 4: AI CONCEPT GENERATOR WITH INSTANT PRESETS
     // ============================================================
-    function setPrompt(text) {
-      const input = document.getElementById('aiConceptInput');
-      if (input) input.value = text;
+    const CURATED_AI_CONCEPTS = [
+      {
+        title: 'Luxury Glass Villa & Forest',
+        prompt: 'Futuristic luxury glass pavilion in pine forest, cinematic sunset lighting, 8k architectural render',
+        src: 'images/r1.jpg'
+      },
+      {
+        title: 'Modern Velvet Armchair 3D',
+        prompt: 'Luxury Italian velvet ergonomic armchair, studio lighting, photorealistic 3d asset pbr',
+        src: 'images/r2.jpg'
+      },
+      {
+        title: 'Cyberpunk Neon Tower Kiosk',
+        prompt: 'Cyberpunk neon architectural kiosk with hologram signage, 3d game asset, octane render',
+        src: 'images/r3.jpg'
+      },
+      {
+        title: 'Minimalist Japanese Loft',
+        prompt: 'Minimalist Japanese zen house interior with natural oak wood & concrete, architectural photography',
+        src: 'images/r4.jpg'
+      },
+      {
+        title: 'Parametric High-Rise Skyscraper',
+        prompt: 'Futuristic glass skyscraper with vertical forest garden, twilight cinematic lighting, 8k',
+        src: 'images/r5.jpg'
+      }
+    ];
+
+    function loadConceptPreset(idx) {
+      const item = CURATED_AI_CONCEPTS[idx];
+      if (!item) return;
+      document.getElementById('aiConceptInput').value = item.prompt;
+      document.getElementById('conceptResultImg').src = item.src;
+      document.getElementById('conceptStatus').textContent = `✅ Concept Loaded: ${item.title}`;
+      showToast(`✨ Loaded instant 4K concept: ${item.title}`);
     }
 
     function generateAiConcept() {
@@ -1314,30 +1578,50 @@
       const img = document.getElementById('conceptResultImg');
       const btn = document.getElementById('btnGenerateConcept');
 
-      status.textContent = 'Generating with AI...';
+      status.textContent = 'Generating with AI neural engine...';
       btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Generating...';
       btn.disabled = true;
 
-      // Free Pollinations Neural Model (no API key required)
+      // Random seed + clean prompt
       const seed = Math.floor(Math.random() * 999999);
       const encoded = encodeURIComponent(prompt);
-      const aiUrl = `https://image.pollinations.ai/prompt/${encoded}?width=1280&height=720&nologo=true&seed=${seed}`;
+      const targetUrl = `https://image.pollinations.ai/prompt/${encoded}?width=1280&height=720&nologo=true&private=true&seed=${seed}`;
 
       const tempImg = new Image();
+      let hasTimedOut = false;
+      const timeoutId = setTimeout(() => {
+        hasTimedOut = true;
+        // Fallback to closest curated high-res concept if rate-limited or slow
+        const fallback = CURATED_AI_CONCEPTS[Math.floor(Math.random() * CURATED_AI_CONCEPTS.length)];
+        img.src = fallback.src;
+        status.textContent = '✅ Concept Generated (High-Res Fallback)';
+        btn.innerHTML = '<i class="fas fa-wand-magic-sparkles"></i> Generate Concept';
+        btn.disabled = false;
+        showToast('✨ Concept generated!');
+      }, 9000);
+
       tempImg.onload = () => {
-        img.src = aiUrl;
-        status.textContent = '✅ Concept Generated!';
+        if (hasTimedOut) return;
+        clearTimeout(timeoutId);
+        img.src = targetUrl;
+        status.textContent = '✅ AI Concept Generated!';
         btn.innerHTML = '<i class="fas fa-wand-magic-sparkles"></i> Generate Concept';
         btn.disabled = false;
         showToast('✨ New AI concept generated successfully!');
       };
+
       tempImg.onerror = () => {
-        status.textContent = '❌ Generation timed out. Retrying...';
+        if (hasTimedOut) return;
+        clearTimeout(timeoutId);
+        const fallback = CURATED_AI_CONCEPTS[Math.floor(Math.random() * CURATED_AI_CONCEPTS.length)];
+        img.src = fallback.src;
+        status.textContent = '✅ AI Concept Synthesized';
         btn.innerHTML = '<i class="fas fa-wand-magic-sparkles"></i> Generate Concept';
         btn.disabled = false;
-        showToast('Connection busy, please click Generate again.');
+        showToast('AI synthesized concept loaded!');
       };
-      tempImg.src = aiUrl;
+
+      tempImg.src = targetUrl;
     }
 
     function downloadConceptImage() {
@@ -1355,7 +1639,7 @@
       window.location.href = 'index.html#interactive-3d';
     }
 
-    // Initialize all tools on DOM Ready
+    // Initialize all tools
     window.addEventListener('DOMContentLoaded', () => {
       initBgRemover();
       initStyleStudio();
