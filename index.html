@@ -16,7 +16,7 @@ window.addEventListener('error', function(e) {
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
-  <link rel="stylesheet" href="style.css?v=28.0"/>
+  <link rel="stylesheet" href="style.css?v=29.0"/>
   <script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/3.4.0/model-viewer.min.js"></script>
 </head>
 <body>
@@ -115,9 +115,16 @@ window.addEventListener('error', function(e) {
 
   <!-- Dedicated Glowing & Blinking $1 Dollar Shop Button (Visible on both Mobile & Desktop) -->
   <a href="addons-store/" class="nav-shop-pill" target="_blank" title="Blender Addons &amp; Tools from $1 / Rs.299">
-    <span class="shop-pill-flame">??</span>
+    <span class="shop-pill-flame">🔥</span>
     <span class="shop-pill-text">$1 Dollar Shop</span>
     <span class="shop-pill-badge">OFFER</span>
+  </a>
+
+  <!-- Dedicated Glowing AI Studio Pill Button -->
+  <a href="ai.html" class="nav-ai-pill" title="100% Free AI 3D & Creative Tools">
+    <span class="ai-pill-icon"><i class="fas fa-wand-magic-sparkles"></i></span>
+    <span class="ai-pill-text">AI Features</span>
+    <span class="ai-pill-badge">FREE</span>
   </a>
 
   <div class="nav-links" id="navLinks">
@@ -125,10 +132,14 @@ window.addEventListener('error', function(e) {
     <a href="#about"           class="nav-link">About</a>
     <a href="#work"            class="nav-link">Portfolio</a>
     <a href="#interactive-3d"  class="nav-link">3D Studio</a>
+    <a href="ai.html"          class="nav-link" style="color:var(--ai-neon-cyan,#00f0ff);font-weight:700;"><i class="fas fa-wand-magic-sparkles"></i> AI Studio</a>
     <a href="#services"        class="nav-link">Services &amp; Tools</a>
     <a href="#contact"         class="nav-link">Contact</a>
+    <a href="ai.html" class="nav-link nav-store-drawer-link" style="color:#00f0ff;font-weight:700;">
+      ✨ AI Creative Studio (100% Free)
+    </a>
     <a href="addons-store/" class="nav-link nav-store-drawer-link" target="_blank" style="color:var(--gold);font-weight:700">
-      ?? $1 Dollar Shop (Special Offer)
+      🔥 $1 Dollar Shop (Special Offer)
     </a>
 
     <!-- Mobile Drawer Extra Actions -->

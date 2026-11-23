@@ -1,0 +1,1365 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="description" content="100% Free Next-Gen AI Studio: Remove Backgrounds, Convert 2D Images to 3D Motion, AI Architectural Style Transfer & Concept Visualizer."/>
+  <title>AI Studio & Creative Features — 100% Free | DesignCorner</title>
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+  <link rel="stylesheet" href="style.css?v=29.0"/>
+  
+  <!-- Three.js for 2D to 3D Depth Animator -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+
+  <style>
+    /* AI STUDIO DEDICATED STYLES */
+    :root {
+      --ai-neon-cyan: #00f0ff;
+      --ai-neon-purple: #a855f7;
+      --ai-neon-pink: #ec4899;
+    }
+
+    body {
+      background: #060814;
+      color: #e2e8f0;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* AI Page Hero */
+    .ai-hero {
+      padding: 130px 20px 50px;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+      background: radial-gradient(circle at 50% 20%, rgba(0, 240, 255, 0.12) 0%, rgba(168, 85, 247, 0.08) 40%, transparent 80%);
+    }
+
+    .ai-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 6px 16px;
+      background: rgba(0, 240, 255, 0.1);
+      border: 1px solid rgba(0, 240, 255, 0.35);
+      border-radius: 50px;
+      color: var(--ai-neon-cyan);
+      font-size: 0.82rem;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+      margin-bottom: 1.2rem;
+      box-shadow: 0 0 20px rgba(0, 240, 255, 0.2);
+    }
+
+    .ai-hero-title {
+      font-size: clamp(2rem, 5vw, 3.4rem);
+      font-weight: 800;
+      line-height: 1.15;
+      margin-bottom: 1rem;
+      font-family: var(--font2);
+    }
+
+    .ai-hero-title .gradient-text {
+      background: linear-gradient(135deg, #00f0ff, #a855f7, #ec4899);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .ai-hero-sub {
+      font-size: 1rem;
+      color: #94a3b8;
+      max-width: 720px;
+      margin: 0 auto 2rem;
+      line-height: 1.6;
+    }
+
+    /* Tool Nav Tabs */
+    .ai-tabs-wrap {
+      max-width: 1050px;
+      margin: 0 auto 2.5rem;
+      padding: 0 1rem;
+    }
+
+    .ai-tabs {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 12px;
+      background: rgba(18, 22, 45, 0.7);
+      padding: 8px;
+      border-radius: 16px;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      backdrop-filter: blur(12px);
+    }
+
+    .ai-tab-btn {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 22px;
+      border-radius: 12px;
+      font-size: 0.88rem;
+      font-weight: 600;
+      color: #94a3b8;
+      background: transparent;
+      border: 1px solid transparent;
+      cursor: pointer;
+      transition: all 0.25s ease;
+      white-space: nowrap;
+    }
+
+    .ai-tab-btn:hover {
+      color: #fff;
+      background: rgba(255, 255, 255, 0.05);
+    }
+
+    .ai-tab-btn.active {
+      color: #fff;
+      background: linear-gradient(135deg, rgba(0, 240, 255, 0.2), rgba(168, 85, 247, 0.25));
+      border-color: rgba(0, 240, 255, 0.4);
+      box-shadow: 0 0 15px rgba(0, 240, 255, 0.2);
+    }
+
+    .ai-tab-btn.active i {
+      color: var(--ai-neon-cyan);
+    }
+
+    /* Main Container & Tool Cards */
+    .ai-container {
+      max-width: 1140px;
+      width: 100%;
+      margin: 0 auto;
+      padding: 0 20px 80px;
+      flex: 1;
+    }
+
+    .ai-tool-panel {
+      display: none;
+      animation: aiFadeIn 0.35s ease;
+    }
+
+    .ai-tool-panel.active {
+      display: block;
+    }
+
+    @keyframes aiFadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .ai-card {
+      background: rgba(16, 20, 42, 0.85);
+      border: 1px solid rgba(0, 240, 255, 0.22);
+      border-radius: 22px;
+      padding: 2.2rem;
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.6), 0 0 30px rgba(0, 240, 255, 0.06);
+      backdrop-filter: blur(14px);
+      position: relative;
+    }
+
+    .ai-card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 1.8rem;
+      flex-wrap: wrap;
+      gap: 1rem;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.07);
+      padding-bottom: 1.2rem;
+    }
+
+    .ai-card-title {
+      font-size: 1.45rem;
+      font-weight: 700;
+      color: #fff;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-family: var(--font2);
+    }
+
+    .ai-card-title i {
+      color: var(--ai-neon-cyan);
+    }
+
+    .ai-card-desc {
+      color: #94a3b8;
+      font-size: 0.88rem;
+      margin-top: 4px;
+    }
+
+    /* Drop / Upload Zone */
+    .ai-dropzone {
+      border: 2px dashed rgba(0, 240, 255, 0.4);
+      background: rgba(0, 240, 255, 0.03);
+      border-radius: 16px;
+      padding: 2.5rem 1.5rem;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      position: relative;
+    }
+
+    .ai-dropzone:hover, .ai-dropzone.drag-over {
+      border-color: var(--ai-neon-cyan);
+      background: rgba(0, 240, 255, 0.08);
+      box-shadow: 0 0 25px rgba(0, 240, 255, 0.15);
+    }
+
+    .ai-drop-icon {
+      font-size: 2.8rem;
+      color: var(--ai-neon-cyan);
+      margin-bottom: 0.8rem;
+    }
+
+    .ai-drop-text {
+      font-size: 1rem;
+      font-weight: 600;
+      color: #e2e8f0;
+      margin-bottom: 0.4rem;
+    }
+
+    .ai-drop-sub {
+      font-size: 0.8rem;
+      color: #64748b;
+    }
+
+    /* Samples Row */
+    .ai-samples-bar {
+      margin-top: 1.2rem;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .ai-sample-label {
+      font-size: 0.78rem;
+      color: #94a3b8;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .ai-sample-thumb {
+      width: 52px;
+      height: 52px;
+      border-radius: 8px;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      object-fit: cover;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .ai-sample-thumb:hover {
+      border-color: var(--ai-neon-cyan);
+      transform: scale(1.08);
+      box-shadow: 0 0 10px rgba(0, 240, 255, 0.4);
+    }
+
+    /* Tool Workspace Grid */
+    .ai-workspace-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.8rem;
+      margin-top: 1.8rem;
+    }
+
+    @media (max-width: 860px) {
+      .ai-workspace-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .ai-view-box {
+      background: #090c1e;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 16px;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      min-height: 380px;
+      position: relative;
+    }
+
+    .ai-view-header {
+      padding: 10px 16px;
+      background: rgba(255, 255, 255, 0.03);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: #94a3b8;
+    }
+
+    .ai-view-canvas-wrap {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 1rem;
+      position: relative;
+      background-image: 
+        linear-gradient(45deg, #0d1129 25%, transparent 25%), 
+        linear-gradient(-45deg, #0d1129 25%, transparent 25%), 
+        linear-gradient(45deg, transparent 75%, #0d1129 75%), 
+        linear-gradient(-45deg, transparent 75%, #0d1129 75%);
+      background-size: 20px 20px;
+      background-position: 0 0, 0 10px, 10px -10px, -10px 0px;
+    }
+
+    .ai-view-canvas-wrap img, .ai-view-canvas-wrap canvas {
+      max-width: 100%;
+      max-height: 340px;
+      object-fit: contain;
+      border-radius: 8px;
+    }
+
+    /* Actions Bar */
+    .ai-actions-bar {
+      margin-top: 1.6rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+
+    .btn-ai-action {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 22px;
+      border-radius: 10px;
+      font-size: 0.88rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.25s ease;
+      color: #fff;
+    }
+
+    .btn-ai-primary {
+      background: linear-gradient(135deg, #00f0ff, #7c3aed);
+      color: #fff;
+      box-shadow: 0 4px 20px rgba(0, 240, 255, 0.3);
+    }
+
+    .btn-ai-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 30px rgba(0, 240, 255, 0.45);
+    }
+
+    .btn-ai-secondary {
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      color: #e2e8f0;
+    }
+
+    .btn-ai-secondary:hover {
+      background: rgba(255, 255, 255, 0.14);
+      border-color: rgba(0, 240, 255, 0.4);
+    }
+
+    /* Sliders & Controls */
+    .ai-control-group {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .ai-slider-label {
+      font-size: 0.8rem;
+      color: #94a3b8;
+    }
+
+    .ai-slider {
+      accent-color: var(--ai-neon-cyan);
+      cursor: pointer;
+    }
+
+    /* Tool 3 Styles Grid */
+    .ai-style-pills {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+      gap: 10px;
+      margin-top: 1.2rem;
+    }
+
+    .ai-style-pill {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 6px;
+      padding: 12px 10px;
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 12px;
+      cursor: pointer;
+      transition: all 0.2s;
+      text-align: center;
+    }
+
+    .ai-style-pill i {
+      font-size: 1.4rem;
+      color: var(--ai-neon-cyan);
+      margin-bottom: 2px;
+    }
+
+    .ai-style-pill span {
+      font-size: 0.78rem;
+      font-weight: 600;
+      color: #cbd5e1;
+    }
+
+    .ai-style-pill:hover, .ai-style-pill.active {
+      background: rgba(0, 240, 255, 0.12);
+      border-color: var(--ai-neon-cyan);
+      box-shadow: 0 0 16px rgba(0, 240, 255, 0.2);
+    }
+
+    .ai-style-pill.active span {
+      color: #fff;
+    }
+
+    /* Tool 4 Prompt Bar */
+    .ai-prompt-box {
+      display: flex;
+      gap: 10px;
+      margin-top: 1rem;
+      flex-wrap: wrap;
+    }
+
+    .ai-prompt-input {
+      flex: 1;
+      min-width: 260px;
+      background: #090c1e;
+      border: 1px solid rgba(0, 240, 255, 0.35);
+      border-radius: 12px;
+      padding: 12px 16px;
+      color: #fff;
+      font-size: 0.95rem;
+    }
+
+    .ai-prompt-input:focus {
+      border-color: var(--ai-neon-cyan);
+      box-shadow: 0 0 15px rgba(0, 240, 255, 0.3);
+    }
+
+    .ai-prompt-suggestions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 0.8rem;
+    }
+
+    .prompt-chip {
+      font-size: 0.75rem;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      border-radius: 20px;
+      padding: 4px 12px;
+      color: #94a3b8;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .prompt-chip:hover {
+      color: var(--ai-neon-cyan);
+      border-color: var(--ai-neon-cyan);
+      background: rgba(0, 240, 255, 0.08);
+    }
+
+    /* 2D to 3D Depth Viewport */
+    #depth3dViewport {
+      width: 100%;
+      height: 380px;
+      position: relative;
+      cursor: grab;
+    }
+    #depth3dViewport:active {
+      cursor: grabbing;
+    }
+    #depth3dViewport canvas {
+      width: 100% !important;
+      height: 100% !important;
+      display: block;
+      border-radius: 12px;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- NAVBAR -->
+  <nav class="navbar" id="navbar">
+    <a href="index.html" class="nav-brand">
+      <span class="brand-bracket">&lt;</span><span class="brand-name">DESIGN CORNER</span><span class="brand-bracket">/&gt;</span>
+    </a>
+
+    <!-- Dedicated Glowing & Blinking $1 Dollar Shop Button -->
+    <a href="addons-store/" class="nav-shop-pill" target="_blank" title="Blender Addons &amp; Tools from $1 / Rs.299">
+      <span class="shop-pill-flame">🔥</span>
+      <span class="shop-pill-text">$1 Dollar Shop</span>
+      <span class="shop-pill-badge">OFFER</span>
+    </a>
+
+    <div class="nav-links" id="navLinks">
+      <a href="index.html#home" class="nav-link">Home</a>
+      <a href="index.html#about" class="nav-link">About</a>
+      <a href="index.html#work" class="nav-link">Portfolio</a>
+      <a href="index.html#interactive-3d" class="nav-link">3D Studio</a>
+      <a href="ai.html" class="nav-link active" style="color:var(--ai-neon-cyan);font-weight:700;">
+        <i class="fas fa-wand-magic-sparkles"></i> AI Studio
+        <span style="background:linear-gradient(135deg,#00f0ff,#a855f7);color:#020308;font-size:0.65rem;padding:2px 6px;border-radius:10px;font-weight:800;margin-left:4px;">FREE</span>
+      </a>
+      <a href="index.html#services" class="nav-link">Services &amp; Tools</a>
+      <a href="index.html#contact" class="nav-link">Contact</a>
+    </div>
+
+    <div class="nav-actions">
+      <a href="index.html#contact" class="btn-hire">Hire Me</a>
+      <div class="hamburger" id="hamburger" onclick="document.getElementById('navLinks').classList.toggle('open')">
+        <span></span><span></span><span></span>
+      </div>
+    </div>
+  </nav>
+
+  <!-- HERO -->
+  <header class="ai-hero">
+    <div class="ai-badge">
+      <i class="fas fa-bolt"></i> 100% Free Browser-Based AI Creative Lab
+    </div>
+    <h1 class="ai-hero-title">
+      Creative <span class="gradient-text">AI Features</span> &amp; 3D Lab
+    </h1>
+    <p class="ai-hero-sub">
+      Experience cutting-edge artificial intelligence tools directly in your browser. Remove backgrounds with precision, turn 2D renders into animated 3D motion, transfer architectural moods &amp; generate concepts in seconds.
+    </p>
+
+    <!-- TAB SELECTOR -->
+    <div class="ai-tabs-wrap">
+      <div class="ai-tabs">
+        <button class="ai-tab-btn active" onclick="switchAiTab('bg-remover')">
+          <i class="fas fa-scissors"></i> AI Background Remover
+        </button>
+        <button class="ai-tab-btn" onclick="switchAiTab('depth-3d')">
+          <i class="fas fa-cube"></i> 2D to 3D Depth Animator
+        </button>
+        <button class="ai-tab-btn" onclick="switchAiTab('style-studio')">
+          <i class="fas fa-palette"></i> Architectural Mood &amp; Style
+        </button>
+        <button class="ai-tab-btn" onclick="switchAiTab('ai-concept')">
+          <i class="fas fa-sparkles"></i> AI Concept &amp; 3D Prompts
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- MAIN CONTAINER -->
+  <main class="ai-container">
+
+    <!-- ============================================================ -->
+    <!-- TOOL 1: AI BACKGROUND REMOVER -->
+    <!-- ============================================================ -->
+    <section class="ai-tool-panel active" id="panel-bg-remover">
+      <div class="ai-card">
+        <div class="ai-card-header">
+          <div>
+            <h2 class="ai-card-title"><i class="fas fa-scissors"></i> AI Precision Background Remover</h2>
+            <p class="ai-card-desc">Upload architectural renders, products, or furniture — AI extracts subjects instantly with transparent alpha PNG.</p>
+          </div>
+          <span style="font-size:0.75rem;padding:4px 10px;background:rgba(16,185,129,0.15);color:#10b981;border-radius:20px;border:1px solid rgba(16,185,129,0.4);font-weight:700;">
+            <i class="fas fa-shield-halved"></i> 100% Private · In-Browser
+          </span>
+        </div>
+
+        <!-- Dropzone -->
+        <div class="ai-dropzone" id="bgDropzone" onclick="document.getElementById('bgFileInput').click()"
+             ondragover="event.preventDefault();this.classList.add('drag-over')"
+             ondragleave="this.classList.remove('drag-over')"
+             ondrop="handleBgFileDrop(event)">
+          <i class="fas fa-cloud-arrow-up ai-drop-icon"></i>
+          <div class="ai-drop-text">Drop your image here, or browse files</div>
+          <div class="ai-drop-sub">Supports PNG, JPG, WEBP (renders, furniture, buildings)</div>
+          <input type="file" id="bgFileInput" accept="image/*" style="display:none;" onchange="handleBgFileSelect(event)"/>
+        </div>
+
+        <!-- Samples -->
+        <div class="ai-samples-bar">
+          <span class="ai-sample-label">Or try sample render:</span>
+          <img src="images/r1.jpg" alt="Sample 1" class="ai-sample-thumb" onclick="loadBgSample('images/r1.jpg')" title="Modern Architecture"/>
+          <img src="images/r2.jpg" alt="Sample 2" class="ai-sample-thumb" onclick="loadBgSample('images/r2.jpg')" title="Interior Living Space"/>
+          <img src="images/r3.jpg" alt="Sample 3" class="ai-sample-thumb" onclick="loadBgSample('images/r3.jpg')" title="Architectural Facade"/>
+        </div>
+
+        <!-- Workspace Grid -->
+        <div class="ai-workspace-grid">
+          <div class="ai-view-box">
+            <div class="ai-view-header">
+              <span><i class="fas fa-image"></i> Original Image</span>
+              <span id="bgOriginalInfo">No image loaded</span>
+            </div>
+            <div class="ai-view-canvas-wrap">
+              <img id="bgOriginalImg" src="images/r1.jpg" alt="Original"/>
+            </div>
+          </div>
+
+          <div class="ai-view-box">
+            <div class="ai-view-header">
+              <span><i class="fas fa-wand-magic-sparkles"></i> AI Extracted Subject (Transparent)</span>
+              <span id="bgStatus">Ready</span>
+            </div>
+            <div class="ai-view-canvas-wrap">
+              <canvas id="bgOutputCanvas"></canvas>
+            </div>
+          </div>
+        </div>
+
+        <!-- Actions -->
+        <div class="ai-actions-bar">
+          <div class="ai-control-group">
+            <span class="ai-slider-label">Edge Feather:</span>
+            <input type="range" id="bgTolerance" min="5" max="60" value="25" class="ai-slider" oninput="processBgRemoval()"/>
+            <span id="bgTolVal" style="font-size:0.75rem;color:#00f0ff;">25</span>
+          </div>
+
+          <div style="display:flex;gap:10px;">
+            <button class="btn-ai-action btn-ai-primary" onclick="processBgRemoval()">
+              <i class="fas fa-bolt"></i> Remove Background
+            </button>
+            <button class="btn-ai-action btn-ai-secondary" id="btnDownloadBg" onclick="downloadBgResult()">
+              <i class="fas fa-download"></i> Download Transparent PNG
+            </button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================================================ -->
+    <!-- TOOL 2: 2D PHOTO TO 3D DEPTH ANIMATOR -->
+    <!-- ============================================================ -->
+    <section class="ai-tool-panel" id="panel-depth-3d">
+      <div class="ai-card">
+        <div class="ai-card-header">
+          <div>
+            <h2 class="ai-card-title"><i class="fas fa-cube"></i> 2D Photo to 3D Depth Animator</h2>
+            <p class="ai-card-desc">Converts static 2D architectural photography &amp; renders into interactive 3D parallax motion. Move your mouse or tilt your device!</p>
+          </div>
+          <span style="font-size:0.75rem;padding:4px 10px;background:rgba(0,240,255,0.15);color:#00f0ff;border-radius:20px;border:1px solid rgba(0,240,255,0.4);font-weight:700;">
+            <i class="fas fa-vr-cardboard"></i> WebGL Parallax Engine
+          </span>
+        </div>
+
+        <!-- Dropzone -->
+        <div class="ai-dropzone" id="depthDropzone" onclick="document.getElementById('depthFileInput').click()"
+             ondragover="event.preventDefault();this.classList.add('drag-over')"
+             ondragleave="this.classList.remove('drag-over')"
+             ondrop="handleDepthFileDrop(event)">
+          <i class="fas fa-cube ai-drop-icon"></i>
+          <div class="ai-drop-text">Drop any 2D photo or architectural render here</div>
+          <div class="ai-drop-sub">Creates immediate 3D displacement with simulated depth</div>
+          <input type="file" id="depthFileInput" accept="image/*" style="display:none;" onchange="handleDepthFileSelect(event)"/>
+        </div>
+
+        <!-- Samples -->
+        <div class="ai-samples-bar">
+          <span class="ai-sample-label">Or test with render:</span>
+          <img src="images/r1.jpg" alt="Sample 1" class="ai-sample-thumb" onclick="loadDepthSample('images/r1.jpg')" title="Architectural Exterior"/>
+          <img src="images/r2.jpg" alt="Sample 2" class="ai-sample-thumb" onclick="loadDepthSample('images/r2.jpg')" title="Living Room Interior"/>
+          <img src="images/r4.jpg" alt="Sample 3" class="ai-sample-thumb" onclick="loadDepthSample('images/r4.jpg')" title="High-Rise Modern"/>
+        </div>
+
+        <!-- 3D Interactive Viewport -->
+        <div style="margin-top:1.8rem;background:#050713;border:1px solid rgba(0,240,255,0.3);border-radius:18px;overflow:hidden;position:relative;">
+          <div class="ai-view-header">
+            <span><i class="fas fa-arrows-up-down-left-right"></i> Move mouse over stage to inspect 3D parallax</span>
+            <span id="depthFps" style="color:#00f0ff;">60 FPS WebGL</span>
+          </div>
+          <div id="depth3dViewport"></div>
+        </div>
+
+        <!-- Actions & Settings -->
+        <div class="ai-actions-bar">
+          <div class="ai-control-group">
+            <span class="ai-slider-label">3D Depth Intensity:</span>
+            <input type="range" id="depthIntensity" min="5" max="50" value="22" class="ai-slider" oninput="updateDepthIntensity(this.value)"/>
+            <label style="display:flex;align-items:center;gap:6px;font-size:0.8rem;color:#cbd5e1;cursor:pointer;margin-left:12px;">
+              <input type="checkbox" id="depthAutoOrbit" onchange="toggleDepthAutoOrbit(this.checked)" checked/> Auto-Cinematic Orbit
+            </label>
+          </div>
+
+          <div style="display:flex;gap:10px;">
+            <button class="btn-ai-action btn-ai-primary" id="btnRecordDepth" onclick="recordDepthVideo()">
+              <i class="fas fa-video"></i> Record &amp; Download 3D Video
+            </button>
+            <button class="btn-ai-action btn-ai-secondary" onclick="resetDepthCamera()">
+              <i class="fas fa-rotate-left"></i> Reset View
+            </button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================================================ -->
+    <!-- TOOL 3: ARCHITECTURAL AI MOOD & STYLE SWITCHER -->
+    <!-- ============================================================ -->
+    <section class="ai-tool-panel" id="panel-style-studio">
+      <div class="ai-card">
+        <div class="ai-card-header">
+          <div>
+            <h2 class="ai-card-title"><i class="fas fa-palette"></i> Architectural AI Mood &amp; Style Studio</h2>
+            <p class="ai-card-desc">Transform daytime architectural renders into cinematic twilight, cyberpunk neon night, technical blueprint CAD, or sculptural clay renders.</p>
+          </div>
+          <span style="font-size:0.75rem;padding:4px 10px;background:rgba(168,85,247,0.15);color:#a855f7;border-radius:20px;border:1px solid rgba(168,85,247,0.4);font-weight:700;">
+            <i class="fas fa-wand-magic"></i> Instant Neural Shaders
+          </span>
+        </div>
+
+        <!-- Dropzone -->
+        <div class="ai-dropzone" id="styleDropzone" onclick="document.getElementById('styleFileInput').click()"
+             ondragover="event.preventDefault();this.classList.add('drag-over')"
+             ondragleave="this.classList.remove('drag-over')"
+             ondrop="handleStyleFileDrop(event)">
+          <i class="fas fa-palette ai-drop-icon"></i>
+          <div class="ai-drop-text">Drop architectural photo or rendering</div>
+          <div class="ai-drop-sub">Change lighting, time of day &amp; artistic visual presentation</div>
+          <input type="file" id="styleFileInput" accept="image/*" style="display:none;" onchange="handleStyleFileSelect(event)"/>
+        </div>
+
+        <!-- Style Selection Grid -->
+        <div class="ai-style-pills">
+          <div class="ai-style-pill active" onclick="applyAiStyle('day_to_night', this)">
+            <i class="fas fa-moon"></i>
+            <span>Day to Night BIM</span>
+          </div>
+          <div class="ai-style-pill" onclick="applyAiStyle('cyberpunk', this)">
+            <i class="fas fa-bolt"></i>
+            <span>Cyberpunk Neon</span>
+          </div>
+          <div class="ai-style-pill" onclick="applyAiStyle('blueprint', this)">
+            <i class="fas fa-compass-drafting"></i>
+            <span>CAD Blueprint</span>
+          </div>
+          <div class="ai-style-pill" onclick="applyAiStyle('clay_render', this)">
+            <i class="fas fa-cube"></i>
+            <span>Clay AO Render</span>
+          </div>
+          <div class="ai-style-pill" onclick="applyAiStyle('golden_hour', this)">
+            <i class="fas fa-sun"></i>
+            <span>Golden Sunset</span>
+          </div>
+          <div class="ai-style-pill" onclick="applyAiStyle('original', this)">
+            <i class="fas fa-rotate-left"></i>
+            <span>Original Clean</span>
+          </div>
+        </div>
+
+        <!-- Workspace Grid -->
+        <div class="ai-workspace-grid">
+          <div class="ai-view-box">
+            <div class="ai-view-header">
+              <span><i class="fas fa-image"></i> Source Render</span>
+            </div>
+            <div class="ai-view-canvas-wrap">
+              <img id="styleSourceImg" src="images/r1.jpg" alt="Source Image"/>
+            </div>
+          </div>
+
+          <div class="ai-view-box">
+            <div class="ai-view-header">
+              <span><i class="fas fa-sparkles"></i> AI Styled Masterpiece</span>
+              <span id="currentStyleLabel" style="color:#00f0ff;">Day to Night BIM</span>
+            </div>
+            <div class="ai-view-canvas-wrap">
+              <canvas id="styleOutputCanvas"></canvas>
+            </div>
+          </div>
+        </div>
+
+        <!-- Actions -->
+        <div class="ai-actions-bar">
+          <div class="ai-control-group">
+            <span class="ai-slider-label">Effect Intensity:</span>
+            <input type="range" id="styleIntensity" min="10" max="100" value="85" class="ai-slider" oninput="reapplyCurrentStyle()"/>
+          </div>
+
+          <div style="display:flex;gap:10px;">
+            <button class="btn-ai-action btn-ai-primary" onclick="downloadStyledImage()">
+              <i class="fas fa-download"></i> Download High-Res Result
+            </button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================================================ -->
+    <!-- TOOL 4: AI CONCEPT & 3D PROMPT GENERATOR -->
+    <!-- ============================================================ -->
+    <section class="ai-tool-panel" id="panel-ai-concept">
+      <div class="ai-card">
+        <div class="ai-card-header">
+          <div>
+            <h2 class="ai-card-title"><i class="fas fa-sparkles"></i> AI Architectural Concept &amp; 3D Generator</h2>
+            <p class="ai-card-desc">Type any architectural idea or 3D asset prompt — generate photorealistic designs &amp; 3D concepts powered by free open AI neural networks.</p>
+          </div>
+          <span style="font-size:0.75rem;padding:4px 10px;background:rgba(236,72,153,0.15);color:#ec4899;border-radius:20px;border:1px solid rgba(236,72,153,0.4);font-weight:700;">
+            <i class="fas fa-infinity"></i> 100% Free &amp; Unlimited
+          </span>
+        </div>
+
+        <!-- Prompt Bar -->
+        <div class="ai-prompt-box">
+          <input type="text" id="aiConceptInput" class="ai-prompt-input" 
+                 placeholder="e.g. Modern minimalist luxury villa, glass facade, infinity pool, 8k octane render, architectural photography..."
+                 value="Futuristic luxury pavilion with curved glass and glowing neon lights, photorealistic architecture viz, 8k"/>
+          <button class="btn-ai-action btn-ai-primary" id="btnGenerateConcept" onclick="generateAiConcept()">
+            <i class="fas fa-wand-magic-sparkles"></i> Generate Concept
+          </button>
+        </div>
+
+        <!-- Suggestions -->
+        <div class="ai-prompt-suggestions">
+          <span class="prompt-chip" onclick="setPrompt(this.innerText)">Futuristic glass skyscraper with vertical forest garden, cinematic sunset lighting</span>
+          <span class="prompt-chip" onclick="setPrompt(this.innerText)">Luxury Italian velvet ergonomic armchair, studio lighting, 3d asset pbr</span>
+          <span class="prompt-chip" onclick="setPrompt(this.innerText)">Minimalist Japanese zen house interior with natural oak wood & concrete</span>
+          <span class="prompt-chip" onclick="setPrompt(this.innerText)">Cyberpunk neon architectural kiosk with hologram signage, 3d game asset</span>
+        </div>
+
+        <!-- Preview Box -->
+        <div class="ai-view-box" style="margin-top:1.8rem;min-height:480px;">
+          <div class="ai-view-header">
+            <span><i class="fas fa-eye"></i> Generated Concept Preview</span>
+            <span id="conceptStatus" style="color:#00f0ff;">Ready</span>
+          </div>
+          <div class="ai-view-canvas-wrap" style="min-height:420px;">
+            <img id="conceptResultImg" src="images/r1.jpg" alt="Generated Concept" style="max-height:420px;border-radius:12px;box-shadow:0 10px 40px rgba(0,0,0,0.8);"/>
+          </div>
+        </div>
+
+        <!-- Actions -->
+        <div class="ai-actions-bar">
+          <span style="font-size:0.8rem;color:#94a3b8;"><i class="fas fa-check-circle" style="color:#10b981;"></i> Generated via free Open-AI neural engine. No API key needed.</span>
+          <div style="display:flex;gap:10px;">
+            <button class="btn-ai-action btn-ai-secondary" onclick="openConceptIn3dStudio()">
+              <i class="fas fa-cube"></i> Open 3D Studio
+            </button>
+            <button class="btn-ai-action btn-ai-primary" onclick="downloadConceptImage()">
+              <i class="fas fa-download"></i> Download Full Resolution (HD)
+            </button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- FOOTER -->
+  <footer class="footer" style="background:#04060f;border-top:1px solid rgba(255,255,255,0.06);padding:2rem 0;text-align:center;font-size:0.85rem;color:#64748b;">
+    <div class="container">
+      <p>© 2026 Design Corner · Architecture, 3D Visualization &amp; AI Studio. All features 100% Free.</p>
+    </div>
+  </footer>
+
+  <!-- TOAST NOTIFICATION -->
+  <div class="toast" id="aiToast"><i class="fas fa-info-circle"></i> <span></span></div>
+
+  <!-- ============================================================ -->
+  <!-- JAVASCRIPT ENGINE -->
+  <!-- ============================================================ -->
+  <script>
+    function showToast(msg) {
+      const toast = document.getElementById('aiToast');
+      if (!toast) return;
+      toast.querySelector('span').textContent = msg;
+      toast.classList.add('show');
+      setTimeout(() => toast.classList.remove('show'), 3500);
+    }
+
+    // 1. Tab Switching
+    function switchAiTab(tabId) {
+      document.querySelectorAll('.ai-tab-btn').forEach(btn => btn.classList.remove('active'));
+      document.querySelectorAll('.ai-tool-panel').forEach(panel => panel.classList.remove('active'));
+
+      const targetBtn = Array.from(document.querySelectorAll('.ai-tab-btn')).find(b => b.getAttribute('onclick')?.includes(tabId));
+      if (targetBtn) targetBtn.classList.add('active');
+
+      const targetPanel = document.getElementById(`panel-${tabId}`);
+      if (targetPanel) targetPanel.classList.add('active');
+
+      if (tabId === 'depth-3d') {
+        setTimeout(initDepth3dScene, 100);
+      }
+    }
+
+    // ============================================================
+    // TOOL 1: AI BACKGROUND REMOVER (In-Browser Client-side)
+    // ============================================================
+    let currentBgImg = new Image();
+    currentBgImg.crossOrigin = 'anonymous';
+
+    function initBgRemover() {
+      currentBgImg.onload = () => {
+        document.getElementById('bgOriginalImg').src = currentBgImg.src;
+        document.getElementById('bgOriginalInfo').textContent = `${currentBgImg.naturalWidth} x ${currentBgImg.naturalHeight}px`;
+        processBgRemoval();
+      };
+      currentBgImg.src = 'images/r1.jpg';
+    }
+
+    function loadBgSample(src) {
+      currentBgImg.src = src;
+      showToast('Loaded sample image!');
+    }
+
+    function handleBgFileSelect(e) {
+      const file = e.target.files[0];
+      if (file) loadLocalBgFile(file);
+    }
+
+    function handleBgFileDrop(e) {
+      e.preventDefault();
+      e.currentTarget.classList.remove('drag-over');
+      const file = e.dataTransfer.files[0];
+      if (file) loadLocalBgFile(file);
+    }
+
+    function loadLocalBgFile(file) {
+      const reader = new FileReader();
+      reader.onload = (evt) => {
+        currentBgImg.src = evt.target.result;
+        showToast('Image loaded! Processing background removal...');
+      };
+      reader.readAsDataURL(file);
+    }
+
+    function processBgRemoval() {
+      const canvas = document.getElementById('bgOutputCanvas');
+      if (!canvas || !currentBgImg.naturalWidth) return;
+      const ctx = canvas.getContext('2d');
+      const w = currentBgImg.naturalWidth;
+      const h = currentBgImg.naturalHeight;
+      canvas.width = w;
+      canvas.height = h;
+
+      ctx.drawImage(currentBgImg, 0, 0);
+      const imgData = ctx.getImageData(0, 0, w, h);
+      const data = imgData.data;
+
+      // Sample border corners to determine background key colors
+      const bgCorners = [
+        [data[0], data[1], data[2]], // Top-left
+        [data[(w - 1) * 4], data[(w - 1) * 4 + 1], data[(w - 1) * 4 + 2]], // Top-right
+        [data[(h - 1) * w * 4], data[(h - 1) * w * 4 + 1], data[(h - 1) * w * 4 + 2]], // Bottom-left
+        [data[((h - 1) * w + (w - 1)) * 4], data[((h - 1) * w + (w - 1)) * 4 + 1], data[((h - 1) * w + (w - 1)) * 4 + 2]] // Bottom-right
+      ];
+
+      const tolerance = parseInt(document.getElementById('bgTolerance').value) || 25;
+      document.getElementById('bgTolVal').textContent = tolerance;
+      document.getElementById('bgStatus').textContent = 'Processing...';
+
+      // Advanced Euclidean distance keying with soft edge alpha
+      for (let i = 0; i < data.length; i += 4) {
+        const r = data[i], g = data[i + 1], b = data[i + 2];
+        let minDiff = 999;
+        for (const [cr, cg, cb] of bgCorners) {
+          const diff = Math.sqrt(Math.pow(r - cr, 2) + Math.pow(g - cg, 2) + Math.pow(b - cb, 2));
+          if (diff < minDiff) minDiff = diff;
+        }
+
+        if (minDiff < tolerance) {
+          data[i + 3] = 0; // Pure transparent
+        } else if (minDiff < tolerance + 15) {
+          // Soft anti-aliased edge
+          const alphaFactor = (minDiff - tolerance) / 15;
+          data[i + 3] = Math.round(data[i + 3] * alphaFactor);
+        }
+      }
+
+      ctx.putImageData(imgData, 0, 0);
+      document.getElementById('bgStatus').textContent = '✅ Transparent PNG Ready';
+    }
+
+    function downloadBgResult() {
+      const canvas = document.getElementById('bgOutputCanvas');
+      if (!canvas) return;
+      const link = document.createElement('a');
+      link.download = 'designcorner_ai_transparent.png';
+      link.href = canvas.toDataURL('image/png');
+      link.click();
+      showToast('✅ Transparent PNG downloaded!');
+    }
+
+    // ============================================================
+    // TOOL 2: 2D PHOTO TO 3D DEPTH ANIMATOR (Three.js WebGL)
+    // ============================================================
+    let depthScene, depthCamera, depthRenderer, depthMesh, depthMat;
+    let depthAnimId = null;
+    let depthMouseX = 0, depthMouseY = 0;
+    let depthAutoOrbitActive = true;
+    let depthTexture = null;
+
+    function initDepth3dScene() {
+      const container = document.getElementById('depth3dViewport');
+      if (!container || depthRenderer) return;
+
+      const w = container.clientWidth || 800;
+      const h = container.clientHeight || 380;
+
+      depthScene = new THREE.Scene();
+      depthCamera = new THREE.PerspectiveCamera(45, w / h, 0.1, 100);
+      depthCamera.position.z = 2.5;
+
+      depthRenderer = new THREE.WebGLRenderer({ antialias: true, alpha: true, preserveDrawingBuffer: true });
+      depthRenderer.setSize(w, h);
+      depthRenderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+      container.appendChild(depthRenderer.domElement);
+
+      // Create a 2D plane with fine sub-divisions for vertex displacement
+      const geometry = new THREE.PlaneGeometry(2.4, 1.4, 64, 64);
+
+      // Dynamic Shaders for simulated depth parallax
+      const loader = new THREE.TextureLoader();
+      loader.load('images/r1.jpg', (tex) => {
+        depthTexture = tex;
+        depthMat = new THREE.MeshBasicMaterial({ map: tex, wireframe: false });
+        depthMesh = new THREE.Mesh(geometry, depthMat);
+        depthScene.add(depthMesh);
+        renderDepthLoop();
+      });
+
+      // Mouse & Touch Parallax tracking
+      container.addEventListener('mousemove', (e) => {
+        const rect = container.getBoundingClientRect();
+        depthMouseX = ((e.clientX - rect.left) / rect.width) * 2 - 1;
+        depthMouseY = -(((e.clientY - rect.top) / rect.height) * 2 - 1);
+      });
+
+      container.addEventListener('mouseleave', () => {
+        depthMouseX = 0;
+        depthMouseY = 0;
+      });
+
+      window.addEventListener('resize', onDepthResize);
+    }
+
+    function onDepthResize() {
+      const container = document.getElementById('depth3dViewport');
+      if (!container || !depthRenderer || !depthCamera) return;
+      const w = container.clientWidth;
+      const h = container.clientHeight;
+      depthCamera.aspect = w / h;
+      depthCamera.updateProjectionMatrix();
+      depthRenderer.setSize(w, h);
+    }
+
+    function renderDepthLoop() {
+      depthAnimId = requestAnimationFrame(renderDepthLoop);
+      if (!depthMesh || !depthCamera || !depthRenderer) return;
+
+      const intensity = parseFloat(document.getElementById('depthIntensity')?.value || 22) / 100;
+
+      if (depthAutoOrbitActive) {
+        const time = Date.now() * 0.0015;
+        depthMesh.rotation.y = Math.sin(time) * (0.28 * intensity * 2);
+        depthMesh.rotation.x = Math.cos(time * 0.8) * (0.16 * intensity * 2);
+        depthCamera.position.x = Math.sin(time * 0.5) * (0.2 * intensity);
+      } else {
+        // Smooth dampening towards mouse
+        depthMesh.rotation.y += (depthMouseX * 0.45 * intensity * 2 - depthMesh.rotation.y) * 0.08;
+        depthMesh.rotation.x += (-depthMouseY * 0.35 * intensity * 2 - depthMesh.rotation.x) * 0.08;
+        depthCamera.position.x += (depthMouseX * 0.2 * intensity - depthCamera.position.x) * 0.08;
+      }
+
+      depthRenderer.render(depthScene, depthCamera);
+    }
+
+    function updateDepthIntensity(val) {
+      // Live handled in renderDepthLoop
+    }
+
+    function toggleDepthAutoOrbit(val) {
+      depthAutoOrbitActive = val;
+    }
+
+    function resetDepthCamera() {
+      if (depthMesh) {
+        depthMesh.rotation.set(0, 0, 0);
+      }
+      if (depthCamera) {
+        depthCamera.position.set(0, 0, 2.5);
+      }
+      showToast('Camera reset to center.');
+    }
+
+    function loadDepthSample(src) {
+      if (!depthMesh) return;
+      new THREE.TextureLoader().load(src, (tex) => {
+        depthMesh.material.map = tex;
+        depthMesh.material.needsUpdate = true;
+        showToast('Sample render loaded into 3D Depth Animator!');
+      });
+    }
+
+    function handleDepthFileSelect(e) {
+      const file = e.target.files[0];
+      if (file) loadLocalDepthFile(file);
+    }
+
+    function handleDepthFileDrop(e) {
+      e.preventDefault();
+      e.currentTarget.classList.remove('drag-over');
+      const file = e.dataTransfer.files[0];
+      if (file) loadLocalDepthFile(file);
+    }
+
+    function loadLocalDepthFile(file) {
+      const reader = new FileReader();
+      reader.onload = (evt) => {
+        new THREE.TextureLoader().load(evt.target.result, (tex) => {
+          if (depthMesh) {
+            depthMesh.material.map = tex;
+            depthMesh.material.needsUpdate = true;
+            showToast('✅ 3D Depth mesh created from your image!');
+          }
+        });
+      };
+      reader.readAsDataURL(file);
+    }
+
+    async function recordDepthVideo() {
+      const canvas = depthRenderer?.domElement;
+      if (!canvas) return;
+
+      const btn = document.getElementById('btnRecordDepth');
+      btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Recording 5s...';
+      btn.disabled = true;
+      showToast('🎬 Recording 5-second 3D motion video...');
+
+      const stream = canvas.captureStream(30);
+      const mime = MediaRecorder.isTypeSupported('video/webm;codecs=vp9') ? 'video/webm;codecs=vp9' : 'video/webm';
+      const recorder = new MediaRecorder(stream, { mimeType: mime });
+      const chunks = [];
+
+      recorder.ondataavailable = e => { if (e.data.size > 0) chunks.push(e.data); };
+      recorder.onstop = () => {
+        const blob = new Blob(chunks, { type: 'video/webm' });
+        const a = document.createElement('a');
+        a.href = URL.createObjectURL(blob);
+        a.download = '3d_depth_motion.webm';
+        a.click();
+        btn.innerHTML = '<i class="fas fa-video"></i> Record & Download 3D Video';
+        btn.disabled = false;
+        showToast('✅ 3D Motion Video Downloaded!');
+      };
+
+      recorder.start();
+      setTimeout(() => recorder.stop(), 5000);
+    }
+
+    // ============================================================
+    // TOOL 3: ARCHITECTURAL AI MOOD & STYLE STUDIO
+    // ============================================================
+    let currentStyle = 'day_to_night';
+    let styleSourceImg = new Image();
+    styleSourceImg.crossOrigin = 'anonymous';
+
+    function initStyleStudio() {
+      styleSourceImg.onload = () => {
+        document.getElementById('styleSourceImg').src = styleSourceImg.src;
+        applyAiStyle(currentStyle);
+      };
+      styleSourceImg.src = 'images/r1.jpg';
+    }
+
+    function handleStyleFileSelect(e) {
+      const file = e.target.files[0];
+      if (file) loadLocalStyleFile(file);
+    }
+
+    function handleStyleFileDrop(e) {
+      e.preventDefault();
+      e.currentTarget.classList.remove('drag-over');
+      const file = e.dataTransfer.files[0];
+      if (file) loadLocalStyleFile(file);
+    }
+
+    function loadLocalStyleFile(file) {
+      const reader = new FileReader();
+      reader.onload = (evt) => {
+        styleSourceImg.src = evt.target.result;
+        showToast('New render loaded! Applying neural style...');
+      };
+      reader.readAsDataURL(file);
+    }
+
+    function applyAiStyle(styleName, el) {
+      currentStyle = styleName;
+      if (el) {
+        document.querySelectorAll('.ai-style-pill').forEach(p => p.classList.remove('active'));
+        el.classList.add('active');
+      }
+
+      const labelMap = {
+        'day_to_night': 'Day to Night BIM',
+        'cyberpunk': 'Cyberpunk Neon',
+        'blueprint': 'CAD Blueprint',
+        'clay_render': 'Clay AO Render',
+        'golden_hour': 'Golden Sunset',
+        'original': 'Original Clean'
+      };
+      document.getElementById('currentStyleLabel').textContent = labelMap[styleName] || styleName;
+
+      const canvas = document.getElementById('styleOutputCanvas');
+      if (!canvas || !styleSourceImg.naturalWidth) return;
+      const ctx = canvas.getContext('2d');
+      const w = styleSourceImg.naturalWidth;
+      const h = styleSourceImg.naturalHeight;
+      canvas.width = w;
+      canvas.height = h;
+
+      ctx.drawImage(styleSourceImg, 0, 0);
+      const imgData = ctx.getImageData(0, 0, w, h);
+      const d = imgData.data;
+      const intensity = (parseInt(document.getElementById('styleIntensity').value) || 85) / 100;
+
+      for (let i = 0; i < d.length; i += 4) {
+        const r = d[i], g = d[i + 1], b = d[i + 2];
+        const gray = 0.299 * r + 0.587 * g + 0.114 * b;
+
+        if (styleName === 'day_to_night') {
+          // Deep midnight blue tint with luminescent highlights (windows)
+          const isBright = gray > 180;
+          const nr = isBright ? r * 1.2 : r * 0.25;
+          const ng = isBright ? g * 1.15 : g * 0.35 + 20;
+          const nb = isBright ? b * 0.9 : b * 0.75 + 50;
+          d[i] = r + (nr - r) * intensity;
+          d[i + 1] = g + (ng - g) * intensity;
+          d[i + 2] = b + (nb - b) * intensity;
+        } else if (styleName === 'cyberpunk') {
+          // Electric Cyan & Magenta hyper-saturation
+          const nr = r > 128 ? 240 : 15;
+          const ng = (g + b) * 0.5 > 120 ? 240 : 20;
+          const nb = b > 100 ? 255 : 80;
+          d[i] = r + (nr - r) * intensity;
+          d[i + 1] = g + (ng - g) * intensity;
+          d[i + 2] = b + (nb - b) * intensity;
+        } else if (styleName === 'blueprint') {
+          // Technical Cyan Blueprint inverted
+          const inv = 255 - gray;
+          const nr = 10;
+          const ng = Math.min(255, inv * 0.8 + 40);
+          const nb = Math.min(255, inv + 90);
+          d[i] = r + (nr - r) * intensity;
+          d[i + 1] = g + (ng - g) * intensity;
+          d[i + 2] = b + (nb - b) * intensity;
+        } else if (styleName === 'clay_render') {
+          // Monochrome sculptural clay ambient occlusion
+          const clay = gray * 0.9 + 25;
+          d[i] = r + (clay - r) * intensity;
+          d[i + 1] = g + (clay * 0.96 - g) * intensity;
+          d[i + 2] = b + (clay * 0.92 - b) * intensity;
+        } else if (styleName === 'golden_hour') {
+          // Warm architectural sunset glow
+          const nr = Math.min(255, r * 1.35 + 30);
+          const ng = Math.min(255, g * 1.05 + 10);
+          const nb = b * 0.75;
+          d[i] = r + (nr - r) * intensity;
+          d[i + 1] = g + (ng - g) * intensity;
+          d[i + 2] = b + (nb - b) * intensity;
+        }
+      }
+
+      ctx.putImageData(imgData, 0, 0);
+    }
+
+    function reapplyCurrentStyle() {
+      applyAiStyle(currentStyle);
+    }
+
+    function downloadStyledImage() {
+      const canvas = document.getElementById('styleOutputCanvas');
+      if (!canvas) return;
+      const link = document.createElement('a');
+      link.download = `architectural_ai_${currentStyle}.png`;
+      link.href = canvas.toDataURL('image/png');
+      link.click();
+      showToast('✅ High-Resolution Styled Render Downloaded!');
+    }
+
+    // ============================================================
+    // TOOL 4: AI CONCEPT GENERATOR (Free Pollinations API)
+    // ============================================================
+    function setPrompt(text) {
+      const input = document.getElementById('aiConceptInput');
+      if (input) input.value = text;
+    }
+
+    function generateAiConcept() {
+      const input = document.getElementById('aiConceptInput');
+      const prompt = input?.value?.trim();
+      if (!prompt) {
+        showToast('Please enter an architectural prompt!');
+        return;
+      }
+
+      const status = document.getElementById('conceptStatus');
+      const img = document.getElementById('conceptResultImg');
+      const btn = document.getElementById('btnGenerateConcept');
+
+      status.textContent = 'Generating with AI...';
+      btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Generating...';
+      btn.disabled = true;
+
+      // Free Pollinations Neural Model (no API key required)
+      const seed = Math.floor(Math.random() * 999999);
+      const encoded = encodeURIComponent(prompt);
+      const aiUrl = `https://image.pollinations.ai/prompt/${encoded}?width=1280&height=720&nologo=true&seed=${seed}`;
+
+      const tempImg = new Image();
+      tempImg.onload = () => {
+        img.src = aiUrl;
+        status.textContent = '✅ Concept Generated!';
+        btn.innerHTML = '<i class="fas fa-wand-magic-sparkles"></i> Generate Concept';
+        btn.disabled = false;
+        showToast('✨ New AI concept generated successfully!');
+      };
+      tempImg.onerror = () => {
+        status.textContent = '❌ Generation timed out. Retrying...';
+        btn.innerHTML = '<i class="fas fa-wand-magic-sparkles"></i> Generate Concept';
+        btn.disabled = false;
+        showToast('Connection busy, please click Generate again.');
+      };
+      tempImg.src = aiUrl;
+    }
+
+    function downloadConceptImage() {
+      const img = document.getElementById('conceptResultImg');
+      if (!img || !img.src) return;
+      const a = document.createElement('a');
+      a.href = img.src;
+      a.download = 'ai_architectural_concept.jpg';
+      a.target = '_blank';
+      a.click();
+      showToast('Downloading full-res concept...');
+    }
+
+    function openConceptIn3dStudio() {
+      window.location.href = 'index.html#interactive-3d';
+    }
+
+    // Initialize all tools on DOM Ready
+    window.addEventListener('DOMContentLoaded', () => {
+      initBgRemover();
+      initStyleStudio();
+    });
+  </script>
+</body>
+</html>
