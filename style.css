@@ -4320,14 +4320,15 @@ html {
   background: radial-gradient(circle at 50% 50%, #0d112b 0%, #03040c 100%);
   border: 1px solid rgba(255, 255, 255, 0.12);
   border-radius: 26px;
-  overflow: hidden;
+  overflow: visible;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
   padding: 1.5rem;
-  min-height: 580px;
+  min-height: 620px;
   box-shadow: 0 25px 70px rgba(0, 0, 0, 0.8), 0 0 50px rgba(0, 240, 255, 0.08);
   transition: border-color 0.5s ease, box-shadow 0.5s ease;
+  clip-path: inset(0 round 26px);
 }
 
 /* Dynamic Organic Morphing Background Blob */
@@ -4444,19 +4445,24 @@ html {
   position: relative;
   width: 100%;
   flex: 1;
-  min-height: 440px;
-  z-index: 5;
+  height: 460px;
+  min-height: 460px;
+  z-index: 10;
   display: flex;
   align-items: center;
   justify-content: center;
 }
 .storehouse-viewer-box model-viewer {
   width: 100%;
-  height: 100%;
-  min-height: 440px;
+  height: 460px;
+  min-height: 460px;
   background: transparent !important;
+  --poster-color: transparent;
   outline: none;
   cursor: grab;
+  position: relative;
+  z-index: 10;
+  isolation: isolate;
 }
 .storehouse-viewer-box model-viewer:active {
   cursor: grabbing;
@@ -4909,11 +4915,12 @@ html {
     grid-template-columns: 1fr;
   }
   .storehouse-stage-card {
-    min-height: 480px;
+    min-height: 520px;
   }
   .storehouse-viewer-box,
   .storehouse-viewer-box model-viewer {
-    min-height: 380px;
+    height: 400px;
+    min-height: 400px;
   }
 }
 

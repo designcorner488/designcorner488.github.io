@@ -4844,8 +4844,15 @@ function switchI3dModelById(modelId, notify = true) {
     }
 
     if (viewer.src !== model.src) {
-      if (loader) loader.style.display = 'flex';
+      if (loader) {
+        loader.style.display = 'flex';
+        const txt = loader.querySelector('span');
+        if (txt) txt.textContent = model.id === 'snaks_bar' ? 'Loading 3D Mesh (62 MB)...' : `Loading ${model.name}...`;
+      }
       viewer.src = model.src;
+      // Auto-frame bounds for new model
+      viewer.setAttribute('camera-orbit', 'auto 75deg auto');
+      viewer.setAttribute('field-of-view', 'auto');
     }
 
     const onLoad = () => {
@@ -4869,14 +4876,6 @@ function switchI3dModelById(modelId, notify = true) {
   }
 
   // 7. Render model-specific hotspots
-  renderI3dHotspots(model);
-
-  if (notify) {
-    showToast(`🧊 Loaded: ${model.name}`, 'info');
-  }
-}
-
-  // Render model-specific hotspots
   renderI3dHotspots(model);
 
   if (notify) {
@@ -5062,10 +5061,18 @@ async function handleSaveNew3dModel(event) {
     const newModel = {
       id: 'i3d_' + Date.now(),
       name: title,
+      bigTitle: title.toUpperCase().slice(0, 16),
       category: category,
+      specs: 'Custom PBR Asset',
+      themeColor: '#00f0ff',
+      blob1: '#00f0ff',
+      blob2: '#4338ca',
+      blob3: '#3b82f6',
+      icon: '🧊',
       src: objectUrl,
       fileKey: fileKey,
       desc: desc,
+      locked: false,
       hotspots: [
         { top: '45%', left: '50%', title: title, desc: desc || 'Interactive 3D component', specs: 'PBR 3D Asset' }
       ]
@@ -5073,6 +5080,8 @@ async function handleSaveNew3dModel(event) {
 
     i3dModelsList.push(newModel);
     saveI3dModelsState();
+    renderStorehouseTable();
+    renderStorehouseDock();
     renderI3dModelDropdown();
     switchI3dModelById(newModel.id);
 
@@ -5111,6 +5120,8 @@ function deleteCurrent3dModel() {
   if (idx !== -1) {
     i3dModelsList.splice(idx, 1);
     saveI3dModelsState();
+    renderStorehouseTable();
+    renderStorehouseDock();
     renderI3dModelDropdown();
     switchI3dModelById(i3dModelsList[0].id);
     showToast(`ðŸ—‘ï¸ "${name}" deleted from showcase.`);
@@ -5609,8 +5620,12 @@ window.handlePublicGlbDrop = handlePublicGlbDrop;
 window.handlePublicGlbUpload = handlePublicGlbUpload;
 window.downloadPublicModelAsVideo = downloadPublicModelAsVideo;
 
-window.addEventListener('DOMContentLoaded', () => {
+if (document.readyState === 'loading') {
+  window.addEventListener('DOMContentLoaded', () => {
+    initI3dShowcase();
+  });
+} else {
   initI3dShowcase();
-});
+}
 
 

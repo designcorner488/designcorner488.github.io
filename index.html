@@ -16,7 +16,7 @@ window.addEventListener('error', function(e) {
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
-  <link rel="stylesheet" href="style.css?v=30.0"/>
+  <link rel="stylesheet" href="style.css?v=31.0"/>
   <script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/3.4.0/model-viewer.min.js"></script>
 </head>
 <body>
@@ -668,8 +668,9 @@ window.addEventListener('error', function(e) {
             loading="eager"
             reveal="auto"
             rotation-per-second="18deg"
-            camera-orbit="40deg 75deg 105%"
-            field-of-view="32deg"
+            camera-orbit="auto 75deg auto"
+            field-of-view="auto"
+            interaction-prompt="none"
             touch-action="pan-y">
           </model-viewer>
 
@@ -1403,7 +1404,7 @@ window.addEventListener('error', function(e) {
   <button type="button" class="btn-fs-reset" onclick="resetActiveFontSize()" title="Reset size"><i class="fas fa-rotate-left"></i></button>
 </div>
 
-<script src="script.js?v=30.0"></script>
+<script src="script.js?v=31.0"></script>
 </body>
 </html>
 
