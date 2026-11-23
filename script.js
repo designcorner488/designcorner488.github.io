@@ -4489,27 +4489,23 @@ function replyViaWhatsAppDirect(name, clientMsg) {
 window.addEventListener('DOMContentLoaded', updateInquiryBadge);
 
 /* ============================================================
-   NEXT-GENERATION INTERACTIVE 3D GLB SHOWCASE PLATFORM
+   NEXT-GENERATION INTERACTIVE 3D GLB SHOWCASE PLATFORM (v30.0)
    ============================================================ */
 
 const DEFAULT_I3D_MODELS = [
   {
-    id: 'cyber_lamp',
-    name: 'Cyberpunk Floor Lamp',
-    category: 'Product & Lighting',
-    src: 'media/lamp.glb',
-    desc: 'Futuristic floor lamp with adjustable luminescence and neon core',
-    locked: true,
-    hotspots: [
-      { top: '30%', left: '50%', title: 'LED Diffuser', desc: '360° addressable RGB COB LED ring', specs: 'Lumens: 2400lm · Color: 6500K' }
-    ]
-  },
-  {
     id: 'designer_sofa',
     name: 'Velvet Designer Sofa',
+    bigTitle: 'VELVET SOFA',
     category: 'Interior Viz',
+    specs: '220 × 95 × 85 cm',
     src: 'media/sofa.glb',
-    desc: 'Luxury Italian velvet sofa with brushed bronze legs',
+    themeColor: '#7c3aed',
+    blob1: '#7c3aed',
+    blob2: '#4338ca',
+    blob3: '#a855f7',
+    icon: '🛋️',
+    desc: 'Luxury Italian velvet sofa with brushed bronze legs and ergonomic contouring',
     locked: true,
     hotspots: [
       { top: '48%', left: '50%', title: 'Velvet Upholstery', desc: 'Double-stitched premium Italian velvet', specs: 'Martindale: 50,000 Rubs' }
@@ -4518,19 +4514,51 @@ const DEFAULT_I3D_MODELS = [
   {
     id: 'modern_chair',
     name: 'Modern Ergonomic Chair',
+    bigTitle: 'ERGO CHAIR',
     category: 'Furniture Design',
+    specs: '65 × 65 × 115 cm',
     src: 'media/Modern_Chair_1.glb',
-    desc: 'High-end parametric office chair with mesh backing',
+    themeColor: '#f59e0b',
+    blob1: '#f59e0b',
+    blob2: '#d97706',
+    blob3: '#fbbf24',
+    icon: '🪑',
+    desc: 'High-end parametric office chair with breathable active lumbar backing',
     locked: true,
     hotspots: [
       { top: '40%', left: '50%', title: 'Lumbar Mesh', desc: 'Self-adjusting active lumbar support', specs: 'Breathable Nylon Mesh · 120kg Test' }
     ]
   },
   {
+    id: 'cyber_lamp',
+    name: 'Cyberpunk Floor Lamp',
+    bigTitle: 'CYBER LAMP',
+    category: 'Product & Lighting',
+    specs: '45 × 45 × 180 cm',
+    src: 'media/lamp.glb',
+    themeColor: '#00f0ff',
+    blob1: '#00f0ff',
+    blob2: '#0284c7',
+    blob3: '#06b6d4',
+    icon: '💡',
+    desc: 'Futuristic floor lamp with adjustable luminescence and neon core',
+    locked: true,
+    hotspots: [
+      { top: '30%', left: '50%', title: 'LED Diffuser', desc: '360° addressable RGB COB LED ring', specs: 'Lumens: 2400lm · Color: 6500K' }
+    ]
+  },
+  {
     id: 'terrain_site',
     name: 'Survey Contour Terrain',
+    bigTitle: 'CONTOUR SITE',
     category: 'Site & Landscape',
+    specs: '150 × 120 × 35 m',
     src: 'media/object_0.glb',
+    themeColor: '#10b981',
+    blob1: '#10b981',
+    blob2: '#059669',
+    blob3: '#34d399',
+    icon: '🏔️',
     desc: 'Topographical land contour mesh for architectural site planning',
     locked: true,
     hotspots: [
@@ -4538,33 +4566,45 @@ const DEFAULT_I3D_MODELS = [
     ]
   },
   {
+    id: 'snaks_bar',
+    name: 'Snack Bar Kiosk',
+    bigTitle: 'SNACK BAR',
+    category: 'Architecture BIM',
+    specs: '320 × 180 × 240 cm',
+    src: 'media/snaks_bar.glb',
+    themeColor: '#ec4899',
+    blob1: '#ec4899',
+    blob2: '#db2777',
+    blob3: '#f43f5e',
+    icon: '🏪',
+    desc: 'Full architectural kiosk with reinforced glass and LED lighting',
+    locked: true,
+    hotspots: [
+      { top: '32%', left: '45%', title: 'Neon Counter', desc: 'Reinforced glass with underglow LED strips', specs: 'Length: 3.2m · Material: Tempered Glass' }
+    ]
+  },
+  {
     id: 'ornate_dining',
     name: 'Ornate Dining Table & Chairs',
+    bigTitle: 'ORNATE DINING',
     category: 'Interior Viz',
+    specs: '240 × 110 × 78 cm',
     src: 'media/Meshy_AI_Ornate_Wooden_Dining__1031072807_texture.glb',
+    themeColor: '#d97706',
+    blob1: '#d97706',
+    blob2: '#b45309',
+    blob3: '#f59e0b',
+    icon: '🍽️',
     desc: 'Hand-carved classical wooden dining ensemble with detailed textures',
     locked: true,
     hotspots: [
       { top: '42%', left: '48%', title: 'Carved Oak Top', desc: 'Solid French oak with satin oil finish', specs: 'Dimensions: 220cm x 100cm' }
     ]
-  },
-  {
-    id: 'snaks_bar',
-    name: 'Snack Bar Kiosk',
-    category: 'Architecture BIM',
-    src: 'media/snaks_bar.glb',
-    desc: 'Full architectural kiosk with reinforced glass and LED lighting',
-    locked: true,
-    hotspots: [
-      { top: '32%', left: '45%', title: 'Neon Counter', desc: 'Reinforced glass with underglow LED strips', specs: 'Length: 3.2m · Material: Tempered Glass' },
-      { top: '58%', left: '62%', title: 'Cooling Unit', desc: 'Commercial beverage refrigeration display', specs: 'Temp: -2°C to 4°C · 350L Capacity' },
-      { top: '25%', left: '75%', title: 'Digital Menu', desc: 'Overhead high-contrast acrylic signage', specs: '4K Display · Aluminum Frame' }
-    ]
   }
 ];
 
 let i3dModelsList = [];
-let currentI3dModelId = 'cyber_lamp';
+let currentI3dModelId = 'designer_sofa';
 let i3dCinematicTimer = null;
 let i3dCinematicAngle = 45;
 let i3dCinematicElev = 75;
@@ -4575,10 +4615,9 @@ let i3dOriginalBaseColors = [];
 
 // 1. Initialization and Loading Models
 async function initI3dShowcase() {
-  // Clear any outdated localStorage state to ensure fresh model list with valid URLs
   let saved = null;
   try {
-    const raw = localStorage.getItem('portfolio_i3d_models_v4');
+    const raw = localStorage.getItem('portfolio_i3d_models_v5');
     if (raw) saved = JSON.parse(raw);
   } catch(e) {}
 
@@ -4607,8 +4646,10 @@ async function initI3dShowcase() {
   // Restore any IndexedDB custom file blobs
   await restoreI3dCustomModelBlobs();
 
+  renderStorehouseTable();
+  renderStorehouseDock();
   renderI3dModelDropdown();
-  switchI3dModelById(i3dModelsList[0]?.id || 'cyber_lamp', false);
+  switchI3dModelById(i3dModelsList[0]?.id || 'designer_sofa', false);
   initI3dMouseInteractivity();
 }
 
@@ -4632,14 +4673,21 @@ function saveI3dModelsState() {
     const sanitized = i3dModelsList.map(m => ({
       id: m.id,
       name: m.name,
+      bigTitle: m.bigTitle || m.name.toUpperCase(),
       category: m.category,
+      specs: m.specs || '',
+      themeColor: m.themeColor || '#00f0ff',
+      blob1: m.blob1 || m.themeColor,
+      blob2: m.blob2 || '#4338ca',
+      blob3: m.blob3 || '#00f0ff',
+      icon: m.icon || '🧊',
       src: m.fileKey ? '' : m.src,
       fileKey: m.fileKey || '',
       desc: m.desc || '',
       locked: m.locked || false,
       hotspots: m.hotspots || []
     }));
-    localStorage.setItem('portfolio_i3d_models_v4', JSON.stringify(sanitized));
+    localStorage.setItem('portfolio_i3d_models_v5', JSON.stringify(sanitized));
     if (portfolioData) {
       portfolioData.settings = portfolioData.settings || {};
       portfolioData.settings.i3dModels = sanitized;
@@ -4649,7 +4697,72 @@ function saveI3dModelsState() {
   }
 }
 
-// 2. Dropdown & Switcher
+// 2. Render Storehouse Table & Dock Navigation
+function renderStorehouseTable() {
+  const tbody = document.getElementById('storehouseTableBody');
+  if (!tbody) return;
+
+  tbody.innerHTML = '';
+  i3dModelsList.forEach((m, idx) => {
+    const tr = document.createElement('tr');
+    tr.className = `storehouse-row ${m.id === currentI3dModelId ? 'active' : ''}`;
+    tr.id = `storehouseRow_${m.id}`;
+    tr.style.setProperty('--row-accent', m.themeColor || '#00f0ff');
+    tr.onclick = () => switchI3dModelById(m.id, true);
+
+    tr.innerHTML = `
+      <td>
+        <div class="row-name-wrap">
+          <span class="row-name">${m.name}</span>
+          <span class="row-cat">${m.icon || '🧊'} ${m.category || '3D Showcase'}</span>
+        </div>
+      </td>
+      <td>
+        <span class="row-specs">${m.specs || 'Parametric PBR'}</span>
+      </td>
+      <td>
+        <span class="row-preview-chip">
+          <i class="fas fa-cube" style="color:${m.themeColor || '#00f0ff'};"></i> GLB
+        </span>
+      </td>
+      <td style="text-align:right;">
+        <button type="button" class="row-action-btn" title="View 3D Asset">
+          <i class="fas fa-plus"></i>
+        </button>
+      </td>
+    `;
+    tbody.appendChild(tr);
+  });
+
+  const countBadge = document.getElementById('storehouseCountBadge');
+  if (countBadge) countBadge.textContent = `${i3dModelsList.length} Items`;
+}
+
+function renderStorehouseDock() {
+  const pillsContainer = document.getElementById('storehouseCategoryPills');
+  if (!pillsContainer) return;
+
+  pillsContainer.innerHTML = '';
+  i3dModelsList.forEach((m) => {
+    const btn = document.createElement('button');
+    btn.type = 'button';
+    btn.className = `dock-pill-btn ${m.id === currentI3dModelId ? 'active' : ''}`;
+    btn.id = `dockPill_${m.id}`;
+    btn.style.setProperty('--pill-accent', m.themeColor || '#00f0ff');
+    btn.onclick = () => switchI3dModelById(m.id, true);
+    btn.innerHTML = `<span>${m.icon || '🧊'}</span> <span>${m.name.split(' ')[0]}</span>`;
+    pillsContainer.appendChild(btn);
+  });
+}
+
+function cycleNextStorehouseItem() {
+  if (!i3dModelsList.length) return;
+  const currentIdx = i3dModelsList.findIndex(m => m.id === currentI3dModelId);
+  const nextIdx = (currentIdx + 1) % i3dModelsList.length;
+  switchI3dModelById(i3dModelsList[nextIdx].id, true);
+}
+
+// 3. Dropdown (compat) & Switcher
 function renderI3dModelDropdown() {
   const select = document.getElementById('i3dModelSelect');
   if (!select) return;
@@ -4670,35 +4783,98 @@ function switchI3dModelById(modelId, notify = true) {
   if (!model) return;
 
   currentI3dModelId = model.id;
+
+  // 1. Update Dropdown & badges
   const select = document.getElementById('i3dModelSelect');
   if (select && select.value !== model.id) select.value = model.id;
 
-  const badge = document.getElementById('i3dCategoryBadge');
-  if (badge) badge.textContent = model.category || '3D Showcase';
+  const categoryPillText = document.getElementById('storehouseCategoryText');
+  if (categoryPillText) categoryPillText.textContent = `${(model.category || '3D SHOWCASE').toUpperCase()} · PBR GLB`;
 
+  const specsPillText = document.getElementById('storehouseSpecsText');
+  if (specsPillText) specsPillText.textContent = model.specs || '220 × 95 × 85 cm';
+
+  // 2. Update Giant Background Watermark Text
+  const bgTitle = document.getElementById('storehouseBgTitle');
+  if (bgTitle) {
+    bgTitle.style.opacity = '0';
+    setTimeout(() => {
+      bgTitle.textContent = model.bigTitle || model.name.toUpperCase();
+      bgTitle.style.opacity = '1';
+    }, 150);
+  }
+
+  // 3. Update Dynamic Organic Morphing Blob Colors
+  const blob = document.getElementById('storehouseBlob');
+  const blob2 = document.getElementById('storehouseBlob2');
+  if (blob) {
+    blob.style.setProperty('--stage-blob-c1', model.blob1 || model.themeColor || '#7c3aed');
+    blob.style.setProperty('--stage-blob-c2', model.blob2 || '#4338ca');
+  }
+  if (blob2) {
+    blob2.style.setProperty('--stage-blob-c3', model.blob3 || model.themeColor || '#00f0ff');
+  }
+
+  // 4. Update Table Row Active State
+  document.querySelectorAll('.storehouse-row').forEach(row => row.classList.remove('active'));
+  const activeRow = document.getElementById(`storehouseRow_${model.id}`);
+  if (activeRow) {
+    activeRow.classList.add('active');
+    activeRow.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+  }
+
+  // 5. Update Dock Category Pills & Counter
+  document.querySelectorAll('.dock-pill-btn').forEach(pill => pill.classList.remove('active'));
+  const activePill = document.getElementById(`dockPill_${model.id}`);
+  if (activePill) activePill.classList.add('active');
+
+  const dockCounter = document.getElementById('storehouseDockCounter');
+  if (dockCounter) {
+    const curIdx = i3dModelsList.findIndex(m => m.id === model.id) + 1;
+    dockCounter.textContent = `${String(curIdx).padStart(2, '0')} / ${String(i3dModelsList.length).padStart(2, '0')}`;
+  }
+
+  // 6. Update 3D Model Viewer with Loader
   const viewer = document.getElementById('i3dModelViewer');
+  const loader = document.getElementById('stageLoader');
   if (viewer) {
     viewer.style.opacity = '1';
     if (!viewer.getAttribute('environment-image')) {
       viewer.setAttribute('environment-image', 'neutral');
     }
+
     if (viewer.src !== model.src) {
+      if (loader) loader.style.display = 'flex';
       viewer.src = model.src;
     }
+
     const onLoad = () => {
+      if (loader) loader.style.display = 'none';
       viewer.style.opacity = '1';
       saveOriginalModelMaterials();
     };
+
     if (viewer.loaded) {
+      if (loader) loader.style.display = 'none';
       onLoad();
     } else {
       viewer.addEventListener('load', onLoad, { once: true });
     }
+
     viewer.addEventListener('error', (e) => {
       console.warn('Model loading issue:', e);
+      if (loader) loader.style.display = 'none';
       viewer.style.opacity = '1';
     }, { once: true });
   }
+
+  // 7. Render model-specific hotspots
+  renderI3dHotspots(model);
+
+  if (notify) {
+    showToast(`🧊 Loaded: ${model.name}`, 'info');
+  }
+}
 
   // Render model-specific hotspots
   renderI3dHotspots(model);
@@ -5304,6 +5480,9 @@ window.toggleI3dFullscreen = toggleI3dFullscreen;
 window.resetI3dCamera = resetI3dCamera;
 window.switchI3dTab = switchI3dTab;
 window.toggleI3dEffect = toggleI3dEffect;
+window.cycleNextStorehouseItem = cycleNextStorehouseItem;
+window.renderStorehouseTable = renderStorehouseTable;
+window.renderStorehouseDock = renderStorehouseDock;
 
 // =============================================
 // PUBLIC VISITOR 3D UPLOAD ZONE
@@ -5327,35 +5506,40 @@ function handlePublicGlbUpload(event) {
 
 function loadPublicUserModel(file) {
   if (!file.name.match(/\.(glb|gltf)$/i)) {
-    showToast('âŒ Please upload a .glb or .gltf file', 'error');
+    showToast('❌ Please upload a .glb or .gltf file', 'error');
     return;
   }
-  // Revoke old URL
   if (publicUserModelUrl) URL.revokeObjectURL(publicUserModelUrl);
   publicUserModelUrl = URL.createObjectURL(file);
 
-  // Load into the shared viewer
-  const viewer = document.getElementById('i3dModelViewer');
-  if (!viewer) return;
-  viewer.src = publicUserModelUrl;
-  viewer.setAttribute('camera-orbit', '45deg 75deg 2.5m');
-  viewer.setAttribute('auto-rotate', '');
-  viewer.setAttribute('camera-controls', '');
+  const cleanName = file.name.replace(/\.(glb|gltf)$/i, '');
+  const customModel = {
+    id: 'user_upload_' + Date.now(),
+    name: cleanName,
+    bigTitle: cleanName.toUpperCase().slice(0, 16),
+    category: 'User Model',
+    specs: 'Custom GLB',
+    src: publicUserModelUrl,
+    themeColor: '#00f0ff',
+    blob1: '#00f0ff',
+    blob2: '#a855f7',
+    blob3: '#3b82f6',
+    icon: '🧊',
+    desc: 'Uploaded 3D asset ready for real-time 360° inspection',
+    locked: false,
+    hotspots: []
+  };
 
-  // Clear hotspots (user model â€” no owner hotspots)
-  const container = document.getElementById('i3dHotspots');
-  if (container) container.innerHTML = '';
+  i3dModelsList.unshift(customModel);
+  renderStorehouseTable();
+  renderStorehouseDock();
+  renderI3dModelDropdown();
+  switchI3dModelById(customModel.id, true);
 
-  // Update public zone UI
-  const zone = document.getElementById('i3dPublicZone');
-  if (zone) {
-    zone.querySelector('.pub-upload-label').textContent = `âœ… ${file.name} loaded! Explore below.`;
-    zone.querySelector('.pub-upload-label').style.color = '#00f0ff';
-  }
   const dlBtn = document.getElementById('i3dPublicDlBtn');
   if (dlBtn) dlBtn.style.display = 'inline-flex';
 
-  showToast(`ðŸ§Š "${file.name}" loaded! Use all tools below to explore in 3D.`);
+  showToast(`🧊 "${cleanName}" added to 3D Storehouse!`);
 }
 
 async function downloadPublicModelAsVideo() {

@@ -16,7 +16,7 @@ window.addEventListener('error', function(e) {
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
-  <link rel="stylesheet" href="style.css?v=29.0"/>
+  <link rel="stylesheet" href="style.css?v=30.0"/>
   <script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/3.4.0/model-viewer.min.js"></script>
 </head>
 <body>
@@ -583,298 +583,207 @@ window.addEventListener('error', function(e) {
 
 
 
-<!-- INTERACTIVE 3D MODELS: NEXT-GEN SHOWCASE PLATFORM -->
+<!-- INTERACTIVE 3D MODELS: 3D STOREHOUSE & ASSET VAULT -->
 <section class="i3d-section section" id="interactive-3d">
   <div class="container">
     <div class="section-header" data-aos="fade-up">
-      <div class="section-tag editable" data-key="i3dTag">Next-Gen 3D Engine</div>
-      <h2 class="section-title"><span class="editable" data-key="i3dTitle1">Interactive </span><span class="gradient-text editable" data-key="i3dTitle2">3D Studio</span></h2>
-      <p class="section-sub editable" data-key="i3dSub">Explore, inspect, customize materials, examine blueprints &amp; animate 3D GLB models in real-time</p>
+      <div class="section-tag editable" data-key="i3dTag">Interactive 3D Engine</div>
+      <h2 class="section-title"><span class="editable" data-key="i3dTitle1">3D Storehouse &amp; </span><span class="gradient-text editable" data-key="i3dTitle2">Asset Vault</span></h2>
+      <p class="section-sub editable" data-key="i3dSub">Explore real-time parametric 3D models with 360° orbit, material shaders, physical specs &amp; video captures</p>
     </div>
 
-    <!-- PUBLIC VISITOR UPLOAD ZONE -->
-    <div class="i3d-public-zone" id="i3dPublicZone" data-aos="fade-up"
-         ondragover="event.preventDefault();this.classList.add('drag-over')"
-         ondragleave="this.classList.remove('drag-over')"
-         ondrop="handlePublicGlbDrop(event)">
-      <div class="i3d-public-hero">
-        <div class="pub-icon-wrap"><i class="fas fa-cube"></i></div>
-        <div>
-          <h3 class="pub-title">🧊 Upload Your 3D Model &amp; Get Interactive</h3>
-          <p class="pub-sub">Drop your .GLB / .GLTF — explore in 360°, apply VFX effects, and download as video</p>
-        </div>
+    <!-- Quick Management & Visitor Upload Bar -->
+    <div class="i3d-action-dock" data-aos="fade-up">
+      <div class="i3d-dock-left">
+        <label class="btn-dock-upload" for="i3dPublicFile" title="Drop or upload your own .GLB 3D model">
+          <i class="fas fa-cloud-arrow-up"></i>
+          <span>Drop .GLB to View</span>
+          <input type="file" id="i3dPublicFile" accept=".glb,.gltf" style="display:none;" onchange="handlePublicGlbUpload(event)">
+        </label>
+        <button type="button" class="btn-dock-action" onclick="openAdd3dModelModal()" title="Add Model to Vault">
+          <i class="fas fa-plus-circle"></i> <span>Add Model</span>
+        </button>
+        <button type="button" class="btn-dock-action btn-dock-del" onclick="deleteCurrent3dModel()" title="Delete Current Custom Model">
+          <i class="fas fa-trash-alt"></i> <span>Delete</span>
+        </button>
       </div>
-      <label class="i3d-public-upload-area" for="i3dPublicFile">
-        <i class="fas fa-cloud-arrow-up pub-upload-icon"></i>
-        <span class="pub-upload-label">Drop .GLB file here or <u>click to browse</u></span>
-        <input type="file" id="i3dPublicFile" accept=".glb,.gltf" style="display:none;" onchange="handlePublicGlbUpload(event)">
-      </label>
-      <button type="button" id="i3dPublicDlBtn" class="btn-pub-download" onclick="downloadPublicModelAsVideo()" style="display:none;">
-        <i class="fas fa-download"></i> Download as Video
-      </button>
+      <div class="i3d-dock-right">
+        <!-- Hidden select kept for backwards-compatibility -->
+        <select id="i3dModelSelect" style="display:none;" onchange="switchI3dModelById(this.value)"></select>
+        <span id="i3dCategoryBadge" style="display:none;"></span>
+        
+        <button type="button" class="btn-dock-action" onclick="captureI3dScreenshot()" title="HD Screenshot capture">
+          <i class="fas fa-camera"></i> <span>Snapshot</span>
+        </button>
+        <button type="button" class="btn-dock-action" onclick="downloadPublicModelAsVideo()" id="i3dPublicDlBtn" title="Download 360° video">
+          <i class="fas fa-video"></i> <span>Record Video</span>
+        </button>
+        <button type="button" class="btn-dock-action btn-dock-publish" onclick="publishToGitHub()" title="Publish to GitHub">
+          <i class="fas fa-cloud-upload-alt"></i> <span>Publish Live</span>
+        </button>
+      </div>
     </div>
 
-    <div class="i3d-wrapper" id="i3dWrapper" data-aos="fade-up">
-      <!-- 1. Top HUD Control Bar -->
-      <div class="i3d-top-bar">
-        <!-- Model Selector & Info -->
-        <div class="i3d-model-select-group">
-          <label for="i3dModelSelect" class="i3d-select-label"><i class="fas fa-cubes"></i> Active Model:</label>
-          <select id="i3dModelSelect" class="i3d-select" onchange="switchI3dModelById(this.value)">
-            <!-- Populated dynamically by JS -->
-          </select>
-          <span class="i3d-category-pill" id="i3dCategoryBadge">Architecture BIM</span>
-        </div>
-
-        <!-- Model Management (Add / Delete) + Quick Tools -->
-        <div class="i3d-top-actions">
-          <button type="button" class="btn-i3d-action btn-i3d-add" onclick="openAdd3dModelModal()" title="Add New 3D Model (GLB/GLTF)">
-            <i class="fas fa-plus-circle"></i> <span>Add Model</span>
-          </button>
-          <button type="button" class="btn-i3d-action btn-i3d-del" onclick="deleteCurrent3dModel()" title="Delete Current 3D Model">
-            <i class="fas fa-trash-alt"></i> <span>Delete</span>
-          </button>
-          <button type="button" class="btn-i3d-tool" onclick="captureI3dScreenshot()" title="HD Screenshot capture">
-            <i class="fas fa-camera"></i>
-          </button>
-          <button type="button" class="btn-i3d-tool" onclick="toggleI3dFullscreen()" title="Toggle Fullscreen">
-            <i class="fas fa-expand"></i>
-          </button>
-          <button type="button" class="btn-i3d-tool" onclick="resetI3dCamera()" title="Reset Camera View">
-            <i class="fas fa-rotate-left"></i>
-          </button>
-          <button type="button" class="btn-i3d-publish" onclick="publishToGitHub()" title="Publish Live to GitHub">
-            <i class="fas fa-cloud-upload-alt"></i> <span>Publish Live</span>
-          </button>
-        </div>
-      </div>
-
-      <!-- 2. Viewer Stage -->
-      <div class="i3d-viewer-stage mode-normal" id="i3dStage">
+    <!-- MAIN 2-COLUMN STOREHOUSE SHOWCASE (VIDEO REFERENCE DESIGN) -->
+    <div class="storehouse-layout" id="i3dWrapper" data-aos="fade-up">
+      
+      <!-- LEFT HERO 3D STAGE -->
+      <div class="storehouse-stage-card mode-normal" id="i3dStage">
         <!-- Technical HUD Overlay Grid / Wireframe / Blueprint / Hologram layers -->
         <div class="i3d-blueprint-grid" id="i3dBlueprintGrid"></div>
         <div class="i3d-holo-layer" id="i3dHoloLayer"></div>
         <div class="i3d-matrix-layer" id="i3dMatrixLayer"></div>
         <div class="i3d-dissolve-layer" id="i3dDissolveLayer"></div>
 
-        <!-- 3D Model Viewer -->
-        <model-viewer id="i3dModelViewer" 
-          src="media/lamp.glb" 
-          alt="Interactive 3D Model"
-          auto-rotate 
-          camera-controls 
-          environment-image="neutral"
-          shadow-intensity="1.5" 
-          shadow-softness="0.8"
-          exposure="1.2"
-          loading="eager"
-          reveal="auto"
-          rotation-per-second="20deg"
-          touch-action="pan-y">
-        </model-viewer>
+        <!-- Dynamic Organic Morphing Background Blob -->
+        <div class="storehouse-blob" id="storehouseBlob"></div>
+        <div class="storehouse-blob-secondary" id="storehouseBlob2"></div>
 
-        <!-- Dynamic 3D Hotspots Container -->
-        <div class="i3d-hotspots-container" id="i3dHotspots">
-          <!-- Rendered dynamically per model -->
+        <!-- Giant Floating Watermark Typography Behind Model -->
+        <div class="storehouse-bg-title" id="storehouseBgTitle">VELVET SOFA</div>
+
+        <!-- Top Stage Overlays -->
+        <div class="stage-top-hud">
+          <div class="stage-badge-pill" id="storehouseCategoryPill">
+            <span class="pulse-dot"></span>
+            <span id="storehouseCategoryText">INTERIOR VIZ · PBR GLB</span>
+          </div>
+          <div class="stage-specs-pill" id="storehouseSpecsPill">
+            <i class="fas fa-ruler-combined"></i>
+            <span id="storehouseSpecsText">220 × 95 × 85 cm</span>
+          </div>
         </div>
 
-        <!-- Interactive Drag Hint & Active Mode Watermark -->
-        <div class="i3d-stage-hud">
-          <div class="i3d-active-mode-tag" id="i3dActiveModeTag">
+        <!-- Real Interactive 3D Model Viewer -->
+        <div class="storehouse-viewer-box">
+          <model-viewer id="i3dModelViewer"
+            src="media/sofa.glb"
+            alt="Interactive 3D Model"
+            auto-rotate
+            camera-controls
+            environment-image="neutral"
+            shadow-intensity="1.6"
+            shadow-softness="0.75"
+            exposure="1.15"
+            loading="eager"
+            reveal="auto"
+            rotation-per-second="18deg"
+            camera-orbit="40deg 75deg 105%"
+            field-of-view="32deg"
+            touch-action="pan-y">
+          </model-viewer>
+
+          <!-- Dynamic 3D Hotspots Container -->
+          <div class="i3d-hotspots-container" id="i3dHotspots"></div>
+
+          <!-- Loading Indicator -->
+          <div class="stage-loader" id="stageLoader" style="display:none;">
+            <div class="spinner-neon"></div>
+            <span>Loading 3D Mesh...</span>
+          </div>
+        </div>
+
+        <!-- Stage Bottom Control Strip -->
+        <div class="stage-bottom-hud">
+          <div class="stage-mode-watermark" id="i3dActiveModeTag">
             <span class="hud-dot"></span> MODE: NORMAL PBR
           </div>
-          <div class="i3d-drag-hint">
-            <i class="fas fa-hand-pointer"></i> 360° Drag · Scroll to Zoom · Double Click to Center
+          <div class="stage-tools-group">
+            <button type="button" class="btn-stage-tool" onclick="toggleI3dRotate()" id="btnFxRotate" title="Toggle Auto-Rotate">
+              <i class="fas fa-rotate"></i>
+            </button>
+            <button type="button" class="btn-stage-tool" onclick="resetI3dCamera()" title="Reset Camera View">
+              <i class="fas fa-arrows-rotate"></i>
+            </button>
+            <button type="button" class="btn-stage-tool" onclick="toggleI3dFullscreen()" title="Fullscreen">
+              <i class="fas fa-expand"></i>
+            </button>
           </div>
         </div>
       </div>
 
-      <!-- 3. Futuristic Studio Dock: Navigation Tabs & Control Panels -->
-      <div class="i3d-studio-dock">
-        <!-- Tab Navigation Bar -->
-        <div class="i3d-dock-tabs">
-          <button type="button" class="i3d-tab-btn active" id="tabBtnModes" onclick="switchI3dTab('modes')">
-            <i class="fas fa-layer-group"></i> <span>Exploration Modes</span>
-          </button>
-          <button type="button" class="i3d-tab-btn" id="tabBtnLighting" onclick="switchI3dTab('lighting')">
-            <i class="fas fa-sun"></i> <span>Lighting &amp; Studio</span>
-          </button>
-          <button type="button" class="i3d-tab-btn" id="tabBtnCamera" onclick="switchI3dTab('camera')">
-            <i class="fas fa-video"></i> <span>Camera &amp; Tour</span>
-          </button>
-          <button type="button" class="i3d-tab-btn" id="tabBtnMaterials" onclick="switchI3dTab('materials')">
-            <i class="fas fa-palette"></i> <span>Material Studio</span>
-          </button>
-          <button type="button" class="i3d-tab-btn" id="tabBtnHotspots" onclick="switchI3dTab('hotspots')">
-            <i class="fas fa-map-marker-alt"></i> <span>Hotspots &amp; Specs</span>
-          </button>
-        </div>
-
-        <!-- Tab Panel 1: Exploration Modes -->
-        <div class="i3d-panel active" id="i3dPanelModes">
-          <div class="i3d-buttons-grid">
-            <button type="button" class="btn-i3d-mode active" onclick="setI3dMode('normal')">
-              <span class="mode-icon">👁️</span>
-              <div class="mode-info">
-                <strong>Normal PBR</strong>
-                <small>Realistic Materials</small>
-              </div>
-            </button>
-            <button type="button" class="btn-i3d-mode" onclick="setI3dMode('wireframe')">
-              <span class="mode-icon">🕸️</span>
-              <div class="mode-info">
-                <strong>Wireframe</strong>
-                <small>Edge Mesh Glow</small>
-              </div>
-            </button>
-            <button type="button" class="btn-i3d-mode" onclick="setI3dMode('blueprint')">
-              <span class="mode-icon">📐</span>
-              <div class="mode-info">
-                <strong>Blueprint</strong>
-                <small>Technical CAD Grid</small>
-              </div>
-            </button>
-            <button type="button" class="btn-i3d-mode" onclick="setI3dMode('xray')">
-              <span class="mode-icon">🩻</span>
-              <div class="mode-info">
-                <strong>X-Ray Ghost</strong>
-                <small>Translucent Depth</small>
-              </div>
-            </button>
-            <button type="button" class="btn-i3d-mode" onclick="setI3dMode('hologram')">
-              <span class="mode-icon">🌌</span>
-              <div class="mode-info">
-                <strong>Hologram</strong>
-                <small>Cyber Scanlines</small>
-              </div>
-            </button>
-            <button type="button" class="btn-i3d-mode" onclick="setI3dMode('clay')">
-              <span class="mode-icon">🏺</span>
-              <div class="mode-info">
-                <strong>Clay Render</strong>
-                <small>Studio Matte White</small>
-              </div>
-            </button>
-            <button type="button" class="btn-i3d-mode" onclick="setI3dMode('explode')">
-              <span class="mode-icon">💥</span>
-              <div class="mode-info">
-                <strong>Exploded Pulse</strong>
-                <small>Dynamic Expansion</small>
-              </div>
-            </button>
-          </div>
-        </div>
-
-        <!-- Tab Panel 2: Lighting & Studio -->
-        <div class="i3d-panel" id="i3dPanelLighting">
-          <div class="i3d-lighting-row">
-            <div class="i3d-presets-group">
-              <button type="button" class="btn-i3d-light active" id="btnLightStudio" onclick="setI3dLighting('studio')">
-                <i class="fas fa-sun"></i> Studio Day
-              </button>
-              <button type="button" class="btn-i3d-light" id="btnLightNight" onclick="setI3dLighting('night')">
-                <i class="fas fa-moon"></i> Cyber Night
-              </button>
-              <button type="button" class="btn-i3d-light" id="btnLightSunset" onclick="setI3dLighting('sunset')">
-                <i class="fas fa-cloud-sun"></i> Sunset Gold
-              </button>
-              <button type="button" class="btn-i3d-light" id="btnLightDramatic" onclick="setI3dLighting('dramatic')">
-                <i class="fas fa-bolt"></i> High Contrast
-              </button>
-            </div>
-            <div class="i3d-sliders-group">
-              <div class="i3d-slider-item">
-                <label><i class="fas fa-lightbulb"></i> Exposure: <span id="exposureVal">1.0</span></label>
-                <input type="range" min="0.4" max="2.2" step="0.05" value="1.0" oninput="adjustI3dExposure(this.value)">
-              </div>
-              <div class="i3d-slider-item">
-                <label><i class="fas fa-shield"></i> Shadows: <span id="shadowVal">1.5</span></label>
-                <input type="range" min="0" max="3" step="0.2" value="1.5" oninput="adjustI3dShadows(this.value)">
-              </div>
+      <!-- RIGHT COLUMN: MY STOREHOUSE TABLE & CUSTOMIZER -->
+      <div class="storehouse-list-card">
+        <div class="storehouse-list-header">
+          <div class="storehouse-title-wrap">
+            <div class="storehouse-icon-box"><i class="fas fa-boxes-stacked"></i></div>
+            <div>
+              <h3 class="storehouse-heading">My Storehouse</h3>
+              <span class="storehouse-sub">Curated 3D Models Vault</span>
             </div>
           </div>
+          <div class="storehouse-count-pill" id="storehouseCountBadge">6 Items</div>
         </div>
 
-        <!-- Tab Panel 3: Camera & Presentation -->
-        <div class="i3d-panel" id="i3dPanelCamera">
-          <div class="i3d-camera-row">
-            <div class="i3d-presets-group">
-              <button type="button" class="btn-i3d-cam active" onclick="setI3dCameraPreset('perspective')">
-                <i class="fas fa-cube"></i> Perspective
-              </button>
-              <button type="button" class="btn-i3d-cam" onclick="setI3dCameraPreset('front')">
-                <i class="fas fa-border-none"></i> Front View
-              </button>
-              <button type="button" class="btn-i3d-cam" onclick="setI3dCameraPreset('top')">
-                <i class="fas fa-arrows-to-dot"></i> Top Plan
-              </button>
-              <button type="button" class="btn-i3d-cam" onclick="setI3dCameraPreset('iso')">
-                <i class="fas fa-compass"></i> Isometric 45°
-              </button>
-              <button type="button" class="btn-i3d-cam" onclick="setI3dCameraPreset('closeup')">
-                <i class="fas fa-magnifying-glass-plus"></i> Detail Close-Up
-              </button>
-            </div>
-            <div class="i3d-tour-controls">
-              <button type="button" class="btn-i3d-action" id="btnFxRotate" onclick="toggleI3dRotate()">
-                <i class="fas fa-rotate"></i> <span>360° Auto-Rotate: ON</span>
-              </button>
-              <button type="button" class="btn-i3d-action" id="btnCinematicTour" onclick="toggleI3dCinematicTour()">
-                <i class="fas fa-film"></i> <span>Cinematic Auto-Tour</span>
+        <!-- Interactive Assets Table -->
+        <div class="storehouse-table-wrap">
+          <table class="storehouse-table">
+            <thead>
+              <tr>
+                <th>PRODUCT NAME</th>
+                <th>DIMENSIONS</th>
+                <th>PREVIEW</th>
+                <th style="text-align:right;">ACTION</th>
+              </tr>
+            </thead>
+            <tbody id="storehouseTableBody">
+              <!-- Dynamically populated rows with active highlight and click-to-switch -->
+            </tbody>
+          </table>
+        </div>
+
+        <!-- Studio Controls Drawer: Exploration Modes & Materials -->
+        <div class="storehouse-drawer">
+          <div class="drawer-header">
+            <span><i class="fas fa-sliders"></i> Real-Time Studio Shaders</span>
+          </div>
+          
+          <!-- Mode Selector Chips -->
+          <div class="mode-chips-row">
+            <button type="button" class="mode-chip active" id="chipModeNormal" onclick="setI3dMode('normal')">👁️ Normal PBR</button>
+            <button type="button" class="mode-chip" id="chipModeWireframe" onclick="setI3dMode('wireframe')">🕸️ Wireframe</button>
+            <button type="button" class="mode-chip" id="chipModeBlueprint" onclick="setI3dMode('blueprint')">📐 Blueprint</button>
+            <button type="button" class="mode-chip" id="chipModeXray" onclick="setI3dMode('xray')">🩻 X-Ray</button>
+            <button type="button" class="mode-chip" id="chipModeHologram" onclick="setI3dMode('hologram')">🌌 Hologram</button>
+            <button type="button" class="mode-chip" id="chipModeClay" onclick="setI3dMode('clay')">🏺 Clay</button>
+          </div>
+
+          <!-- Color Swatches Row -->
+          <div class="swatches-strip">
+            <span class="swatch-label">Material Tint:</span>
+            <div class="swatches-list">
+              <button type="button" class="swatch-dot" style="--sc:#00f0ff;" onclick="applyI3dMaterialTint('#00f0ff', 0.8, 0.2, 'Cyber Cyan')" title="Cyber Cyan"></button>
+              <button type="button" class="swatch-dot" style="--sc:#a855f7;" onclick="applyI3dMaterialTint('#a855f7', 0.7, 0.3, 'Neon Violet')" title="Neon Violet"></button>
+              <button type="button" class="swatch-dot" style="--sc:#f59e0b;" onclick="applyI3dMaterialTint('#f59e0b', 0.95, 0.15, 'Polished Gold')" title="Polished Gold"></button>
+              <button type="button" class="swatch-dot" style="--sc:#ffffff;" onclick="applyI3dMaterialTint('#ffffff', 0.2, 0.8, 'Studio White')" title="Studio White"></button>
+              <button type="button" class="swatch-dot" style="--sc:#18181b;" onclick="applyI3dMaterialTint('#18181b', 0.9, 0.2, 'Carbon Black')" title="Carbon Black"></button>
+              <button type="button" class="swatch-dot" style="--sc:#10b981;" onclick="applyI3dMaterialTint('#10b981', 0.8, 0.25, 'Emerald Green')" title="Emerald Green"></button>
+              <button type="button" class="swatch-reset-btn" onclick="resetI3dMaterials()" title="Reset Textures">
+                <i class="fas fa-rotate-left"></i> Original
               </button>
             </div>
           </div>
         </div>
 
-        <!-- Tab Panel 4: Material Customization Studio -->
-        <div class="i3d-panel" id="i3dPanelMaterials">
-          <div class="i3d-materials-wrap">
-            <div class="i3d-mat-title">Live Material Tint &amp; Shaders:</div>
-            <div class="i3d-swatches-grid">
-              <button type="button" class="i3d-swatch" style="--swatch:#00f0ff;" onclick="applyI3dMaterialTint('#00f0ff', 0.8, 0.2, 'Cyber Cyan')" title="Cyber Cyan">
-                <span>Cyber Cyan</span>
-              </button>
-              <button type="button" class="i3d-swatch" style="--swatch:#a855f7;" onclick="applyI3dMaterialTint('#a855f7', 0.7, 0.3, 'Neon Violet')" title="Neon Violet">
-                <span>Neon Violet</span>
-              </button>
-              <button type="button" class="i3d-swatch" style="--swatch:#fbbf24;" onclick="applyI3dMaterialTint('#fbbf24', 0.95, 0.15, 'Polished Gold')" title="Polished Gold">
-                <span>Polished Gold</span>
-              </button>
-              <button type="button" class="i3d-swatch" style="--swatch:#ef4444;" onclick="applyI3dMaterialTint('#ef4444', 0.6, 0.4, 'Ruby Red')" title="Ruby Red">
-                <span>Ruby Red</span>
-              </button>
-              <button type="button" class="i3d-swatch" style="--swatch:#ffffff;" onclick="applyI3dMaterialTint('#ffffff', 0.2, 0.8, 'Studio White')" title="Studio White">
-                <span>Studio White</span>
-              </button>
-              <button type="button" class="i3d-swatch" style="--swatch:#18181b;" onclick="applyI3dMaterialTint('#18181b', 0.9, 0.2, 'Carbon Black')" title="Carbon Black">
-                <span>Carbon Black</span>
-              </button>
-              <button type="button" class="i3d-swatch" style="--swatch:#10b981;" onclick="applyI3dMaterialTint('#10b981', 0.8, 0.25, 'Emerald Green')" title="Emerald Green">
-                <span>Emerald</span>
-              </button>
-              <button type="button" class="btn-i3d-mat-reset" onclick="resetI3dMaterials()" title="Restore Original PBR Textures">
-                <i class="fas fa-rotate-left"></i> Original Textures
-              </button>
-            </div>
-          </div>
-        </div>
-
-        <!-- Tab Panel 5: Hotspots & Specs -->
-        <div class="i3d-panel" id="i3dPanelHotspots">
-          <div class="i3d-hotspots-bar">
-            <button type="button" class="btn-i3d-action" id="btnToggleHotspots" onclick="toggleI3dEffect('labels')">
-              <i class="fas fa-tag"></i> <span>Hotspots: ON</span>
-            </button>
-            <button type="button" class="btn-i3d-action btn-i3d-add" onclick="promptAddHotspot()" title="Add custom marker on current model">
-              <i class="fas fa-plus"></i> <span>Add Hotspot Annotation</span>
-            </button>
-            <div class="i3d-hotspot-hint">
-              <i class="fas fa-info-circle"></i> Click any glowing marker on the model to view structural specifications &amp; dimensions.
-            </div>
-          </div>
-        </div>
       </div>
     </div>
+
+    <!-- FLOATING DOCK BOTTOM NAVIGATION (VIDEO REFERENCE DESIGN) -->
+    <div class="storehouse-bottom-dock" data-aos="fade-up">
+      <div class="dock-pills" id="storehouseCategoryPills">
+        <!-- Rendered by JS: Sofa, Chair, Lamp, Terrain, Kiosk, Dining -->
+      </div>
+      <div class="dock-nav-controls">
+        <span class="dock-counter" id="storehouseDockCounter">01 / 06</span>
+        <button type="button" class="btn-dock-next" onclick="cycleNextStorehouseItem()" title="Next 3D Asset">
+          <span>Next Asset</span>
+          <i class="fas fa-arrow-right"></i>
+        </button>
+      </div>
+    </div>
+
+  </div>
+</section>
   </div>
 </section>
 
@@ -1494,7 +1403,7 @@ window.addEventListener('error', function(e) {
   <button type="button" class="btn-fs-reset" onclick="resetActiveFontSize()" title="Reset size"><i class="fas fa-rotate-left"></i></button>
 </div>
 
-<script src="script.js?v=28.0"></script>
+<script src="script.js?v=30.0"></script>
 </body>
 </html>
 
